@@ -7,7 +7,7 @@ General description
 Infinite lazy-evaluated scala-like streams. Analog: Clojure lazy-seq.
 
     from fn import Stream
-    from fn.itertools import take, drop, map
+    from fn.iters import take, drop, map
 
     f = Stream()
     fib = f << [0, 1] << map(add, f, drop(1, f))
@@ -20,7 +20,7 @@ Infinite lazy-evaluated scala-like streams. Analog: Clojure lazy-seq.
 
 
     from fn import _
-    from fn.itertools import zipwith
+    from fn.iters import zipwith
     from itertools import repeat
 
     assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
