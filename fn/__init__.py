@@ -1,2 +1,2 @@
 from .stream import Stream
-import iters
+from .lambdas import shortcut as _
