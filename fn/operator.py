@@ -1,1 +1,1 @@
-identity = lambda arg: arg 
+identity = lambda arg: arg
