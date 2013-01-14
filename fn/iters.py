@@ -1,16 +1,16 @@
 from itertools import islice, chain, izip, imap
 from sys import version
 
-if version.startswith("2"):
-	map = imap 
-else:
-	map = map
+# Syntax sugar to deal with Python 2/Python 3 
+# differences: this one will return generator
+# even in Python 2.*
+map = imap version.startswith("2") else map
 
 def take(limit, base): 
-	return islice(base, limit)
+    return islice(base, limit)
 
 def drop(limit, base): 
-	return islice(base, limit, None)
+    return islice(base, limit, None)
 
 def nth(iterable, n, default=None):
     return next(islice(iterable, n, None), default)
