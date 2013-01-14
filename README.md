@@ -1,8 +1,27 @@
 # Fn.py: enjoy FP in Python
 
-General description
+Despite the fact the Python is not pure-functional programming language, it's multi-paradigm PL and it gives you enough freedom to take credits from functional programming approach. There are theoretical and practical advantages to the functional style:
 
-## Streams
+* Formal provability
+* Modularity
+* Composability
+* Ease of debugging and testing
+
+`Fn.py` library provides you with missing "batteries" to get maximum from functional approach even in mostly-imperative program.
+
+## Scala-style lambdas definition
+
+
+    from fn import _
+    from fn.iters import zipwith
+    from itertools import repeat
+
+    assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
+    assert list(filter(_ < 10, [9,10,11])) == [9]
+    assert list(zipwith(_ + _, [0,1,2], repeat(10))) == [10,11,12]
+
+
+## Streams and infinite sequences declaration
 
 Lazy-evaluated scala-style streams. Basic idea: evaluate each new element "on demand" and share calculated elements between all created iterators. `Stream` object supports `<<` operator that means pushing new elements when it's necessary.
 
@@ -30,6 +49,7 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
 
     from fn import Stream
     from fn.iters import take, drop, map
+    from operator import add
 
     f = Stream()
     fib = f << [0, 1] << map(add, f, drop(1, f))
@@ -37,17 +57,6 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
     assert list(take(10, fib)) == [0,1,1,2,3,5,8,13,21,34]
     assert fib[20] == 6765
     assert fib[30:35] == [832040,1346269,2178309,3524578,5702887]
-
-## Scala-style lambdas definition
-
-
-    from fn import _
-    from fn.iters import zipwith
-    from itertools import repeat
-
-    assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
-    assert list(filter(_ < 10, [9,10,11])) == [9]
-    assert list(zipwith(_ + _, [0,1,2], repeat(10))) == [10,11,12]
 
 
 ## High-level operations with functions
