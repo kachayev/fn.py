@@ -1,2 +1,2 @@
 from .stream import Stream
-from .lambdas import shortcut as _
+from .underscore import shortcut as _
