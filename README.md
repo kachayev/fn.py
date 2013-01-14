@@ -4,7 +4,29 @@ General description
 
 ## Streams
 
-Infinite lazy-evaluated scala-like streams. Analog: Clojure lazy-seq.
+Lazy-evaluated scala-style streams. Basic idea: evaluate each new element "on demand" and share calculated elements between all created iterators. `Stream` object supports `<<` operator that means pushing new elements when it's necessary.
+
+Simplest cases:
+
+    from fn import Stream
+    
+    s = Stream() << [1,2,3,4,5]
+    assert list(s) == [1,2,3,4,5]
+    assert s[1] == 2
+    assert s[0:2] == [1,2]
+
+    s = Stream() << range(6) << [6,7]
+    assert list(s) == [0,1,2,3,4,5,6,7]
+
+    def gen():
+        yield 1
+        yield 2
+        yield 3
+    
+    s = Stream() << gen << (4,5)
+    assert list(s) == [1,2,3,4,5]
+
+Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence can be calculated as:
 
     from fn import Stream
     from fn.iters import take, drop, map
