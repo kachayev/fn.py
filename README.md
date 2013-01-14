@@ -123,7 +123,9 @@ You can also build library from source
     $ cd fn.py
     $ python setup.py install
 
-## Plan
+## Work in progress (!)
+
+Rough plan: 
 
 * Scala-style lambda implementation
 * Unit tests for `Stream` and `underscore` module, tests infrastructure
