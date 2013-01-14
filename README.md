@@ -15,7 +15,7 @@ More about functional approach from my Pycon UA 2012 talks: [Functional Programm
 
 
     from fn import _
-    from fn.iters import zipwith
+    from fn.iter import zipwith
     from itertools import repeat
 
     assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
@@ -50,7 +50,7 @@ Simplest cases:
 Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence can be calculated as:
 
     from fn import Stream
-    from fn.iters import take, drop, map
+    from fn.iter import take, drop, map
     from operator import add
 
     f = Stream()
