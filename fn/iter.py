@@ -4,7 +4,7 @@ from sys import version
 # Syntax sugar to deal with Python 2/Python 3 
 # differences: this one will return generator
 # even in Python 2.*
-map = imap version.startswith("2") else map
+map = imap if version.startswith("2") else map
 
 def take(limit, base): 
     return islice(base, limit)
