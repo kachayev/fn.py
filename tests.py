@@ -40,3 +40,34 @@ class UnderscoreTestCase(unittest.TestCase):
 	def test_call_method(self):
 		self.assertEqual(["test", "case"], (_.call("split"))("test case"))
 		self.assertEqual("str", _.__name__(str))
+
+	def test_comparator_single(self):
+		self.assertTrue((_ < 7)(1))
+		self.assertFalse((_ < 7)(10))
+		self.assertTrue((_ > 20)(25))
+		self.assertFalse((_ > 20)(0))
+		self.assertTrue((_ <= 7)(6))
+		self.assertTrue((_ <= 7)(7))
+		self.assertFalse((_ <= 7)(8))
+		self.assertTrue((_ >= 7)(8))
+		self.assertTrue((_ >= 7)(7))
+		self.assertFalse((_ >= 7)(6))
+		self.assertTrue((_ == 10)(10))
+		self.assertFalse((_ == 10)(9))
+
+	def test_comparator_multiple(self):
+		self.assertTrue((_ < _)(1, 2))
+		self.assertFalse((_ < _)(2, 1))
+		self.assertTrue((_ > _)(25, 20))
+		self.assertFalse((_ > _)(20, 25))
+		self.assertTrue((_ <= _)(6, 7))
+		self.assertTrue((_ <= _)(7, 7))
+		self.assertFalse((_ <= _)(8, 7))
+		self.assertTrue((_ >= _)(8, 7))
+		self.assertTrue((_ >= _)(7, 7))
+		self.assertFalse((_ >= _)(6, 7))
+		self.assertTrue((_ == _)(10, 10))
+		self.assertFalse((_ == _)(9, 10))
+
+	def test_comparator_filter(self):
+		self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))

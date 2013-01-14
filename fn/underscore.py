@@ -1,7 +1,8 @@
 from .operator import identity, curry
 
+# XXX Deal with code duplication with composition and fabric method
 class _Callable(object):
-	
+
 	def __init__(self, callback=None):
 		self._callback = callback or identity
 
@@ -20,18 +21,47 @@ class _Callable(object):
 		return self.__class__(lambda arg: self(arg) * other)
 
 	def __lt__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) < other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) < other)
+
 	def __le__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) <= other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) <= other)
+
 	def __gt__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) > other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) > other)
+
 	def __ge__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) >= other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) >= other)
 	
 	def __eq__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) == other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) == other)
+
 	def __ne__(self, other):
-		raise NotImplementedError
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) != other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) != other)
+
 	def __nonzero__(self):
 		raise NotImplementedError
 
