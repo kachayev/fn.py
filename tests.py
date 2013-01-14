@@ -71,3 +71,15 @@ class UnderscoreTestCase(unittest.TestCase):
 
 	def test_comparator_filter(self):
 		self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
+
+	def test_slicing_single(self):
+		self.assertEqual(0, 	  (_[0])(range(10)))
+		self.assertEqual(9, 	  (_[-1])(range(10)))
+		self.assertEqual([3,4,5], (_[3:])(range(6)))
+		self.assertEqual([0,1,2], (_[:3])(range(10)))
+		self.assertEqual([1,2,3], (_[1:4])(range(10)))
+		self.assertEqual([0,2,4], (_[0:6:2])(range(10)))
+
+	def test_slicing_multiple(self):
+		self.assertEqual(0, (_[_])(range(10), 0))
+		self.assertEqual(8, (_[_ * (-1)])(range(10), 2))

@@ -67,16 +67,27 @@ class _Callable(object):
 
 	def __getattr__(self, name):
 		return self.__class__(lambda arg: getattr(self(arg), name))
+
 	def call(self, name, *args):
 		"""Call method from _ object by given name and arguments"""
 		return self.__class__(lambda arg: getattr(self(arg), name)(*args))
 
 	def __getitem__(self, k):
-		raise NotImplementedError
+		if isinstance(k, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg)[k])
+
 	def __contains__(self, elt):
 		raise NotImplementedError
 
 	def __str__(self):
+		"""Build readable representation for function
+
+		(_ < 7): (x1) => (x1 < 7)
+		(_ + _*10): (x1, x2) => (x1 + x2*10)
+		"""
 		raise NotImplementedError
 
 	def __call__(self, *args):
