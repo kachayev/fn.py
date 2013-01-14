@@ -71,7 +71,7 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
 	assert flip([10, 20], mul) == 200
 	assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
-TODO: more interesting examples for functional composition
+__TODO: more interesting examples for functional composition__
 
 ## Itertools receipts
 
@@ -83,14 +83,18 @@ TODO: more interesting examples for functional composition
 * foldl, foldr, zipwith
 * findelem, findindex
 
-## Trampolines to work with TCO
-
-TBD
-
 ## Functional style for error-handling
 
 * Maybe
 * Either
+
+__TODO: Implementation, code samples__
+
+## Trampolines decorator
+
+Workaround for dealing with TCO without heavy stack utilization.
+
+__TODO: Implementation, code samples and documented theory.__
 
 ## Installation
 
@@ -107,6 +111,16 @@ You can also build library from source
     $ git clone https://github.com/kachayev/fn.py.git
     $ cd fn.py
     $ python setup.py install
+
+## Plan
+
+* Scala-style lambda implementation
+* Unit tests for `Stream` and `underscore` module, tests infrastructure
+* Itertools, operators
+* Functions composition and good example for its usage
+* Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
+* Trampolines decorator
+* C-accelerator for most modules
 
 ## Contribute
 
