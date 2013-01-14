@@ -9,6 +9,8 @@ Despite the fact the Python is not pure-functional programming language, it's mu
 
 `Fn.py` library provides you with missing "batteries" to get maximum from functional approach even in mostly-imperative program.
 
+More about functional approach from my Pycon UA 2012 talks: [Functional Programming with Python](http://ua.pycon.org/static/talks/kachayev/#/).
+
 ## Scala-style lambdas definition
 
 
