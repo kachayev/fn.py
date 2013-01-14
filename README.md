@@ -13,6 +13,7 @@ More about functional approach from my Pycon UA 2012 talks: [Functional Programm
 
 ## Scala-style lambdas definition
 
+__TODO: Partially implemented, need TBD__
 
     from fn import _
     from fn.iter import zipwith
@@ -63,6 +64,10 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
 
 ## High-level operations with functions
 
+__TODO: Not implemented yet__
+
+__TODO: more interesting examples for functional composition__
+
     from fn import F, _
     from fn.operator import apply, flip
     from operator import add, mul
@@ -82,9 +87,9 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
 	assert flip([10, 20], mul) == 200
 	assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
-__TODO: more interesting examples for functional composition__
-
 ## Itertools receipts
+
+__TODO: Partially implemented, need TBD__
 
 * take, drop, takelast, droplast
 * first, rest
