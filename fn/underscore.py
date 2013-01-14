@@ -1,14 +1,55 @@
-from .operator import identity
+from .operator import identity, curry
 
 class _Callable(object):
+	
 	def __init__(self, callback=None):
-		self.callback = callback or identity
+		self._callback = callback or identity
 
 	def __add__(self, other):
-		# should be implemented with folding by apply operator
-		return _Callable(lambda *args, **kwargs: self.callback(*args, **kwargs) + other)
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) + other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) + other)
 
-	def __call__(self, *args, **kwargs):
-		return self.callback(*args, **kwargs)
+	def __mul__(self, other):
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: self(arg1) * other(arg2))
+		# XXX this should be composition
+		return self.__class__(lambda arg: self(arg) * other)
+
+	def __lt__(self, other):
+		raise NotImplementedError
+	def __le__(self, other):
+		raise NotImplementedError
+	def __gt__(self, other):
+		raise NotImplementedError
+	def __ge__(self, other):
+		raise NotImplementedError
+	
+	def __eq__(self, other):
+		raise NotImplementedError
+	def __ne__(self, other):
+		raise NotImplementedError
+	def __nonzero__(self):
+		raise NotImplementedError
+
+	def __getattr__(self, name):
+		return self.__class__(lambda arg: getattr(self(arg), name))
+	def call(self, name, *args):
+		"""Call method from _ object by given name and arguments"""
+		return self.__class__(lambda arg: getattr(self(arg), name)(*args))
+
+	def __getitem__(self, k):
+		raise NotImplementedError
+	def __contains__(self, elt):
+		raise NotImplementedError
+
+	def __str__(self):
+		raise NotImplementedError
+
+	def __call__(self, *args):
+		return curry(self._callback, *args)
 
 shortcut = _Callable()

@@ -23,6 +23,8 @@ __TODO: Partially implemented, need TBD__
     assert list(filter(_ < 10, [9,10,11])) == [9]
     assert list(zipwith(_ + _, [0,1,2], repeat(10))) == [10,11,12]
 
+    assert "str" == (_.__name__)(str)
+    assert ["fn", "py"] == _.call("split")("fn py")
 
 ## Streams and infinite sequences declaration
 
