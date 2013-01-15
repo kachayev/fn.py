@@ -8,8 +8,10 @@ import unittest
 from fn import op
 from fn import _
 from fn import F 
+from fn import iter as iters 
 
 import operator
+import itertools
 
 class OperatorTestCase(unittest.TestCase):
     def test_currying(self):
@@ -114,3 +116,16 @@ class CompositionTestCase(unittest.TestCase):
 	def test_partial(self):
 		f = F.partial(operator.add, 10) << F.partial(operator.add, 5)
 		self.assertEqual(25, f(10))
+
+class IteratorsTestCase(unittest.TestCase):
+
+	def test_zipwith(self):
+		zipper = iters.zipwith(operator.add)
+		self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+
+		zipper = iters.zipwith(_ + _)
+		self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+
+		zipper = F() << list << iters.zipwith(_ + _)
+		self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
+
