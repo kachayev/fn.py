@@ -14,6 +14,7 @@ import operator
 import itertools
 
 class OperatorTestCase(unittest.TestCase):
+	
     def test_currying(self):
     	def add(first):
     		def add(second):
@@ -23,6 +24,10 @@ class OperatorTestCase(unittest.TestCase):
     	self.assertEqual(1, op.curry(add, 0, 1))
 
 class UnderscoreTestCase(unittest.TestCase):
+
+	def test_identity_default(self):
+		self.assertEqual(10, _(10))
+
 	def test_arithmetic(self):
 		# operator +
 		self.assertEqual(7, (_ + 2)(5))

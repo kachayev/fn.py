@@ -12,3 +12,7 @@ class F(object):
 
 	def  __call__(self, *args, **kwargs):
 		return self.f(*args, **kwargs)
+
+	@classmethod
+	def flip(cls, f, arg2):
+		return cls(lambda arg1: f(arg1, arg2))

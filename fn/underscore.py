@@ -1,16 +1,14 @@
 import operator
-from .op import identity, curry
+from .op import identity, curry, apply
+from .func import F
 
 def fmap(f):
 	def applyier(self, other):
 		if isinstance(other, self.__class__):
-			# XXX this should be fmap
 			return self.__class__(lambda arg1: lambda arg2: f(self(arg1), other(arg2)))
-		# XXX this should be composition
-		return self.__class__(lambda arg: f(self(arg), other))
+		return self.__class__(F.flip(f, other) << F(self))
 	return applyier
 
-# XXX Deal with code duplication with composition and fabric method
 class _Callable(object):
 
 	def __init__(self, callback=None):
@@ -43,23 +41,17 @@ class _Callable(object):
 
 	__contains__ = fmap(operator.contains)
 	
-	def __nonzero__(self):
-		# XXX this should be composition
-		return self.__class__(lambda arg: bool(self(arg)))
-
 	def __getattr__(self, name):
-		return self.__class__(lambda arg: getattr(self(arg), name))
+		return self.__class__(F.flip(getattr, name) << F(self))
 
 	def call(self, name, *args):
 		"""Call method from _ object by given name and arguments"""
-		return self.__class__(lambda arg: getattr(self(arg), name)(*args))
+		return self.__class__(F(apply) << F.flip(getattr, name) << F(self))
 
 	def __getitem__(self, k):
 		if isinstance(k, self.__class__):
-			# XXX this should be fmap
 			return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg)[k])
+		return self.__class__(F.flip(operator.getitem, k) << F(self))
 
 	def __str__(self):
 		"""Build readable representation for function
