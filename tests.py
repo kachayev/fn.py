@@ -7,6 +7,9 @@ import unittest
 
 from fn import op
 from fn import _
+from fn import F 
+
+import operator
 
 class OperatorTestCase(unittest.TestCase):
     def test_currying(self):
@@ -96,3 +99,18 @@ class UnderscoreTestCase(unittest.TestCase):
 	def test_slicing_multiple(self):
 		self.assertEqual(0, (_[_])(range(10), 0))
 		self.assertEqual(8, (_[_ * (-1)])(range(10), 2))
+
+class CompositionTestCase(unittest.TestCase):
+
+	def test_composition(self):
+		def f(x): return x * 2
+		def g(x): return x + 10
+
+		self.assertEqual(30, (F(f) << g)(5))
+
+		def z(x): return x * 20
+		self.assertEqual(220, (F(f) << F(g) << F(z))(5))
+
+	def test_partial(self):
+		f = F.partial(operator.add, 10) << F.partial(operator.add, 5)
+		self.assertEqual(25, f(10))
