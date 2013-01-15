@@ -70,7 +70,7 @@ __TODO: Not implemented yet__
 __TODO: more interesting examples for functional composition__
 
     from fn import F, _
-    from fn.operator import apply, flip
+    from fn.op import apply, flip
     from operator import add, mul
 
     # F(add, 1) == F.partial(add, 1)
