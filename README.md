@@ -73,15 +73,11 @@ __TODO: more interesting examples for functional composition__
     from fn.op import apply, flip
     from operator import add, mul
 
-    # F(add, 1) == F.partial(add, 1)
-    mul_100_add_1 = F(add, 1) << F(mul, 100)
     # F << F means functions composition, so
     # (F(f) << F(g))(x) == f(g(x))
-    assert list(map(mul_100_add_1, [0,1,2])) == [1,101,201]
-
-    # Simplify syntax for composition:
-    # F << f1 << f2 << f3 << ..
-    assert list(map(F << (_ ** 2) << _ + 1, range(3))) == [2, 4, 6]
+    f = F(add, 1) << F(mul, 100)
+    assert list(map(f, [0, 1, 2])) == [1, 101, 201]
+    assert list(map(F() << (_ ** 2) << _ + 1, range(3))) == [2, 4, 6]
 
 	# Apply and flip operator useful for map, filter, fold operations    
 	assert apply(add, [1, 2]) == 3

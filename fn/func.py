@@ -4,12 +4,8 @@ from .op import identity
 
 class F(object):
 
-	def __init__(self, f = None):
-		self.f = f or identity
-
-	@classmethod
-	def partial(cls, f, *args, **kwargs):
-		return cls(partial(f, *args, **kwargs))
+	def __init__(self, f = identity, *args, **kwargs):
+		self.f = partial(f, *args, **kwargs) if any([args, kwargs]) else f
 
 	def __lshift__(self, g):
 		return self.__class__(lambda *args, **kwargs: self.f(g(*args, **kwargs)))

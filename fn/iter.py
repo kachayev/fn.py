@@ -9,9 +9,10 @@ from .func import F
 map = imap if version.startswith("2") else map
 zip = izip if version.startswith("2") else zip
 
+# zipwith = F(zip) >> partial(F, starmap)
 def zipwith(f): 
 	'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
-	return F.partial(starmap, f) << zip
+	return F(starmap, f) << zip
 
 def take(limit, base): 
     return islice(base, limit)

@@ -114,8 +114,10 @@ class CompositionTestCase(unittest.TestCase):
 		self.assertEqual(220, (F(f) << F(g) << F(z))(5))
 
 	def test_partial(self):
-		f = F.partial(operator.add, 10) << F.partial(operator.add, 5)
+		# Partial should work if we pass additional arguments to F constructor
+		f = F(operator.add, 10) << F(operator.add, 5)
 		self.assertEqual(25, f(10))
+
 
 class IteratorsTestCase(unittest.TestCase):
 
