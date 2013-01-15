@@ -1,10 +1,16 @@
-from itertools import islice, chain, izip, imap
 from sys import version
+from functools import partial
+from itertools import islice, chain, izip, imap, starmap
 
 # Syntax sugar to deal with Python 2/Python 3 
 # differences: this one will return generator
 # even in Python 2.*
 map = imap if version.startswith("2") else map
+zip = izip if version.startswith("2") else zip
+
+def zipwith(f): 
+	'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
+	return partial(starmap, f)
 
 def take(limit, base): 
     return islice(base, limit)
