@@ -1,4 +1,14 @@
-from .operator import identity, curry
+import operator
+from .op import identity, curry
+
+def fmap(f):
+	def applyier(self, other):
+		if isinstance(other, self.__class__):
+			# XXX this should be fmap
+			return self.__class__(lambda arg1: lambda arg2: f(self(arg1), other(arg2)))
+		# XXX this should be composition
+		return self.__class__(lambda arg: f(self(arg), other))
+	return applyier
 
 # XXX Deal with code duplication with composition and fabric method
 class _Callable(object):
@@ -6,64 +16,36 @@ class _Callable(object):
 	def __init__(self, callback=None):
 		self._callback = callback or identity
 
-	def __add__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) + other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) + other)
+	__add__ = fmap(operator.add)
+	__mul__ = fmap(operator.mul)
+	__sub__ = fmap(operator.sub)
+	__mod__ = fmap(operator.mod)
+	__pow__ = fmap(operator.pow)
 
-	def __mul__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) * other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) * other)
+	__and__ = fmap(operator.and_)
+	__or__ = fmap(operator.or_)
+	__xor__ = fmap(operator.xor)
 
-	def __lt__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) < other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) < other)
+	__div__ = fmap(operator.div)
+	__divmod__ = fmap(divmod)
+	__floordiv__ = fmap(operator.floordiv)
+	__truediv__ = fmap(operator.truediv)
 
-	def __le__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) <= other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) <= other)
+	__lshift__ = fmap(operator.lshift)
+	__rshift__ = fmap(operator.rshift)
 
-	def __gt__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) > other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) > other)
+	__lt__ = fmap(operator.lt)
+	__le__ = fmap(operator.le)
+	__gt__ = fmap(operator.gt)
+	__ge__ = fmap(operator.ge)
+	__eq__ = fmap(operator.eq)
+	__ne__ = fmap(operator.ne)
 
-	def __ge__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) >= other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) >= other)
+	__contains__ = fmap(operator.contains)
 	
-	def __eq__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) == other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) == other)
-
-	def __ne__(self, other):
-		if isinstance(other, self.__class__):
-			# XXX this should be fmap
-			return self.__class__(lambda arg1: lambda arg2: self(arg1) != other(arg2))
-		# XXX this should be composition
-		return self.__class__(lambda arg: self(arg) != other)
-
 	def __nonzero__(self):
-		raise NotImplementedError
+		# XXX this should be composition
+		return self.__class__(lambda arg: bool(self(arg)))
 
 	def __getattr__(self, name):
 		return self.__class__(lambda arg: getattr(self(arg), name))
@@ -79,9 +61,6 @@ class _Callable(object):
 		# XXX this should be composition
 		return self.__class__(lambda arg: self(arg)[k])
 
-	def __contains__(self, elt):
-		raise NotImplementedError
-
 	def __str__(self):
 		"""Build readable representation for function
 
@@ -92,5 +71,41 @@ class _Callable(object):
 
 	def __call__(self, *args):
 		return curry(self._callback, *args)
+
+	def __neg__(self):
+		raise NotImplementedError
+	def __pos__(self):
+		raise NotImplementedError
+	def __invert__(self):
+		raise NotImplementedError
+
+	def __radd__(self, other):
+		raise NotImplementedError
+	def __rsub__(self, other):
+		raise NotImplementedError
+	def __rmul__(self, other):
+		raise NotImplementedError
+	def __rdiv__(self, other):
+		raise NotImplementedError
+	def __rtruediv__(self, other):
+		raise NotImplementedError
+	def __rfloordiv__(self, other):
+		raise NotImplementedError
+	def __rmod__(self, other):
+		raise NotImplementedError
+	def __rdivmod__(self, other):
+		raise NotImplementedError
+	def __rpow__(self, other):
+		raise NotImplementedError
+	def __rlshift__(self, other):
+		raise NotImplementedError
+	def __rrshift__(self, other):
+		raise NotImplementedError
+	def __rand__(self, other):
+		raise NotImplementedError
+	def __rxor__(self, other):
+		raise NotImplementedError
+	def __ror__(self, other):
+		raise NotImplementedError
 
 shortcut = _Callable()

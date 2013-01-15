@@ -5,7 +5,7 @@
 
 import unittest
 
-from fn import operator as op
+from fn import op
 from fn import _
 
 class OperatorTestCase(unittest.TestCase):
@@ -18,15 +18,28 @@ class OperatorTestCase(unittest.TestCase):
     	self.assertEqual(1, op.curry(add, 0, 1))
 
 class UnderscoreTestCase(unittest.TestCase):
-	def test_add_single(self):
+	def test_arithmetic(self):
+		# operator +
 		self.assertEqual(7, (_ + 2)(5))
-		self.assertEqual([10,11,12], list(map(_ + 10, range(3))))
-		self.assertEqual(10, (_ + _)(5, 5))
-
-	def test_mul(self):
+		self.assertEqual([10,11,12], list(map(_ + 10, [0,1,2])))
+		# operator -
+		self.assertEqual(3, (_ - 2)(5))
+		self.assertEqual(13, (_ - 2 + 10)(5))
+		self.assertEqual([0,1,2], list(map(_ - 10, [10,11,12])))
+		# operator * 
 		self.assertEqual(10, (_ * 2)(5))
 		self.assertEqual(50, (_ * 2 + 40)(5))
+		self.assertEqual([0,10,20], list(map(_ * 10, [0,1,2])))
+		# operator /
+		self.assertEqual(5, (_ / 2)(10))
+		self.assertEqual(6, (_ / 2 + 1)(10))
+		self.assertEqual([1,2,3], list(map(_ / 10, [10,20,30])))
+
+	def test_arithmetic_multiple(self):
+		self.assertEqual(10, (_ + _)(5, 5))
+		self.assertEqual(0, (_ - _)(5, 5))
 		self.assertEqual(25, (_ * _)(5, 5))
+		self.assertEqual(1, (_ / _)(5, 5))
 
 	def test_getattr(self):
 		class GetattrTest(object):
@@ -41,7 +54,7 @@ class UnderscoreTestCase(unittest.TestCase):
 		self.assertEqual(["test", "case"], (_.call("split"))("test case"))
 		self.assertEqual("str", _.__name__(str))
 
-	def test_comparator_single(self):
+	def test_comparator(self):
 		self.assertTrue((_ < 7)(1))
 		self.assertFalse((_ < 7)(10))
 		self.assertTrue((_ > 20)(25))
