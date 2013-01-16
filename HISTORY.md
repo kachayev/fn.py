@@ -6,6 +6,7 @@
 * Test cases for all implemented modules/functions
 * Update in Readme file with several fixes
 * Get rid of F.flip classmethod in pref. for simple building blocks
+* Optimized version for fn.op.flip operator
 
 ## 14.01.2012
 

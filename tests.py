@@ -28,6 +28,9 @@ class OperatorTestCase(unittest.TestCase):
 
     def test_flip(self):
         self.assertEqual(10, op.flip(operator.sub)(2, 12))
+        self.assertEqual(-10, op.flip(op.flip(operator.sub))(2, 12))
+        # flipping of flipped function should use optimization
+        self.assertTrue(operator.sub is op.flip(op.flip(operator.sub)))
 
 class UnderscoreTestCase(unittest.TestCase):
 
