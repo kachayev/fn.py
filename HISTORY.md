@@ -1,5 +1,11 @@
 # History
 
+## 16.01.2012 
+
+* Finished underscore module functionality
+* Test cases for all implemented modules/functions
+* Update in Readme file with several fixes
+
 ## 14.01.2012
 
 * Simplest `Stream` implementation

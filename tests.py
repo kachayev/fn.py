@@ -23,6 +23,12 @@ class OperatorTestCase(unittest.TestCase):
 
         self.assertEqual(1, op.curry(add, 0, 1))
 
+    def test_apply(self):
+        self.assertEqual(10, op.apply(operator.add, [2,8]))
+
+    def test_flip(self):
+        self.assertEqual(10, op.flip(operator.sub)(2, 12))
+
 class UnderscoreTestCase(unittest.TestCase):
 
     def test_identity_default(self):
@@ -197,6 +203,9 @@ class CompositionTestCase(unittest.TestCase):
         # Partial should work if we pass additional arguments to F constructor
         f = F(operator.add, 10) << F(operator.add, 5)
         self.assertEqual(25, f(10))
+
+    def test_underscore(self):
+        self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))    
 
 
 class IteratorsTestCase(unittest.TestCase):

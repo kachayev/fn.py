@@ -63,20 +63,28 @@ Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence 
 
 ## High-level operations with functions
 
-__TODO: more interesting examples for functional composition__
+`fn.F` is a useful function wrapper to provide easy-to-use partial application and functions composition.
 
     from fn import F, _
+    from operator import add, mul
+
+    # F(f, *args) means partial application 
+    # same as functools.partial but returns fn.F instance
+    assert F(add, 1)(10) == 11
+
+    # F << F means functions composition,
+    # so (F(f) << g)(x) == f(g(x))
+    f = F(add, 1) << F(mul, 100)
+    assert list(map(f, [0, 1, 2])) == [1, 101, 201]
+    assert list(map(F() << str << (_ ** 2) << (_ + 1), range(3))) == ["1", "4", "9"]
+
+You can find more examples for compositions usage in `fn._` implementation [source code](https://github.com/kachayev/fn.py/blob/master/fn/underscore.py).
+
+`fn.op.apply` executes given function with given positional arguments in list (or any other iterable). `fn.op.flip` returns you function that will reverse arguments order before apply.
+
     from fn.op import apply, flip
     from operator import add, sub
 
-    # F << F means functions composition, so
-    # (F(f) << F(g))(x) == f(g(x))
-    f = F(add, 1) << F(mul, 100)
-    assert list(map(f, [0, 1, 2])) == [1, 101, 201]
-    assert list(map(F() << (_ ** 2) << _ + 1, range(3))) == [1, 4, 9]
-
-    # Apply execute given function with given positional arguments in list
-    # Flip return you function that will reverse arguments order before apply
     assert apply(add, [1, 2]) == 3
     assert flip(sub)(20,10) == -10
     assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
@@ -126,10 +134,8 @@ You can also build library from source
 
 Rough plan: 
 
-* Scala-style lambda implementation
-* Unit tests for `Stream` and `underscore` module, tests infrastructure
-* Itertools, operators
-* Functions composition and good example for its usage
+* Unit tests for `Stream`
+* Itertools receipts implementation and tests
 * Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
 * Trampolines decorator
 * C-accelerator for most modules
