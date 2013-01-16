@@ -13,8 +13,6 @@ More about functional approach from my Pycon UA 2012 talks: [Functional Programm
 
 ## Scala-style lambdas definition
 
-__TODO: Partially implemented, need TBD__
-
     from fn import _
     from fn.iter import zipwith
     from itertools import repeat
@@ -79,10 +77,10 @@ __TODO: more interesting examples for functional composition__
     assert list(map(f, [0, 1, 2])) == [1, 101, 201]
     assert list(map(F() << (_ ** 2) << _ + 1, range(3))) == [2, 4, 6]
 
-	# Apply and flip operator useful for map, filter, fold operations    
-	assert apply(add, [1, 2]) == 3
-	assert flip([10, 20], mul) == 200
-	assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
+    # Apply and flip operator useful for map, filter, fold operations    
+    assert apply(add, [1, 2]) == 3
+    assert flip([10, 20], mul) == 200
+    assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
 ## Itertools receipts
 
