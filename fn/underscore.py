@@ -1,5 +1,5 @@
 import operator
-from .op import identity, curry, apply
+from .op import identity, curry, apply, flip
 from .func import F
 
 def fmap(f):    
@@ -13,10 +13,33 @@ def fmap(f):
 
 class _Callable(object):
     
-    __slots__ = ('_callback', )
+    __slots__ = '_callback',
 
-    def __init__(self, callback=None):
-        self._callback = callback or identity
+    def __init__(self, callback=identity):
+        self._callback = callback
+
+    def call(self, name, *args):
+        """Call method from _ object by given name and arguments"""
+        return self.__class__(F(apply) << F.flip(getattr, name) << F(self))
+
+    def __getattr__(self, name):
+        return self.__class__(F.flip(getattr, name) << F(self))
+
+    def __getitem__(self, k):
+        if isinstance(k, self.__class__):
+            return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
+        return self.__class__(F.flip(operator.getitem, k) << F(self))
+
+    def __str__(self):
+        """Build readable representation for function
+
+        (_ < 7): (x1) => (x1 < 7)
+        (_ + _*10): (x1, x2) => (x1 + x2*10)
+        """
+        raise NotImplementedError
+
+    def __call__(self, *args):
+        return curry(self._callback, *args)
 
     __add__ = fmap(operator.add)
     __mul__ = fmap(operator.mul)
@@ -47,56 +70,21 @@ class _Callable(object):
     __pos__ = fmap(operator.pos)
     __invert__ = fmap(operator.invert)
 
-    def __getattr__(self, name):
-        return self.__class__(F.flip(getattr, name) << F(self))
+    __radd__ = fmap(flip(operator.add))
+    __rmul__ = fmap(flip(operator.mul))
+    __rsub__ = fmap(flip(operator.sub))
+    __rmod__ = fmap(flip(operator.mod))
+    __rpow__ = fmap(flip(operator.pow))
+    __rdiv__ = fmap(flip(operator.div))
+    __rdivmod__ = fmap(flip(divmod))
+    __rtruediv__ = fmap(flip(operator.truediv))
+    __rfloordiv__ = fmap(flip(operator.floordiv))
 
-    def call(self, name, *args):
-        """Call method from _ object by given name and arguments"""
-        return self.__class__(F(apply) << F.flip(getattr, name) << F(self))
+    __rlshift__ = fmap(flip(operator.lshift))
+    __rrshift__ = fmap(flip(operator.rshift))
 
-    def __getitem__(self, k):
-        if isinstance(k, self.__class__):
-            return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
-        return self.__class__(F.flip(operator.getitem, k) << F(self))
-
-    def __str__(self):
-        """Build readable representation for function
-
-        (_ < 7): (x1) => (x1 < 7)
-        (_ + _*10): (x1, x2) => (x1 + x2*10)
-        """
-        raise NotImplementedError
-
-    def __call__(self, *args):
-        return curry(self._callback, *args)
-
-    def __radd__(self, other):
-        raise NotImplementedError
-    def __rsub__(self, other):
-        raise NotImplementedError
-    def __rmul__(self, other):
-        raise NotImplementedError
-    def __rdiv__(self, other):
-        raise NotImplementedError
-    def __rtruediv__(self, other):
-        raise NotImplementedError
-    def __rfloordiv__(self, other):
-        raise NotImplementedError
-    def __rmod__(self, other):
-        raise NotImplementedError
-    def __rdivmod__(self, other):
-        raise NotImplementedError
-    def __rpow__(self, other):
-        raise NotImplementedError
-    def __rlshift__(self, other):
-        raise NotImplementedError
-    def __rrshift__(self, other):
-        raise NotImplementedError
-    def __rand__(self, other):
-        raise NotImplementedError
-    def __rxor__(self, other):
-        raise NotImplementedError
-    def __ror__(self, other):
-        raise NotImplementedError
+    __rand__ = fmap(flip(operator.and_))
+    __ror__ = fmap(flip(operator.or_))
+    __rxor__ = fmap(flip(operator.xor))
 
 shortcut = _Callable()

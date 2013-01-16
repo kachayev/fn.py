@@ -67,6 +67,31 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(25, (_ * _)(5, 5))
         self.assertEqual(1, (_ / _)(5, 5))
 
+    def test_arithmetic_swap(self):
+        # operator +
+        self.assertEqual(7, (2 + _)(5))
+        self.assertEqual([10,11,12], list(map(10 + _, [0,1,2])))
+        # operator -
+        self.assertEqual(3, (8 - _)(5))
+        self.assertEqual(13, (8 - _ + 10)(5))
+        self.assertEqual([10,9,8], list(map(10 - _, [0,1,2])))
+        # operator * 
+        self.assertEqual(10, (2 * _)(5))
+        self.assertEqual(50, (2 * _ + 40)(5))
+        self.assertEqual([0,10,20], list(map(10 * _, [0,1,2])))
+        # operator /
+        self.assertEqual(5, (10 / _)(2))
+        self.assertEqual(6, (10 / _ + 1)(2))
+        self.assertEqual([10,5,2], list(map(100 / _, [10,20,50])))
+        # operator **
+        self.assertEqual(100, (10**_)(2))
+        # operator %
+        self.assertEqual(1, (11 % _)(2))
+        # operator << 
+        self.assertEqual(32, (8 << _)(2))
+        # operator >> 
+        self.assertEqual(2, (8 >> _)(2))
+
     def test_bitwise(self):
         # and
         self.assertTrue( (_ & 1)(1))
@@ -83,6 +108,23 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertTrue( (_ ^ 0)(1))
         self.assertFalse((_ ^ 1)(1))
         self.assertFalse((_ ^ 0)(0))
+
+    def test_bitwise_swap(self):
+        # and
+        self.assertTrue( (1 & _)(1))
+        self.assertFalse((1 & _)(0))
+        self.assertFalse((0 & _)(1))
+        self.assertFalse((0 & _)(0))
+        # or 
+        self.assertTrue( (1 | _)(1))
+        self.assertTrue( (1 | _)(0))
+        self.assertTrue( (0 | _)(1))
+        self.assertFalse((0 | _)(0))
+        # xor
+        self.assertTrue( (1 ^ _)(0))
+        self.assertTrue( (0 ^ _)(1))
+        self.assertFalse((1 ^ _)(1))
+        self.assertFalse((0 ^ _)(0))
 
     def test_getattr(self):
         class GetattrTest(object):
