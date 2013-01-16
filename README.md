@@ -1,6 +1,6 @@
 # Fn.py: enjoy FP in Python
 
-Despite the fact the Python is not pure-functional programming language, it's multi-paradigm PL and it gives you enough freedom to take credits from functional programming approach. There are theoretical and practical advantages to the functional style:
+Despite the fact that Python is not pure-functional programming language, it's multi-paradigm PL and it gives you enough freedom to take credits from functional programming approach. There are theoretical and practical advantages to the functional style:
 
 * Formal provability
 * Modularity
@@ -139,6 +139,12 @@ Rough plan:
 * Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
 * Trampolines decorator
 * C-accelerator for most modules
+
+Ideas to think about:
+
+* "Pipeline" notation for composition (back-order): `F() >> list >> partial(map, int)`
+* Curried function builder to simplify `lambda arg1: lambda arg2: ...`
+* Scala-style for-yield loop to simplify long map/filter blocks
 
 ## Contribute
 
