@@ -3,13 +3,17 @@ from .op import identity, curry, apply
 from .func import F
 
 def fmap(f):
-	def applyier(self, other):
+	def applyier(self, other=None):
+		if other is None:
+			return self.__class__(F(self) << f)
 		if isinstance(other, self.__class__):
 			return self.__class__(lambda arg1: lambda arg2: f(self(arg1), other(arg2)))
 		return self.__class__(F.flip(f, other) << F(self))
 	return applyier
 
 class _Callable(object):
+
+	__slots__ = ('_callback', )
 
 	def __init__(self, callback=None):
 		self._callback = callback or identity
@@ -39,8 +43,10 @@ class _Callable(object):
 	__eq__ = fmap(operator.eq)
 	__ne__ = fmap(operator.ne)
 
-	__contains__ = fmap(operator.contains)
-	
+	__neg__ = fmap(operator.neg)
+	__pos__ = fmap(operator.pos)
+	__invert__ = fmap(operator.invert)
+
 	def __getattr__(self, name):
 		return self.__class__(F.flip(getattr, name) << F(self))
 
@@ -63,13 +69,6 @@ class _Callable(object):
 
 	def __call__(self, *args):
 		return curry(self._callback, *args)
-
-	def __neg__(self):
-		raise NotImplementedError
-	def __pos__(self):
-		raise NotImplementedError
-	def __invert__(self):
-		raise NotImplementedError
 
 	def __radd__(self, other):
 		raise NotImplementedError

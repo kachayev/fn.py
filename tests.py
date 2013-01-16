@@ -14,7 +14,7 @@ import operator
 import itertools
 
 class OperatorTestCase(unittest.TestCase):
-	
+
     def test_currying(self):
     	def add(first):
     		def add(second):
@@ -44,12 +44,45 @@ class UnderscoreTestCase(unittest.TestCase):
 		self.assertEqual(5, (_ / 2)(10))
 		self.assertEqual(6, (_ / 2 + 1)(10))
 		self.assertEqual([1,2,3], list(map(_ / 10, [10,20,30])))
+		# operator **
+		self.assertEqual(100, (_ ** 2)(10))
+		# operator %
+		self.assertEqual(1, (_ % 2)(11))
+		# operator << 
+		self.assertEqual(32, (_ << 2)(8))
+		# operator >> 
+		self.assertEqual(2, (_ >> 2)(8))
+		# operator (-a)
+		self.assertEqual(10,  (-_)(-10))
+		self.assertEqual(-10, (-_)(10))
+		# operator (+a)
+		self.assertEqual(10,  (+_)(10))
+		self.assertEqual(-10, (+_)(-10))
+		# operator (~a)
+		self.assertEqual(-11, (~_)(10))
 
 	def test_arithmetic_multiple(self):
 		self.assertEqual(10, (_ + _)(5, 5))
 		self.assertEqual(0, (_ - _)(5, 5))
 		self.assertEqual(25, (_ * _)(5, 5))
 		self.assertEqual(1, (_ / _)(5, 5))
+
+	def test_bitwise(self):
+		# and
+		self.assertTrue( (_ & 1)(1))
+		self.assertFalse((_ & 1)(0))
+		self.assertFalse((_ & 0)(1))
+		self.assertFalse((_ & 0)(0))
+		# or 
+		self.assertTrue( (_ | 1)(1))
+		self.assertTrue( (_ | 1)(0))
+		self.assertTrue( (_ | 0)(1))
+		self.assertFalse((_ | 0)(0))
+		# xor
+		self.assertTrue( (_ ^ 1)(0))
+		self.assertTrue( (_ ^ 0)(1))
+		self.assertFalse((_ ^ 1)(1))
+		self.assertFalse((_ ^ 0)(0))
 
 	def test_getattr(self):
 		class GetattrTest(object):
@@ -95,7 +128,7 @@ class UnderscoreTestCase(unittest.TestCase):
 	def test_comparator_filter(self):
 		self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
 
-	def test_slicing_single(self):
+	def test_slicing(self):
 		self.assertEqual(0, 	  (_[0])(range(10)))
 		self.assertEqual(9, 	  (_[-1])(range(10)))
 		self.assertEqual([3,4,5], (_[3:])(range(6)))
