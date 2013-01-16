@@ -15,23 +15,19 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 short = 'Implementation of missing features to enjoy functional programming in Python'
-descr = open('README.md').read() + '\n\n' + open('HISTORY.md').read()
-license = open('LICENSE').read()
-
 setup(
     name = 'fn',
     version = fn.__version__,
     description = short,
-    long_description = descr,
+    long_description = open('README.md').read() + '\n\n' + open('HISTORY.md').read(),
     author='Alexey Kachayev',
     author_email='kachayev@gmail.com',
     url='https://github.com/kachayev/fn.py',
     packages=['fn'],
-    package_data={'': ['LICENSE']},
-    package_dir={'fn': 'fn'},
+    package_data={'': ['LICENSE', 'README.md', 'HISTORY.md']},
     include_package_data=True,
     install_requires=[],
-    license=license,
+    license=open('LICENSE').read(),
     zip_safe=False,
     classifiers=(
         'Development Status :: 2 - Pre-Alpha',
