@@ -8,7 +8,7 @@ def fmap(f):
             return self.__class__(F(self) << f)
         if isinstance(other, self.__class__):
             return self.__class__(lambda arg1: lambda arg2: f(self(arg1), other(arg2)))
-        return self.__class__(F.flip(f, other) << F(self))
+        return self.__class__(F(flip(f), other) << F(self))
     return applyier
 
 class _Callable(object):
@@ -20,15 +20,15 @@ class _Callable(object):
 
     def call(self, name, *args):
         """Call method from _ object by given name and arguments"""
-        return self.__class__(F(apply) << F.flip(getattr, name) << F(self))
+        return self.__class__(F(apply) << F(flip(getattr), name) << F(self))
 
     def __getattr__(self, name):
-        return self.__class__(F.flip(getattr, name) << F(self))
+        return self.__class__(F(flip(getattr), name) << F(self))
 
     def __getitem__(self, k):
         if isinstance(k, self.__class__):
             return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
-        return self.__class__(F.flip(operator.getitem, k) << F(self))
+        return self.__class__(F(flip(operator.getitem), k) << F(self))
 
     def __str__(self):
         """Build readable representation for function

@@ -5,6 +5,7 @@
 * Finished underscore module functionality
 * Test cases for all implemented modules/functions
 * Update in Readme file with several fixes
+* Get rid of F.flip classmethod in pref. for simple building blocks
 
 ## 14.01.2012
 
