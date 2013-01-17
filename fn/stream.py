@@ -1,4 +1,4 @@
-from sys import maxint
+from sys import maxint, version
 from itertools import chain
 
 class Stream(object):
@@ -21,6 +21,9 @@ class Stream(object):
                 return self._stream._collection[self._position]
 
             raise StopIteration()
+
+        if version.startswith("2"):
+            next = __next__
 
     def __init__(self):
         self._collection = []

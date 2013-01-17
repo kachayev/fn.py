@@ -1,14 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """Tests for Fn.py library"""
 
 import unittest
 
-from fn import op
-from fn import _
-from fn import F 
-from fn import iter as iters 
+from fn import op, _, F, Stream, iters 
 
 import operator
 import itertools
@@ -222,4 +218,37 @@ class IteratorsTestCase(unittest.TestCase):
 
         zipper = F() << list << iters.zipwith(_ + _)
         self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
+
+
+class StreamTestCase(unittest.TestCase):
+
+    def test_from_list(self):
+        s = Stream() << [1,2,3,4,5]
+        self.assertEqual([1,2,3,4,5], list(s))
+        self.assertEqual(2, s[1])
+        self.assertEqual([1,2], s[0:2])
+
+    def test_from_iterator(self):
+        s = Stream() << range(6) << [6,7]
+        self.assertEqual([0,1,2,3,4,5,6,7], list(s))
+
+    def test_from_generator(self):
+        def gen():
+            yield 1
+            yield 2
+            yield 3
+        
+        s = Stream() << gen << (4,5)
+        assert list(s) == [1,2,3,4,5]
+
+    def test_fib_infinite_stream(self):
+        from operator import add 
+
+        f = Stream()
+        fib = f << [0, 1] << iters.map(add, f, iters.drop(1, f))
+
+        self.assertEqual([0,1,1,2,3,5,8,13,21,34], list(iters.take(10, fib)))
+        self.assertEqual(6765, fib[20])
+        self.assertEqual([832040,1346269,2178309,3524578,5702887], fib[30:35])
+
 

@@ -1,5 +1,10 @@
 # History
 
+## 17.01.2012
+
+* Unit tests coverage for `fn.stream.Stream`
+* `_StreamIterator` works fine both in Python 2/3
+
 ## 16.01.2012 
 
 * Finished underscore module functionality
