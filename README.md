@@ -14,7 +14,7 @@ More about functional approach from my Pycon UA 2012 talks: [Functional Programm
 ## Scala-style lambdas definition
 
     from fn import _
-    from fn.iter import zipwith
+    from fn.iters import zipwith
     from itertools import repeat
 
     assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
@@ -50,7 +50,7 @@ Simplest cases:
 Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci sequence can be calculated as:
 
     from fn import Stream
-    from fn.iter import take, drop, map
+    from fn.iters import take, drop, map
     from operator import add
 
     f = Stream()
@@ -134,7 +134,6 @@ You can also build library from source
 
 Rough plan: 
 
-* Unit tests for `Stream`
 * Itertools receipts implementation and tests
 * Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
 * Trampolines decorator
