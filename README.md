@@ -150,11 +150,11 @@ You can also build library from source
 
 ## Work in progress (!)
 
-Rough plan: 
+"Roadmap": 
 
-* Add to `fn.iters` module `foldl`, `foldr`, `findelem`, `findindex`
 * Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
 * Trampolines decorator
+* Add to `fn.iters` module `foldl`, `foldr`, `findelem`, `findindex`
 * C-accelerator for most modules
 
 Ideas to think about:
