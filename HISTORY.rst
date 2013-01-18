@@ -5,6 +5,7 @@ History
 ----------
 
 -  Added 22 itertools recipes to ``fn.iters``
+-  Documentation is converted to RST
 
 17.01.2012
 ----------

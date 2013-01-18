@@ -21,7 +21,7 @@ Python <http://ua.pycon.org/static/talks/kachayev/#/>`_.
 Scala-style lambdas definition
 ------------------------------
 
-::
+.. code-block:: python
 
     from fn import _
     from fn.iters import zipwith
@@ -45,7 +45,7 @@ new elements when it's necessary.
 
 Simplest cases:
 
-::
+.. code-block:: python
 
     from fn import Stream
 
@@ -68,7 +68,7 @@ Simplest cases:
 Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci
 sequence can be calculated as:
 
-::
+.. code-block:: python
 
     from fn import Stream
     from fn.iters import take, drop, map
@@ -87,7 +87,7 @@ High-level operations with functions
 ``fn.F`` is a useful function wrapper to provide easy-to-use partial
 application and functions composition.
 
-::
+.. code-block:: python
 
     from fn import F, _
     from operator import add, mul
@@ -104,13 +104,13 @@ application and functions composition.
 
 You can find more examples for compositions usage in ``fn._``
 implementation `source
-code <https://github.com/kachayev/fn.py/blob/master/fn/underscore.py>`_.
+code <https://github.com/kachayev/fn.py/blob/master/fn/underscore.py>`__.
 
 ``fn.op.apply`` executes given function with given positional arguments
 in list (or any other iterable). ``fn.op.flip`` returns you function
 that will reverse arguments order before apply.
 
-::
+.. code-block:: python
 
     from fn.op import apply, flip
     from operator import add, sub
@@ -158,7 +158,7 @@ review status just now.
 
 More information about use cases you can find in docstrings for each
 function in `source
-code <https://github.com/kachayev/fn.py/blob/master/fn/iters.py>`_ and
+code <https://github.com/kachayev/fn.py/blob/master/fn/iters.py>`__ and
 in `test
 cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
 
@@ -182,19 +182,19 @@ Installation
 
 To install ``fn.py``, simply:
 
-::
+.. code-block:: console
 
     $ pip install fn
 
 Or, if you absolutely must:
 
-::
+.. code-block:: console
 
     $ easy_install fn
 
 You can also build library from source
 
-::
+.. code-block:: console
 
     $ git clone https://github.com/kachayev/fn.py.git
     $ cd fn.py
