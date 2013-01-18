@@ -1,5 +1,9 @@
 # History
 
+## 18.01.2012
+
+* Added 22 itertools recipes to `fn.iters`
+
 ## 17.01.2012
 
 * Unit tests coverage for `fn.stream.Stream`

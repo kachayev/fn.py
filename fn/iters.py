@@ -74,8 +74,8 @@ def nth(iterable, n, default=None):
     """
     return next(islice(iterable, n, None), default)
 
-# widely-spreaded shoutcust to get first item 
-# and all but first item from iterator
+# widely-spreaded shoutcuts to get first item 
+# and all but first item from iterator respectively
 head = partial(flip(nth), 0)
 tail = partial(drop, 1)
 
