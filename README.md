@@ -89,17 +89,35 @@ You can find more examples for compositions usage in `fn._` implementation [sour
     assert flip(sub)(20,10) == -10
     assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
-## Itertools receipts
+## Itertools recipes
 
-__TODO: Partially implemented, need TBD__
+`fn.iters` module consists from two parts. First one is "unification" of lazy functionality for few functions to work the same way in Python 2+/3+:
 
-* take, drop, takelast, droplast
-* first, rest
-* partition
-* splitat, splitby
-* flatten
-* foldl, foldr, zipwith
-* findelem, findindex
+* `map` (returns `itertools.imap` in Python 2+)
+* `filter` (returns `itertools.ifilter` in Python 2+)
+* `reduce` (returns `functools.reduce` in Python 3+)
+* `zip` (returns `itertools.izip` in Python 2+)
+* `range` (returns `xrange` in Python 2+)
+* `filterfalse` (returns `itertools.ifilterfalse` in Python 2+)
+* `zip_longest` (returns `itertools.izip_longest` in Python 2+)
+
+Second part of module is high-level recipes to work with iterators. Most of them taken from [Python docs](http://docs.python.org/2.7/library/itertools.html#itertools.product) and adopted to work both with Python 2+/3+. Such recipes as `drop`, `takelast`, `droplast`, `splitat`, `splitby` I have already submitted as [docs patch](http://bugs.python.org/issue16774) which is review status just now.
+
+* `take`, `drop`
+* `takelast`, `droplast`
+* `head`, `tail`
+* `consume`
+* `nth`
+* `padnone`, `ncycles`
+* `repeatfunc`
+* `grouper`, `powerset`, `pairwise`
+* `roundrobin`
+* `partition`, `splitat`, `splitby`
+* `flatten`
+* `zipwith`
+* `iter_except`
+
+More information about use cases you can find in docstrings for each function in [source code](https://github.com/kachayev/fn.py/blob/master/fn/iters.py) and in [test cases](https://github.com/kachayev/fn.py/blob/master/tests.py). 
 
 ## Functional style for error-handling
 
@@ -134,7 +152,7 @@ You can also build library from source
 
 Rough plan: 
 
-* Itertools receipts implementation and tests
+* Add to `fn.iters` module `foldl`, `foldr`, `findelem`, `findindex`
 * Error handling (`Maybe`, `Either` from Haskell, `Option` from Scala etc)
 * Trampolines decorator
 * C-accelerator for most modules

@@ -219,6 +219,148 @@ class IteratorsTestCase(unittest.TestCase):
         zipper = F() << list << iters.zipwith(_ + _)
         self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
 
+    def test_take(self):
+        self.assertEqual([0,1], list(iters.take(2, range(10))))
+        self.assertEqual([0,1], list(iters.take(10, range(2))))
+
+    def test_drop(self):
+        self.assertEqual([3,4], list(iters.drop(3, range(5))))
+        self.assertEqual([], list(iters.drop(10, range(2))))
+
+    def test_takelast(self):
+        self.assertEqual([8,9], list(iters.takelast(2, range(10))))
+        self.assertEqual([0,1], list(iters.takelast(10, range(2))))
+
+    def test_droplast(self):
+        self.assertEqual([0,1], list(iters.droplast(3, range(5))))
+        self.assertEqual([], list(iters.droplast(10, range(2))))
+
+    def test_consume(self):
+        # full consuming, without limitation
+        r = iters.range(10)
+        self.assertEqual(10, len(list(r)))
+        itr = iter(r)
+        iters.consume(itr)
+        self.assertEqual(0, len(list(itr)))
+
+    def test_consume_limited(self):
+        r = iters.range(10)
+        self.assertEqual(10, len(list(r)))
+        itr = iter(r)
+        iters.consume(itr, 5)
+        self.assertEqual(5, len(list(itr)))
+
+    def test_nth(self):
+        self.assertEqual(1, iters.nth(range(5), 1))
+        self.assertEqual(None, iters.nth(range(5), 10))
+        self.assertEqual("X", iters.nth(range(5), 10, "X"))
+
+    def test_head(self):
+        self.assertEqual(0, iters.head([0,1,2]))
+        self.assertEqual(None, iters.head([]))
+
+        def gen():
+            yield 1 
+            yield 2
+            yield 3 
+
+        self.assertEqual(1, iters.head(gen()))
+
+    def test_tail(self):
+        self.assertEqual([1,2], list(iters.tail([0,1,2])))
+        self.assertEqual([], list(iters.tail([])))
+
+        def gen():
+            yield 1 
+            yield 2
+            yield 3 
+
+        self.assertEqual([2,3], list(iters.tail(gen())))
+
+    def test_padnone(self):
+        it = iters.padnone([10,11])
+        self.assertEqual(10, next(it))
+        self.assertEqual(11, next(it))
+        self.assertEqual(None, next(it))
+        self.assertEqual(None, next(it))
+
+    def test_ncycles(self):
+        it = iters.ncycles([10,11], 2)
+        self.assertEqual(10, next(it))
+        self.assertEqual(11, next(it))
+        self.assertEqual(10, next(it))
+        self.assertEqual(11, next(it))
+        self.assertRaises(StopIteration, next, it)
+
+    def test_repeatfunc(self):
+        def f():
+            return "test"
+
+        # unlimited count
+        it = iters.repeatfunc(f)
+        self.assertEqual("test", next(it))
+        self.assertEqual("test", next(it))
+        self.assertEqual("test", next(it))
+
+        # limited
+        it = iters.repeatfunc(f, 2)
+        self.assertEqual("test", next(it))
+        self.assertEqual("test", next(it))
+        self.assertRaises(StopIteration, next, it)
+
+    def test_grouper(self):
+        # without fill value (default should be None)
+        a, b, c = iters.grouper(3, "ABCDEFG")
+        self.assertEqual(["A","B","C"], list(a))
+        self.assertEqual(["D","E","F"], list(b))
+        self.assertEqual(["G",None,None], list(c))
+
+        # with fill value
+        a, b, c = iters.grouper(3, "ABCDEFG", "x")
+        self.assertEqual(["A","B","C"], list(a))
+        self.assertEqual(["D","E","F"], list(b))
+        self.assertEqual(["G","x","x"], list(c))
+
+    def test_roundrobin(self):
+        r = iters.roundrobin('ABC', 'D', 'EF')
+        self.assertEqual(["A","D","E","B","F","C"], list(r))
+
+    def test_partition(self):
+        def is_odd(x):
+            return x % 2 == 1
+
+        before, after = iters.partition(is_odd, iters.range(5))
+        self.assertEqual([0,2,4], list(before))
+        self.assertEqual([1,3], list(after))
+
+    def test_splitat(self):
+        before, after = iters.splitat(2, iters.range(5))
+        self.assertEqual([0,1], list(before))
+        self.assertEqual([2,3,4], list(after))
+
+    def test_splitby(self):
+        def is_even(x):
+            return x % 2 == 0
+
+        before, after = iters.splitby(is_even, iters.range(5))
+        self.assertEqual([0], list(before))
+        self.assertEqual([1, 2,3,4], list(after))
+
+    def test_powerset(self):
+        ps = iters.powerset([1,2])
+        self.assertEqual([tuple(),(1,),(2,),(1,2)], list(ps))
+
+    def test_pairwise(self):
+        ps = iters.pairwise([1,2,3,4])
+        self.assertEqual([(1,2),(2,3),(3,4)], list(ps))
+
+    def test_iter_except(self):
+        d = ["a", "b", "c"]
+        it = iters.iter_except(d.pop, IndexError)
+        self.assertEqual(["c", "b", "a"], list(it))
+
+    def test_flatten(self):
+        self.assertEqual([1,2,3,4], list(iters.flatten([[1,2], [3,4]])))
 
 class StreamTestCase(unittest.TestCase):
 
