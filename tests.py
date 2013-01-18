@@ -361,6 +361,11 @@ class IteratorsTestCase(unittest.TestCase):
 
     def test_flatten(self):
         self.assertEqual([1,2,3,4], list(iters.flatten([[1,2], [3,4]])))
+        self.assertEqual([1,2,3,4,5,6], list(iters.flatten([[1,2], [3, [4,5,6]]])))
+        # flat list should return themself 
+        self.assertEqual([1,2,3], list(iters.flatten([1,2,3])))
+        # string is not a list
+        self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
 
 class StreamTestCase(unittest.TestCase):
 

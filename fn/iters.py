@@ -195,11 +195,16 @@ def iter_except(func, exception, first=None):
     except exception:
         pass
 
-# XXX reimplement to work recursive with all levels
-def flatten(listOfLists):
-    """Flatten one level of nesting
-    
+def flatten(lists):
+    """Flatten any level of nesting lists.
+    Reimplemented to work not with all nested levels (not only one).
+
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
-    return chain.from_iterable(listOfLists)
+    for l in lists:
+        if isinstance(l, list):
+            for t in flatten(l):
+                yield t
+        else:
+            yield l
 
