@@ -35,6 +35,8 @@ More examples of using ``_`` you can find in `test
 cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_
 declaration (attributes resolving, method calling, slicing).
 
+**Attention**! If you work in interactive python shell, your should remember that `_` means "latest output" and you'll get unpredictable results. In this case, you can do something like ``from fn import _ as __``.
+
 Streams and infinite sequences declaration
 ------------------------------------------
 
