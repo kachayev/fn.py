@@ -1,0 +1,272 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fn.py by kachayev</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Fn.py</h1>
+        <p>Functional programming in Python: implementation of missing features to enjoy FP</p>
+
+        <p class="view"><a href="https://github.com/kachayev/fn.py">View the Project on GitHub <small>kachayev/fn.py</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/kachayev/fn.py/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kachayev/fn.py/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kachayev/fn.py">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Fn.py: enjoy FP in Python</h1>
+
+<p>Despite the fact that Python is not pure-functional programming
+language, it's multi-paradigm PL and it gives you enough freedom to take
+credits from functional programming approach. There are theoretical and
+practical advantages to the functional style:</p>
+
+<ul>
+<li> Formal provability</li>
+<li> Modularity</li>
+<li> Composability</li>
+<li> Ease of debugging and testing</li>
+</ul><p><code>Fn.py</code> library provides you with missing "batteries" to get maximum
+from functional approach even in mostly-imperative program.</p>
+
+<p>More about functional approach from my Pycon UA 2012 talks: <a href="http://ua.pycon.org/static/talks/kachayev/">Functional
+Programming with
+Python</a>.</p>
+
+<h2>Scala-style lambdas definition</h2>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">fn.iters</span> <span class="kn">import</span> <span class="n">zipwith</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">_</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">]))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">9</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">zipwith</span><span class="p">(</span><span class="n">_</span> <span class="o">+</span> <span class="n">_</span><span class="p">)([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">10</span><span class="p">)))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]</span>
+</pre></div>
+
+<p>More examples of using <code>_</code> you can find in <a href="https://github.com/kachayev/fn.py/blob/master/tests.py">test
+cases</a>
+declaration (attributes resolving, method calling, slicing).</p>
+
+<p><strong>Attention!</strong> If you work in interactive python shell, your should remember that <code>_</code> means "latest output" and you'll get unpredictable results. In this case, you can do something like <code>from fn import _ as __</code>.</p>
+
+<h2>Streams and infinite sequences declaration</h2>
+
+<p>Lazy-evaluated scala-style streams. Basic idea: evaluate each new
+element "on demand" and share calculated elements between all created
+iterators. <code>Stream</code> object supports <code>&lt;&lt;</code> operator that means pushing
+new elements when it's necessary.</p>
+
+<p>Simplest cases:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">Stream</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="k">assert</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+    <span class="k">yield</span> <span class="mi">1</span>
+    <span class="k">yield</span> <span class="mi">2</span>
+    <span class="k">yield</span> <span class="mi">3</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">gen</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+<p>Lazy-evaluated stream is useful for infinite sequences, i.e. fibonacci
+sequence can be calculated as:</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">Stream</span>
+<span class="kn">from</span> <span class="nn">fn.iters</span> <span class="kn">import</span> <span class="n">take</span><span class="p">,</span> <span class="n">drop</span><span class="p">,</span> <span class="nb">map</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+<span class="n">fib</span> <span class="o">=</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="nb">map</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">drop</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">take</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">fib</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">34</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">fib</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">==</span> <span class="mi">6765</span>
+<span class="k">assert</span> <span class="n">fib</span><span class="p">[</span><span class="mi">30</span><span class="p">:</span><span class="mi">35</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">832040</span><span class="p">,</span><span class="mi">1346269</span><span class="p">,</span><span class="mi">2178309</span><span class="p">,</span><span class="mi">3524578</span><span class="p">,</span><span class="mi">5702887</span><span class="p">]</span>
+</pre></div>
+
+<h2>High-level operations with functions</h2>
+
+<p><code>fn.F</code> is a useful function wrapper to provide easy-to-use partial
+application and functions composition.</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">F</span><span class="p">,</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">mul</span>
+
+<span class="c"># F(f, *args) means partial application </span>
+<span class="c"># same as functools.partial but returns fn.F instance</span>
+<span class="k">assert</span> <span class="n">F</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="mi">1</span><span class="p">)(</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span>
+
+<span class="c"># F &lt;&lt; F means functions composition,</span>
+<span class="c"># so (F(f) &lt;&lt; g)(x) == f(g(x))</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">F</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">201</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">F</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="nb">str</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">_</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">_</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span> <span class="o">==</span> <span class="p">[</span><span class="s">"1"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">,</span> <span class="s">"9"</span><span class="p">]</span>
+</pre></div>
+
+<p>You can find more examples for compositions usage in <code>fn._</code>
+implementation <a href="https://github.com/kachayev/fn.py/blob/master/fn/underscore.py">source
+code</a>.</p>
+
+<p><code>fn.op.apply</code> executes given function with given positional arguments
+in list (or any other iterable). <code>fn.op.flip</code> returns you function
+that will reverse arguments order before apply.</p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn.op</span> <span class="kn">import</span> <span class="nb">apply</span><span class="p">,</span> <span class="n">flip</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">sub</span>
+
+<span class="k">assert</span> <span class="nb">apply</span><span class="p">(</span><span class="n">add</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="k">assert</span> <span class="n">flip</span><span class="p">(</span><span class="n">sub</span><span class="p">)(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">10</span>
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">apply</span><span class="p">,</span> <span class="p">[</span><span class="n">add</span><span class="p">,</span> <span class="n">mul</span><span class="p">],</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">)]))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+</pre></div>
+
+<h2>Itertools recipes</h2>
+
+<p><code>fn.iters</code> module consists from two parts. First one is "unification"
+of lazy functionality for few functions to work the same way in Python
+2+/3+:</p>
+
+<ul>
+<li> <code>map</code> (returns <code>itertools.imap</code> in Python 2+)</li>
+<li> <code>filter</code> (returns <code>itertools.ifilter</code> in Python 2+)</li>
+<li> <code>reduce</code> (returns <code>functools.reduce</code> in Python 3+)</li>
+<li> <code>zip</code> (returns <code>itertools.izip</code> in Python 2+)</li>
+<li> <code>range</code> (returns <code>xrange</code> in Python 2+)</li>
+<li> <code>filterfalse</code> (returns <code>itertools.ifilterfalse</code> in Python 2+)</li>
+<li> <code>zip_longest</code> (returns <code>itertools.izip_longest</code> in Python 2+)</li>
+</ul><p>Second part of module is high-level recipes to work with iterators. Most
+of them taken from <a href="http://docs.python.org/2.7/library/itertools.html#itertools.product">Python docs</a>
+and adopted to work both with Python 2+/3+. Such recipes as <code>drop</code>,
+<code>takelast</code>, <code>droplast</code>, <code>splitat</code>, <code>splitby</code> I have already
+submitted as <a href="http://bugs.python.org/issue16774">docs patch</a> which is
+review status just now.</p>
+
+<ul>
+<li> <code>take</code>, <code>drop</code>
+</li>
+<li> <code>takelast</code>, <code>droplast</code>
+</li>
+<li> <code>head</code>, <code>tail</code>
+</li>
+<li> <code>consume</code>
+</li>
+<li> <code>nth</code>
+</li>
+<li> <code>padnone</code>, <code>ncycles</code>
+</li>
+<li> <code>repeatfunc</code>
+</li>
+<li> <code>grouper</code>, <code>powerset</code>, <code>pairwise</code>
+</li>
+<li> <code>roundrobin</code>
+</li>
+<li> <code>partition</code>, <code>splitat</code>, <code>splitby</code>
+</li>
+<li> <code>flatten</code>
+</li>
+<li> <code>zipwith</code>
+</li>
+<li> <code>iter_except</code>
+</li>
+</ul><p>More information about use cases you can find in docstrings for each
+function in <a href="https://github.com/kachayev/fn.py/blob/master/fn/iters.py">source
+code</a> and
+in <a href="https://github.com/kachayev/fn.py/blob/master/tests.py">test
+cases</a>.</p>
+
+<h2>Functional style for error-handling</h2>
+
+<ul>
+<li> Maybe</li>
+<li> Either</li>
+</ul><p><strong>TODO: Implementation, code samples</strong></p>
+
+<h2>Trampolines decorator</h2>
+
+<p>Workaround for dealing with TCO without heavy stack utilization.</p>
+
+<p><strong>TODO: Implementation, code samples and documented theory.</strong></p>
+
+<h2>Installation</h2>
+
+<p>To install <code>fn.py</code>, simply:</p>
+
+<div class="highlight"><pre><span class="go">    $ pip install fn</span>
+</pre></div>
+
+<p>Or, if you absolutely must:</p>
+
+<div class="highlight"><pre><span class="go">    $ easy_install fn</span>
+</pre></div>
+
+<p>You can also build library from source</p>
+
+<div class="highlight"><pre><span class="go">    $ git clone https://github.com/kachayev/fn.py.git</span>
+<span class="go">    $ cd fn.py</span>
+<span class="go">    $ python setup.py install</span>
+</pre></div>
+
+<h2>Work in progress (!)</h2>
+
+<p>"Roadmap":</p>
+
+<ul>
+<li> Error handling (<code>Maybe</code>, <code>Either</code> from Haskell, <code>Option</code> from
+Scala etc)</li>
+<li> Trampolines decorator</li>
+<li> Add to <code>fn.iters</code> module <code>foldl</code>, <code>foldr</code>, <code>findelem</code>,
+<code>findindex</code>
+</li>
+<li> C-accelerator for most modules</li>
+</ul><p>Ideas to think about:</p>
+
+<ul>
+<li> "Pipeline" notation for composition (back-order):
+<code>F() &gt;&gt; list &gt;&gt; partial(map, int)</code>
+</li>
+<li> Curried function builder to simplify
+<code>lambda arg1: lambda arg2: ...</code>
+</li>
+<li> Scala-style for-yield loop to simplify long map/filter blocks</li>
+</ul><h2>Contribute</h2>
+
+<ol>
+<li>Check for open issues or open a fresh issue to start a discussion
+around a feature idea or a bug.</li>
+<li>Fork the repository on Github to start making your changes to the
+master branch (or branch off of it).</li>
+<li>Write a test which shows that the bug was fixed or that the feature
+works as expected.</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kachayev">kachayev</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
