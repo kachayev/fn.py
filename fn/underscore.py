@@ -1,6 +1,7 @@
 import operator
 from .op import identity, curry, apply, flip
 from .func import F
+from sys import version_info
 
 def fmap(f):    
     def applyier(self, other=None):
@@ -51,7 +52,12 @@ class _Callable(object):
     __or__ = fmap(operator.or_)
     __xor__ = fmap(operator.xor)
 
-    __div__ = fmap(operator.div)
+    if version_info.major == 2:
+        div = operator.div
+    else:
+        div = operator.truediv
+
+    __div__ = fmap(div)
     __divmod__ = fmap(divmod)
     __floordiv__ = fmap(operator.floordiv)
     __truediv__ = fmap(operator.truediv)
@@ -75,7 +81,7 @@ class _Callable(object):
     __rsub__ = fmap(flip(operator.sub))
     __rmod__ = fmap(flip(operator.mod))
     __rpow__ = fmap(flip(operator.pow))
-    __rdiv__ = fmap(flip(operator.div))
+    __rdiv__ = fmap(flip(div))
     __rdivmod__ = fmap(flip(divmod))
     __rtruediv__ = fmap(flip(operator.truediv))
     __rfloordiv__ = fmap(flip(operator.floordiv))
