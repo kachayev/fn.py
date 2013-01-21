@@ -50,7 +50,7 @@ Python</a>.</p>
 <h2>Scala-style lambdas definition</h2>
 
 <div class="highlight"><pre><span class="kn">from</span> <span class="nn">fn</span> <span class="kn">import</span> <span class="n">_</span>
-<span class="kn">from</span> <span class="nn">fn.iters</span> <span class="kn">import</span> <span class="n">zipwith</span>
+<span class="kn">from</span> <span class="nn">fn.op</span> <span class="kn">import</span> <span class="n">zipwith</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
 
 <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
@@ -62,7 +62,7 @@ Python</a>.</p>
 cases</a>
 declaration (attributes resolving, method calling, slicing).</p>
 
-<p><strong>Attention!</strong> If you work in interactive python shell, your should remember that <code>_</code> means "latest output" and you'll get unpredictable results. In this case, you can do something like <code>from fn import _ as __</code>.</p>
+<p><strong>Attention!</strong> If you work in interactive python shell, your should remember that <code>_</code> means "latest output" and you'll get unpredictable results. In this case, you can do something like <code>from fn import _ as X</code> (and then write functions like <code>X * 2</code>).</p>
 
 <h2>Streams and infinite sequences declaration</h2>
 
@@ -186,8 +186,6 @@ review status just now.</p>
 </li>
 <li> <code>flatten</code>
 </li>
-<li> <code>zipwith</code>
-</li>
 <li> <code>iter_except</code>
 </li>
 </ul><p>More information about use cases you can find in docstrings for each
@@ -233,9 +231,9 @@ cases</a>.</p>
 <p>"Roadmap":</p>
 
 <ul>
+<li> Trampolines decorator</li>
 <li> Error handling (<code>Maybe</code>, <code>Either</code> from Haskell, <code>Option</code> from
 Scala etc)</li>
-<li> Trampolines decorator</li>
 <li> Add to <code>fn.iters</code> module <code>foldl</code>, <code>foldr</code>, <code>findelem</code>,
 <code>findindex</code>
 </li>
