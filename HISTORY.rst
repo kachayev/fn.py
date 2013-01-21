@@ -1,6 +1,12 @@
 History
 =======
 
+21.01.2012
+----------
+
+- Update documentation with special ``fn._`` use cases for interactive shells
+- Move ``zipwith`` from ``fn.iters`` to ``fn.op``
+
 18.01.2012
 ----------
 

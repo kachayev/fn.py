@@ -24,7 +24,7 @@ Scala-style lambdas definition
 .. code-block:: python
 
     from fn import _
-    from fn.iters import zipwith
+    from fn.op import zipwith
     from itertools import repeat
 
     assert list(map(_ * 2, range(5))) == [0,2,4,6,8]
@@ -35,7 +35,7 @@ More examples of using ``_`` you can find in `test
 cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_
 declaration (attributes resolving, method calling, slicing).
 
-**Attention**! If you work in interactive python shell, your should remember that `_` means "latest output" and you'll get unpredictable results. In this case, you can do something like ``from fn import _ as __``.
+**Attention!** If you work in interactive python shell, your should remember that ``_`` means "latest output" and you'll get unpredictable results. In this case, you can do something like ``from fn import _ as X`` (and then write functions like ``X * 2``).
 
 Streams and infinite sequences declaration
 ------------------------------------------
@@ -155,7 +155,6 @@ review status just now.
 -  ``roundrobin``
 -  ``partition``, ``splitat``, ``splitby``
 -  ``flatten``
--  ``zipwith``
 -  ``iter_except``
 
 More information about use cases you can find in docstrings for each
@@ -207,9 +206,9 @@ Work in progress (!)
 
 "Roadmap":
 
+-  Trampolines decorator
 -  Error handling (``Maybe``, ``Either`` from Haskell, ``Option`` from
    Scala etc)
--  Trampolines decorator
 -  Add to ``fn.iters`` module ``foldl``, ``foldr``, ``findelem``,
    ``findindex``
 -  C-accelerator for most modules

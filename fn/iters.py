@@ -35,10 +35,6 @@ else:
     from itertools import zip_longest
 zip_longest = zip_longest
 
-def zipwith(f): 
-    'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
-    return F(starmap, f) << zip
-
 def take(limit, base): 
     return islice(base, limit)
 

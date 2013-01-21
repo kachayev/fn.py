@@ -1,5 +1,4 @@
 from sys import version
-from functools import wraps
 
 identity = lambda arg: arg
 apply = apply if version.startswith("2") else _apply
@@ -25,3 +24,10 @@ def flip(f):
 
 def curry(f, arg, *rest):
     return curry(f(arg), *rest) if rest else f(arg)
+
+from .func import F
+from itertools import starmap
+
+def zipwith(f): 
+    'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
+    return F(starmap, f) << zip

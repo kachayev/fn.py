@@ -28,6 +28,17 @@ class OperatorTestCase(unittest.TestCase):
         # flipping of flipped function should use optimization
         self.assertTrue(operator.sub is op.flip(op.flip(operator.sub)))
 
+    def test_zipwith(self):
+        zipper = op.zipwith(operator.add)
+        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+
+        zipper = op.zipwith(_ + _)
+        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+
+        zipper = F() << list << op.zipwith(_ + _)
+        self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
+
+
 class UnderscoreTestCase(unittest.TestCase):
 
     def test_identity_default(self):
@@ -208,16 +219,6 @@ class CompositionTestCase(unittest.TestCase):
 
 
 class IteratorsTestCase(unittest.TestCase):
-
-    def test_zipwith(self):
-        zipper = iters.zipwith(operator.add)
-        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
-
-        zipper = iters.zipwith(_ + _)
-        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
-
-        zipper = F() << list << iters.zipwith(_ + _)
-        self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
 
     def test_take(self):
         self.assertEqual([0,1], list(iters.take(2, range(10))))
