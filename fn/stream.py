@@ -1,4 +1,10 @@
-from sys import maxint, version
+from sys import version_info
+
+if version_info.major == 2:
+    from sys import maxint
+else:
+    from sys import maxsize as maxint
+
 from itertools import chain
 
 class Stream(object):
@@ -22,7 +28,7 @@ class Stream(object):
 
             raise StopIteration()
 
-        if version.startswith("2"):
+        if version_info.major == 2:
             next = __next__
 
     def __init__(self):
@@ -56,13 +62,13 @@ class Stream(object):
     def __getitem__(self, index):
         if isinstance(index, int):
             # todo: i'm not sure what to do with negative indices
-            if index < 0: raise TypeError, "Invalid argument type"
+            if index < 0: raise TypeError("Invalid argument type")
             self._fill_to(index)
         elif isinstance(index, slice):
             # todo: reimplement to work lazy
             low, high, step = index.indices(maxint)
             self._fill_to(max(low, high))
         else:
-            raise TypeError, "Invalid argument type"
+            raise TypeError("Invalid argument type")
 
         return self._collection.__getitem__(index)
