@@ -187,12 +187,12 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
 
     def test_slicing(self):
-        self.assertEqual(0,       (_[0])(range(10)))
-        self.assertEqual(9,       (_[-1])(range(10)))
-        self.assertEqual([3,4,5], (_[3:])(range(6)))
-        self.assertEqual([0,1,2], (_[:3])(range(10)))
-        self.assertEqual([1,2,3], (_[1:4])(range(10)))
-        self.assertEqual([0,2,4], (_[0:6:2])(range(10)))
+        self.assertEqual(0,       (_[0])(list(range(10))))
+        self.assertEqual(9,       (_[-1])(list(range(10))))
+        self.assertEqual([3,4,5], (_[3:])(list(range(6))))
+        self.assertEqual([0,1,2], (_[:3])(list(range(10))))
+        self.assertEqual([1,2,3], (_[1:4])(list(range(10))))
+        self.assertEqual([0,2,4], (_[0:6:2])(list(range(10))))
 
     def test_slicing_multiple(self):
         self.assertEqual(0, (_[_])(range(10), 0))
@@ -282,7 +282,6 @@ class CompositionTestCase(unittest.TestCase):
 
     def test_underscore(self):
         self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))    
-
 
 class IteratorsTestCase(unittest.TestCase):
 
@@ -465,4 +464,5 @@ class StreamTestCase(unittest.TestCase):
         self.assertEqual(6765, fib[20])
         self.assertEqual([832040,1346269,2178309,3524578,5702887], fib[30:35])
 
-
+if __name__ == '__main__':
+    unittest.main()

@@ -4,6 +4,9 @@ from itertools import repeat, count
 from .op import identity, curry, apply, flip
 from .iters import map, zip
 from .func import F
+from sys import version_info
+
+div = operator.div if version_info.major == 2 else operator.truediv
 
 def fmap(f, format=""):
     format = "(%s)" % format.replace("self", "_")
@@ -68,7 +71,7 @@ class _Callable(object):
     __or__ = fmap(operator.or_, "self | other")
     __xor__ = fmap(operator.xor, "self ^ other")
 
-    __div__ = fmap(operator.div, "self / other")
+    __div__ = fmap(div, "self / other")
     __divmod__ = fmap(divmod, "self / other")
     __floordiv__ = fmap(operator.floordiv, "self / other")
     __truediv__ = fmap(operator.truediv, "self / other")
@@ -92,7 +95,7 @@ class _Callable(object):
     __rsub__ = fmap(flip(operator.sub), "other - self")
     __rmod__ = fmap(flip(operator.mod), "other % self")
     __rpow__ = fmap(flip(operator.pow), "other ** self")
-    __rdiv__ = fmap(flip(operator.div), "other / self")
+    __rdiv__ = fmap(flip(div), "other / self")
     __rdivmod__ = fmap(flip(divmod), "other / self")
     __rtruediv__ = fmap(flip(operator.truediv), "other / self")
     __rfloordiv__ = fmap(flip(operator.floordiv), "other / self")

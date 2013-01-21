@@ -1,9 +1,8 @@
-from sys import version
+from sys import version_info
 from collections import deque
 from operator import itemgetter, attrgetter
 from functools import partial
-from itertools import (islice, chain, 
-                       izip, imap, ifilter, 
+from itertools import (islice, chain,                        
                        starmap, repeat, tee, cycle,
                        takewhile, dropwhile,
                        combinations)
@@ -14,22 +13,25 @@ from .func import F
 # Syntax sugar to deal with Python 2/Python 3 
 # differences: this one will return generator
 # even in Python 2.*
-map = imap if version.startswith("2") else map
-filter = ifilter if version.startswith("2") else filter
-zip = izip if version.startswith("2") else zip
+if version_info.major == 2:
+    from itertools import izip as zip, imap as map, ifilter as filter
 
-if version.startswith("3"):
+filter = filter
+map = map
+zip = zip
+
+if version_info.major == 3:
     from functools import reduce
 reduce = reduce 
-range = xrange if version.startswith("2") else  range
+range = xrange if version_info.major == 2 else  range
 
-if version.startswith("2"):
+if version_info.major == 2:
     from itertools import ifilterfalse as filterfalse
 else:
     from itertools import filterfalse
 filterfalse = filterfalse
 
-if version.startswith("2"):
+if version_info.major == 2:
     from itertools import izip_longest as zip_longest
 else:
     from itertools import zip_longest
@@ -117,7 +119,7 @@ def roundrobin(*iterables):
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
     pending = len(iterables)
-    next_attr = "next" if version.startswith("2") else "__next__"
+    next_attr = "next" if version_info.major == 2 else "__next__"
     nexts = cycle(map(attrgetter(next_attr), map(iter, iterables)))
     while pending:
         try:
@@ -165,7 +167,7 @@ def pairwise(iterable):
     """
     a, b = tee(iterable)
     next(b, None)
-    return izip(a, b)
+    return zip(a, b)
 
 def iter_except(func, exception, first=None):
     """ Call a function repeatedly until an exception is raised.

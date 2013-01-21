@@ -1,10 +1,11 @@
-from sys import version
+from sys import version_info
 
 identity = lambda arg: arg
-apply = apply if version.startswith("2") else _apply
 
-def _apply(f, args, kwargs=None):
-    return f(*args, **(kwargs or {}))
+def _apply(f, args=None, kwargs=None):
+    return f(*(args or []), **(kwargs or {}))
+
+apply = apply if version_info.major == 2 else _apply
 
 def flip(f):
     """Return function that will apply arguments in reverse order"""
