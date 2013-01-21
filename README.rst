@@ -37,6 +37,16 @@ declaration (attributes resolving, method calling, slicing).
 
 **Attention!** If you work in interactive python shell, your should remember that ``_`` means "latest output" and you'll get unpredictable results. In this case, you can do something like ``from fn import _ as X`` (and then write functions like ``X * 2``).
 
+If you are not sure, what your function is going to do, you can print it:
+
+.. code-block:: python
+
+    from fn import _
+
+    print (_ + 2) # "(x1) => (x1 + 2)"
+    print (_ + _ * _) # "(x1, x2, x3) => (x1 + (x2 * x3))"
+
+
 Streams and infinite sequences declaration
 ------------------------------------------
 

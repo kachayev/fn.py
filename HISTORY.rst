@@ -6,6 +6,7 @@ History
 
 - Update documentation with special ``fn._`` use cases for interactive shells
 - Move ``zipwith`` from ``fn.iters`` to ``fn.op``
+- ``fn._`` dump to string
 
 18.01.2012
 ----------

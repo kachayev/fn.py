@@ -9,15 +9,16 @@ from sys import version_info
 div = operator.div if version_info.major == 2 else operator.truediv
 
 def fmap(f, format=""):
-    format = "(%s)" % format.replace("self", "_")
     def applyier(self, other=None):
+        fmt = "(%s)" % format.replace("self", self._format)
         if other is None:
-            return self.__class__(F(self) << f, format)
-        if isinstance(other, self.__class__):
-            return self.__class__(lambda arg1: lambda arg2: f(self(arg1), other(arg2)), 
-                                  format.replace("other", other._format))
-        return self.__class__(F(flip(f), other) << F(self), 
-                              format.replace("other", str(other)))
+            return self.__class__(F(self) << f, fmt)
+        elif isinstance(other, self.__class__):
+            call = lambda arg1: lambda arg2: f(self(arg1), other(arg2))
+            return self.__class__(call, fmt.replace("other", other._format))
+        else:
+            call = F(flip(f), other) << F(self)
+            return self.__class__(call, fmt.replace("other", str(other)))
     return applyier
 
 class _Callable(object):
