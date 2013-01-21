@@ -37,6 +37,19 @@ else:
     from itertools import zip_longest
 zip_longest = zip_longest
 
+if version_info.major == 3 and version_info.minor >= 3:
+    from itertools import accumulate
+else:
+    def accumulate(iterable, func=operator.add):
+        """Make an iterator that returns accumulated sums. Elements may be any addable type including Decimal or Fraction. If the optional func argument is supplied, it should be a function of two arguments and it will be used instead of addition."""
+        # from http://docs.python.org/dev/library/itertools.html#itertools.accumulate
+        it = iter(iterable)
+        total = next(it)
+        yield total
+        for element in it:
+            total = func(total, element)
+            yield total
+
 def take(limit, base): 
     return islice(base, limit)
 
