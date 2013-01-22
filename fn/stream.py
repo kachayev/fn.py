@@ -1,6 +1,6 @@
 from sys import version_info
 
-if version_info.major == 2:
+if version_info[0] == 2:
     from sys import maxint
 else:
     from sys import maxsize as maxint
@@ -28,7 +28,7 @@ class Stream(object):
 
             raise StopIteration()
 
-        if version_info.major == 2:
+        if version_info[0] == 2:
             next = __next__
 
     def __init__(self):

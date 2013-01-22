@@ -1,12 +1,13 @@
 import operator
+
+from sys import version_info
 from itertools import repeat, count
 
 from .op import identity, curry, apply, flip
 from .iters import map, zip
 from .func import F
-from sys import version_info
 
-div = operator.div if version_info.major == 2 else operator.truediv
+div = operator.div if version_info[0] == 2 else operator.truediv
 
 def fmap(f, format=""):
     def applyier(self, other=None):

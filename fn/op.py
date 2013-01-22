@@ -5,7 +5,7 @@ identity = lambda arg: arg
 def _apply(f, args=None, kwargs=None):
     return f(*(args or []), **(kwargs or {}))
 
-apply = apply if version_info.major == 2 else _apply
+apply = apply if version_info[0] == 2 else _apply
 
 def flip(f):
     """Return function that will apply arguments in reverse order"""

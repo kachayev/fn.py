@@ -13,28 +13,27 @@ from .func import F
 # Syntax sugar to deal with Python 2/Python 3 
 # differences: this one will return generator
 # even in Python 2.*
-if version_info.major == 2:
+if version_info[0] == 2:
     from itertools import izip as zip, imap as map, ifilter as filter
 
 filter = filter
 map = map
 zip = zip
 
-if version_info.major == 3:
+if version_info[0] == 3:
     from functools import reduce
+
 reduce = reduce 
-range = xrange if version_info.major == 2 else  range
+range = xrange if version_info[0] == 2 else  range
 
-if version_info.major == 2:
+if version_info[0] == 2:
     from itertools import ifilterfalse as filterfalse
-else:
-    from itertools import filterfalse
-filterfalse = filterfalse
-
-if version_info.major == 2:
     from itertools import izip_longest as zip_longest
 else:
+    from itertools import filterfalse
     from itertools import zip_longest
+
+filterfalse = filterfalse
 zip_longest = zip_longest
 
 def take(limit, base): 
@@ -119,7 +118,7 @@ def roundrobin(*iterables):
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
     pending = len(iterables)
-    next_attr = "next" if version_info.major == 2 else "__next__"
+    next_attr = "next" if version_info[0] == 2 else "__next__"
     nexts = cycle(map(attrgetter(next_attr), map(iter, iterables)))
     while pending:
         try:
