@@ -454,6 +454,12 @@ class StreamTestCase(unittest.TestCase):
         s = Stream() << gen << (4,5)
         assert list(s) == [1,2,3,4,5]
 
+    def test_lazy_slicing(self):
+        s = Stream() << xrange(10)
+        assert len(s._collection) == 0
+        s_slice = s[:5]
+        assert len(s._collection) == 0
+
     def test_fib_infinite_stream(self):
         from operator import add 
 
