@@ -1,6 +1,12 @@
 History
 =======
 
+23.01.2012
+----------
+
+- ``fn.Stream`` slice is another ``fn.Stream``
+- ``fn.Stream`` got new public method ``cursor`` to get position on next evaluated element
+
 21.01.2012
 ----------
 

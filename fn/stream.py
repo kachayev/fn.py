@@ -5,7 +5,8 @@ if version_info[0] == 2:
 else:
     from sys import maxsize as maxint
 
-from itertools import chain, imap
+from itertools import chain
+from .iters import map, range
 
 class Stream(object):
 
@@ -23,7 +24,8 @@ class Stream(object):
             # check if elements are available for next position
             # return next element or raise StopIteration
             self._position += 1
-            if len(self._stream._collection) > self._position or self._stream._fill_to(self._position):
+            if (len(self._stream._collection) > self._position or 
+                self._stream._fill_to(self._position)):
                 return self._stream._collection[self._position]
 
             raise StopIteration()
@@ -40,6 +42,10 @@ class Stream(object):
         iterator = rvalue() if callable(rvalue) else rvalue
         self._origin = chain(self._origin, iterator)
         return self
+
+    def cursor(self):
+        """Return position of next evaluated element"""
+        return self._last + 1
 
     def _fill_to(self, index):
         if self._last >= index:
@@ -67,9 +73,7 @@ class Stream(object):
         elif isinstance(index, slice):
             low, high, step = index.indices(maxint)
             if step == 0: raise ValueError("Step must not be 0")
-            step = step or 1
-            stream_vals = imap(self.__getitem__, xrange(low, high, step))
-            return Stream() << stream_vals
+            return self.__class__() << map(self.__getitem__, range(low, high, step or 1))
         else:
             raise TypeError("Invalid argument type")
 
