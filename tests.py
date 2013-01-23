@@ -443,7 +443,7 @@ class StreamTestCase(unittest.TestCase):
         s = Stream() << [1,2,3,4,5]
         self.assertEqual([1,2,3,4,5], list(s))
         self.assertEqual(2, s[1])
-        self.assertEqual([1,2], s[0:2])
+        self.assertEqual([1,2], list(s[0:2]))
 
     def test_from_iterator(self):
         s = Stream() << range(6) << [6,7]
@@ -458,6 +458,14 @@ class StreamTestCase(unittest.TestCase):
         s = Stream() << gen << (4,5)
         assert list(s) == [1,2,3,4,5]
 
+    def test_lazy_slicing(self):
+        s = Stream() << xrange(10)
+        self.assertEqual(len(s._collection), 0)
+        s_slice = s[:5]
+        self.assertEqual(len(s._collection), 0)
+        self.assertEqual(len(list(s_slice)), 5)
+        # not sure if it's worth testing negative slices, as they cannot be lazy
+
     def test_fib_infinite_stream(self):
         from operator import add 
 
@@ -466,7 +474,7 @@ class StreamTestCase(unittest.TestCase):
 
         self.assertEqual([0,1,1,2,3,5,8,13,21,34], list(iters.take(10, fib)))
         self.assertEqual(6765, fib[20])
-        self.assertEqual([832040,1346269,2178309,3524578,5702887], fib[30:35])
+        self.assertEqual([832040,1346269,2178309,3524578,5702887], list(fib[30:35]))
 
 if __name__ == '__main__':
     unittest.main()
