@@ -63,7 +63,7 @@ class Stream(object):
         return True
 
     def __iter__(self):
-        return Stream._StreamIterator(self)
+        return self._StreamIterator(self)
 
     def __getitem__(self, index):
         if isinstance(index, int):
