@@ -199,74 +199,74 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(8, (_[_ * (-1)])(range(10), 2))
 
     def test_string_converting(self):
-        self.assertEqual("(x1) => x1", str(_))
+        self.assertEqual("_", str(_))
 
-        self.assertEqual("(x1) => (x1 + 2)",  str(_ + 2))
-        self.assertEqual("(x1) => (x1 - 2)",  str(_ - 2))
-        self.assertEqual("(x1) => (x1 * 2)",  str(_ * 2))
-        self.assertEqual("(x1) => (x1 / 2)",  str(_ / 2))
-        self.assertEqual("(x1) => (x1 % 2)",  str(_ % 2))
-        self.assertEqual("(x1) => (x1 ** 2)", str(_ ** 2))
+        self.assertEqual("(_ + 2)",  str(_ + 2))
+        self.assertEqual("(_ - 2)",  str(_ - 2))
+        self.assertEqual("(_ * 2)",  str(_ * 2))
+        self.assertEqual("(_ / 2)",  str(_ / 2))
+        self.assertEqual("(_ % 2)",  str(_ % 2))
+        self.assertEqual("(_ ** 2)", str(_ ** 2))
 
-        self.assertEqual("(x1) => (x1 & 2)", str(_ & 2))
-        self.assertEqual("(x1) => (x1 | 2)", str(_ | 2))
-        self.assertEqual("(x1) => (x1 ^ 2)", str(_ ^ 2))
+        self.assertEqual("(_ & 2)", str(_ & 2))
+        self.assertEqual("(_ | 2)", str(_ | 2))
+        self.assertEqual("(_ ^ 2)", str(_ ^ 2))
 
-        self.assertEqual("(x1) => (x1 >> 2)", str(_ >> 2))
-        self.assertEqual("(x1) => (x1 << 2)", str(_ << 2))
+        self.assertEqual("(_ >> 2)", str(_ >> 2))
+        self.assertEqual("(_ << 2)", str(_ << 2))
 
-        self.assertEqual("(x1) => (x1 < 2)",  str(_ < 2))
-        self.assertEqual("(x1) => (x1 > 2)",  str(_ > 2))
-        self.assertEqual("(x1) => (x1 <= 2)", str(_ <= 2))
-        self.assertEqual("(x1) => (x1 >= 2)", str(_ >= 2))
-        self.assertEqual("(x1) => (x1 == 2)", str(_ == 2))
-        self.assertEqual("(x1) => (x1 != 2)", str(_ != 2))
+        self.assertEqual("(_ < 2)",  str(_ < 2))
+        self.assertEqual("(_ > 2)",  str(_ > 2))
+        self.assertEqual("(_ <= 2)", str(_ <= 2))
+        self.assertEqual("(_ >= 2)", str(_ >= 2))
+        self.assertEqual("(_ == 2)", str(_ == 2))
+        self.assertEqual("(_ != 2)", str(_ != 2))
 
     def test_rigthside_string_converting(self):
-        self.assertEqual("(x1) => (2 + x1)",  str(2 + _))
-        self.assertEqual("(x1) => (2 - x1)",  str(2 - _))
-        self.assertEqual("(x1) => (2 * x1)",  str(2 * _))
-        self.assertEqual("(x1) => (2 / x1)",  str(2 / _))
-        self.assertEqual("(x1) => (2 % x1)",  str(2 % _))
-        self.assertEqual("(x1) => (2 ** x1)", str(2 ** _))
+        self.assertEqual("(2 + _)",  str(2 + _))
+        self.assertEqual("(2 - _)",  str(2 - _))
+        self.assertEqual("(2 * _)",  str(2 * _))
+        self.assertEqual("(2 / _)",  str(2 / _))
+        self.assertEqual("(2 % _)",  str(2 % _))
+        self.assertEqual("(2 ** _)", str(2 ** _))
 
-        self.assertEqual("(x1) => (2 & x1)", str(2 & _))
-        self.assertEqual("(x1) => (2 | x1)", str(2 | _))
-        self.assertEqual("(x1) => (2 ^ x1)", str(2 ^ _))
+        self.assertEqual("(2 & _)", str(2 & _))
+        self.assertEqual("(2 | _)", str(2 | _))
+        self.assertEqual("(2 ^ _)", str(2 ^ _))
 
-        self.assertEqual("(x1) => (2 >> x1)", str(2 >> _))
-        self.assertEqual("(x1) => (2 << x1)", str(2 << _))
+        self.assertEqual("(2 >> _)", str(2 >> _))
+        self.assertEqual("(2 << _)", str(2 << _))
 
     def test_unary_string_converting(self):
-        self.assertEqual("(x1) => (+x1)", str(+_))
-        self.assertEqual("(x1) => (-x1)", str(-_))
-        self.assertEqual("(x1) => (~x1)", str(~_))
+        self.assertEqual("(+_)", str(+_))
+        self.assertEqual("(-_)", str(-_))
+        self.assertEqual("(~_)", str(~_))
 
     def test_multiple_string_converting(self):
-        self.assertEqual("(x1, x2) => (x1 + x2)", str(_ + _))
-        self.assertEqual("(x1, x2) => (x1 * x2)", str(_ * _))
-        self.assertEqual("(x1, x2) => (x1 - x2)", str(_ - _))
-        self.assertEqual("(x1, x2) => (x1 / x2)", str(_ / _))
-        self.assertEqual("(x1, x2) => (x1 % x2)", str(_ % _))
-        self.assertEqual("(x1, x2) => (x1 ** x2)", str(_ ** _))
+        self.assertEqual("(_ + _)", str(_ + _))
+        self.assertEqual("(_ * _)", str(_ * _))
+        self.assertEqual("(_ - _)", str(_ - _))
+        self.assertEqual("(_ / _)", str(_ / _))
+        self.assertEqual("(_ % _)", str(_ % _))
+        self.assertEqual("(_ ** _)", str(_ ** _))
 
-        self.assertEqual("(x1, x2) => (x1 & x2)", str(_ & _))
-        self.assertEqual("(x1, x2) => (x1 | x2)", str(_ | _))
-        self.assertEqual("(x1, x2) => (x1 ^ x2)", str(_ ^ _))
+        self.assertEqual("(_ & _)", str(_ & _))
+        self.assertEqual("(_ | _)", str(_ | _))
+        self.assertEqual("(_ ^ _)", str(_ ^ _))
 
-        self.assertEqual("(x1, x2) => (x1 >> x2)", str(_ >> _))
-        self.assertEqual("(x1, x2) => (x1 << x2)", str(_ << _))
+        self.assertEqual("(_ >> _)", str(_ >> _))
+        self.assertEqual("(_ << _)", str(_ << _))
 
-        self.assertEqual("(x1, x2) => (x1 > x2)",  str(_ > _))
-        self.assertEqual("(x1, x2) => (x1 < x2)",  str(_ < _))
-        self.assertEqual("(x1, x2) => (x1 >= x2)", str(_ >= _))
-        self.assertEqual("(x1, x2) => (x1 <= x2)", str(_ <= _))
-        self.assertEqual("(x1, x2) => (x1 == x2)", str(_ == _))
-        self.assertEqual("(x1, x2) => (x1 != x2)", str(_ != _))
+        self.assertEqual("(_ > _)",  str(_ > _))
+        self.assertEqual("(_ < _)",  str(_ < _))
+        self.assertEqual("(_ >= _)", str(_ >= _))
+        self.assertEqual("(_ <= _)", str(_ <= _))
+        self.assertEqual("(_ == _)", str(_ == _))
+        self.assertEqual("(_ != _)", str(_ != _))
 
     def test_reverse_string_converting(self):
-        self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
-        self.assertEqual("(x1, x2, x3) => (x1 + (x2 * x3))", str(_ + _ * _))
+        self.assertEqual("((_ + _) + _)", str(_ + _ + _))
+        self.assertEqual("(_ + (_ * _))", str(_ + _ * _))
 
 class CompositionTestCase(unittest.TestCase):
 
@@ -443,7 +443,7 @@ class StreamTestCase(unittest.TestCase):
         s = Stream() << [1,2,3,4,5]
         self.assertEqual([1,2,3,4,5], list(s))
         self.assertEqual(2, s[1])
-        self.assertEqual([1,2], list(s[0:2]))
+        self.assertEqual([1,2], s[0:2])
 
     def test_from_iterator(self):
         s = Stream() << range(6) << [6,7]
@@ -458,21 +458,6 @@ class StreamTestCase(unittest.TestCase):
         s = Stream() << gen << (4,5)
         assert list(s) == [1,2,3,4,5]
 
-    def test_lazy_slicing(self):
-        s = Stream() << iters.range(10)
-        self.assertEqual(s.cursor(), 0)
-
-        s_slice = s[:5]
-        self.assertEqual(s.cursor(), 0)
-        self.assertEqual(len(list(s_slice)), 5)
-
-    def test_lazy_slicing_recursive(self):
-        s = Stream() << iters.range(10)
-        sf = s[1:3][0:2]
-
-        self.assertEqual(s.cursor(), 0)
-        self.assertEqual(len(list(sf)), 2)
-
     def test_fib_infinite_stream(self):
         from operator import add 
 
@@ -481,10 +466,7 @@ class StreamTestCase(unittest.TestCase):
 
         self.assertEqual([0,1,1,2,3,5,8,13,21,34], list(iters.take(10, fib)))
         self.assertEqual(6765, fib[20])
-        self.assertEqual([832040,1346269,2178309,3524578,5702887], list(fib[30:35]))
-        # 35 elements should be already evaluated
-        self.assertEqual(fib.cursor(), 35)
-
+        self.assertEqual([832040,1346269,2178309,3524578,5702887], fib[30:35])
 
 if __name__ == '__main__':
     unittest.main()
