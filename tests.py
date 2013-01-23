@@ -183,6 +183,10 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertTrue((_ == _)(10, 10))
         self.assertFalse((_ == _)(9, 10))
 
+    def test_nested_underscores(self):
+        self.assertEqual(6, (_[_ + _] * 2)(range(0, 10), 2, 1))
+        self.assertEqual(6, (_[_ + _] * 2)(range(0, 10), 1, 2))
+
     def test_comparator_filter(self):
         self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
 
