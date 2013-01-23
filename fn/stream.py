@@ -23,7 +23,7 @@ class Stream(object):
             # check if elements are available for next position
             # return next element or raise StopIteration
             self._position += 1
-            if self._stream._fill_to(self._position):
+            if len(self._stream._collection) > self._position or self._stream._fill_to(self._position):
                 return self._stream._collection[self._position]
 
             raise StopIteration()
