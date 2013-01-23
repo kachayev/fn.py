@@ -64,7 +64,7 @@ Simplest cases:
     s = Stream() << [1,2,3,4,5]
     assert list(s) == [1,2,3,4,5]
     assert s[1] == 2
-    assert s[0:2] == [1,2]
+    assert list(s[0:2]) == [1,2]
 
     s = Stream() << range(6) << [6,7]
     assert list(s) == [0,1,2,3,4,5,6,7]
@@ -91,7 +91,7 @@ sequence can be calculated as:
 
     assert list(take(10, fib)) == [0,1,1,2,3,5,8,13,21,34]
     assert fib[20] == 6765
-    assert fib[30:35] == [832040,1346269,2178309,3524578,5702887]
+    assert list(fib[30:35]) == [832040,1346269,2178309,3524578,5702887]
 
 High-level operations with functions
 ------------------------------------
