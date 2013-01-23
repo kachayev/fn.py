@@ -1,112 +1,98 @@
+import sys
 import operator
 
-from sys import version_info
-from itertools import repeat, count
-
-from .op import identity, curry, apply, flip
-from .iters import map, zip
+from .op import apply, curry, flip, identity
 from .func import F
 
-div = operator.div if version_info[0] == 2 else operator.truediv
 
-def fmap(f, format=""):
-    def applyier(self, other=None):
-        fmt = "(%s)" % format.replace("self", self._format)
-        if other is None:
-            return self.__class__(F(self) << f, fmt)
-        elif isinstance(other, self.__class__):
-            call = lambda arg1: lambda arg2: f(self(arg1), other(arg2))
-            return self.__class__(call, fmt.replace("other", other._format))
-        else:
-            call = F(flip(f), other) << F(self)
-            return self.__class__(call, fmt.replace("other", str(other)))
-    return applyier
+_div = operator.div if sys.hexversion < 0x03000000 else operator.truediv
 
-class _Callable(object):
-    
-    __slots__ = '_callback', "_format"
 
-    def __init__(self, callback=identity, format="_"):
+def f(text, g):
+    def op(a, b=None):
+        new_repr = text.format(a, b)
+
+        return (
+            # FIXME ideally, it should use partially-applied format strings
+            #   instead of those placeholders.
+            #   The original underscore.py suffered from the same bug,
+            #   though, so I decided to upload the code anyway.
+            T(lambda x: f('<lambda>', g)(a(x), b), new_repr) if isinstance(a, T) else
+            T(lambda x: f('<lambda>', g)(a, b(x)), new_repr) if isinstance(b, T) else
+            g(a) if b is None else g(a, b)
+        )
+
+    return op
+
+
+class T(object):
+
+    __slots__ = ('_callback', '_format')
+
+    def __init__(self, callback=identity, format='_'):
+        super(T, self).__init__()
         self._callback = callback
         self._format = format
-
-    def call(self, name, *args):
-        """Call method from _ object by given name and arguments"""
-        return self.__class__(F(apply) << operator.attrgetter(name) << F(self))
-
-    def __getattr__(self, name):
-        return self.__class__(F(operator.attrgetter(name)) << F(self))
-
-    def __getitem__(self, k):
-        if isinstance(k, self.__class__):
-            return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
-        return self.__class__(F(operator.itemgetter(k)) << F(self))
-
-    def __str__(self):
-        """Build readable representation for function
-
-        (_ < 7): (x1) => (x1 < 7)
-        (_ + _*10): (x1, x2) => (x1 + (x2*10))
-        """
-        # args iterator with produce infinite sequence
-        # args -> (x1, x2, x3, ...) 
-        args = map("".join, zip(repeat("x"), map(str, count(1))))
-        l, r = [], self._format
-        # replace all "_" signs from left to right side 
-        while r.count("_"):
-            n = next(args)
-            r = r.replace("_", n, 1)
-            l.append(n)
-
-        return "({left}) => {right}".format(left=", ".join(l), right=r)
 
     def __call__(self, *args):
         return curry(self._callback, *args)
 
-    __add__ = fmap(operator.add, "self + other")
-    __mul__ = fmap(operator.mul, "self * other")
-    __sub__ = fmap(operator.sub, "self - other")
-    __mod__ = fmap(operator.mod, "self % other")
-    __pow__ = fmap(operator.pow, "self ** other")
+    def __repr__(self):
+        return self._format
 
-    __and__ = fmap(operator.and_, "self & other")
-    __or__ = fmap(operator.or_, "self | other")
-    __xor__ = fmap(operator.xor, "self ^ other")
+    def call(self, name):
+        return T(F(apply) << operator.attrgetter(name) << F(self))
 
-    __div__ = fmap(div, "self / other")
-    __divmod__ = fmap(divmod, "self / other")
-    __floordiv__ = fmap(operator.floordiv, "self / other")
-    __truediv__ = fmap(operator.truediv, "self / other")
+    __getattr__  = f('getattr({0!r}, {1!r})', getattr)
+    __getitem__  = f('{0!r}[{1!r}]',          operator.getitem)
+    __contains__ = f('{1!r} in {0!r}',      operator.contains)
 
-    __lshift__ = fmap(operator.lshift, "self << other")
-    __rshift__ = fmap(operator.rshift, "self >> other")
+    __add__ = f('({0!r} + {1!r})',  operator.add)
+    __mul__ = f('({0!r} * {1!r})',  operator.mul)
+    __sub__ = f('({0!r} - {1!r})',  operator.sub)
+    __mod__ = f('({0!r} % {1!r})',  operator.mod)
+    __pow__ = f('({0!r} ** {1!r})', operator.pow)
 
-    __lt__ = fmap(operator.lt, "self < other")
-    __le__ = fmap(operator.le, "self <= other")
-    __gt__ = fmap(operator.gt, "self > other")
-    __ge__ = fmap(operator.ge, "self >= other")
-    __eq__ = fmap(operator.eq, "self == other")
-    __ne__ = fmap(operator.ne, "self != other")
+    __and__ = f('({0!r} & {1!r})', operator.and_)
+    __or__  = f('({0!r} | {1!r})', operator.or_)
+    __xor__ = f('({0!r} ^ {1!r})', operator.xor)
 
-    __neg__ = fmap(operator.neg, "-self")
-    __pos__ = fmap(operator.pos, "+self")
-    __invert__ = fmap(operator.invert, "~self")
+    __div__      = f('({0!r} / {1!r})',      _div)
+    __truediv__  = f('({0!r} / {1!r})',      _div)
+    __floordiv__ = f('({0!r} // {1!r})',     operator.floordiv)
+    __divmod__   = f('divmod({0!r}, {1!r})', divmod)
 
-    __radd__ = fmap(flip(operator.add), "other + self")
-    __rmul__ = fmap(flip(operator.mul), "other * self")
-    __rsub__ = fmap(flip(operator.sub), "other - self")
-    __rmod__ = fmap(flip(operator.mod), "other % self")
-    __rpow__ = fmap(flip(operator.pow), "other ** self")
-    __rdiv__ = fmap(flip(div), "other / self")
-    __rdivmod__ = fmap(flip(divmod), "other / self")
-    __rtruediv__ = fmap(flip(operator.truediv), "other / self")
-    __rfloordiv__ = fmap(flip(operator.floordiv), "other / self")
+    __lshift__ = f('({0!r} << {1!r})', operator.lshift)
+    __rshift__ = f('({0!r} >> {1!r})', operator.rshift)
 
-    __rlshift__ = fmap(flip(operator.lshift), "other << self")
-    __rrshift__ = fmap(flip(operator.rshift), "other >> self")
+    __lt__ = f('({0!r} < {1!r})',  operator.lt)
+    __le__ = f('({0!r} <= {1!r})', operator.le)
+    __gt__ = f('({0!r} > {1!r})',  operator.gt)
+    __ge__ = f('({0!r} >= {1!r})', operator.ge)
+    __eq__ = f('({0!r} == {1!r})', operator.eq)
+    __ne__ = f('({0!r} != {1!r})', operator.ne)
 
-    __rand__ = fmap(flip(operator.and_), "other & self")
-    __ror__ = fmap(flip(operator.or_), "other | self")
-    __rxor__ = fmap(flip(operator.xor), "other ^ self")
+    __neg__    = f('(-{0!r})', operator.neg)
+    __pos__    = f('(+{0!r})', operator.pos)
+    __invert__ = f('(~{0!r})', operator.invert)
 
-shortcut = _Callable()
+    __radd__ = f('({1!r} + {0!r})',  flip(operator.add))
+    __rmul__ = f('({1!r} * {0!r})',  flip(operator.mul))
+    __rsub__ = f('({1!r} - {0!r})',  flip(operator.sub))
+    __rmod__ = f('({1!r} % {0!r})',  flip(operator.mod))
+    __rpow__ = f('({1!r} ** {0!r})', flip(operator.pow))
+
+    __rand__ = f('({1!r} & {0!r})', flip(operator.and_))
+    __ror__  = f('({1!r} | {0!r})', flip(operator.or_))
+    __rxor__ = f('({1!r} ^ {0!r})', flip(operator.xor))
+
+    __rdiv__      = f('({1!r} / {0!r})',      flip(_div))
+    __rtruediv__  = f('({1!r} / {0!r})',      flip(_div))
+    __rfloordiv__ = f('({1!r} // {0!r})',     flip(operator.floordiv))
+    __rdivmod__   = f('divmod({1!r}, {0!r})', flip(divmod))
+
+    __rlshift__ = f('({1!r} << {0!r})', flip(operator.lshift))
+    __rrshift__ = f('({1!r} >> {0!r})', flip(operator.rshift))
+
+
+shortcut = T()

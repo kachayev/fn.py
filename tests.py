@@ -183,6 +183,10 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertTrue((_ == _)(10, 10))
         self.assertFalse((_ == _)(9, 10))
 
+    def test_nested_underscores(self):
+        self.assertEqual(6, (_[_ + _] * 2)(range(0, 10), 2, 1))
+        self.assertEqual(6, (_[_ + _] * 2)(range(0, 10), 1, 2))
+
     def test_comparator_filter(self):
         self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
 
@@ -199,74 +203,74 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(8, (_[_ * (-1)])(range(10), 2))
 
     def test_string_converting(self):
-        self.assertEqual("(x1) => x1", str(_))
+        self.assertEqual("_", str(_))
 
-        self.assertEqual("(x1) => (x1 + 2)",  str(_ + 2))
-        self.assertEqual("(x1) => (x1 - 2)",  str(_ - 2))
-        self.assertEqual("(x1) => (x1 * 2)",  str(_ * 2))
-        self.assertEqual("(x1) => (x1 / 2)",  str(_ / 2))
-        self.assertEqual("(x1) => (x1 % 2)",  str(_ % 2))
-        self.assertEqual("(x1) => (x1 ** 2)", str(_ ** 2))
+        self.assertEqual("(_ + 2)",  str(_ + 2))
+        self.assertEqual("(_ - 2)",  str(_ - 2))
+        self.assertEqual("(_ * 2)",  str(_ * 2))
+        self.assertEqual("(_ / 2)",  str(_ / 2))
+        self.assertEqual("(_ % 2)",  str(_ % 2))
+        self.assertEqual("(_ ** 2)", str(_ ** 2))
 
-        self.assertEqual("(x1) => (x1 & 2)", str(_ & 2))
-        self.assertEqual("(x1) => (x1 | 2)", str(_ | 2))
-        self.assertEqual("(x1) => (x1 ^ 2)", str(_ ^ 2))
+        self.assertEqual("(_ & 2)", str(_ & 2))
+        self.assertEqual("(_ | 2)", str(_ | 2))
+        self.assertEqual("(_ ^ 2)", str(_ ^ 2))
 
-        self.assertEqual("(x1) => (x1 >> 2)", str(_ >> 2))
-        self.assertEqual("(x1) => (x1 << 2)", str(_ << 2))
+        self.assertEqual("(_ >> 2)", str(_ >> 2))
+        self.assertEqual("(_ << 2)", str(_ << 2))
 
-        self.assertEqual("(x1) => (x1 < 2)",  str(_ < 2))
-        self.assertEqual("(x1) => (x1 > 2)",  str(_ > 2))
-        self.assertEqual("(x1) => (x1 <= 2)", str(_ <= 2))
-        self.assertEqual("(x1) => (x1 >= 2)", str(_ >= 2))
-        self.assertEqual("(x1) => (x1 == 2)", str(_ == 2))
-        self.assertEqual("(x1) => (x1 != 2)", str(_ != 2))
+        self.assertEqual("(_ < 2)",  str(_ < 2))
+        self.assertEqual("(_ > 2)",  str(_ > 2))
+        self.assertEqual("(_ <= 2)", str(_ <= 2))
+        self.assertEqual("(_ >= 2)", str(_ >= 2))
+        self.assertEqual("(_ == 2)", str(_ == 2))
+        self.assertEqual("(_ != 2)", str(_ != 2))
 
     def test_rigthside_string_converting(self):
-        self.assertEqual("(x1) => (2 + x1)",  str(2 + _))
-        self.assertEqual("(x1) => (2 - x1)",  str(2 - _))
-        self.assertEqual("(x1) => (2 * x1)",  str(2 * _))
-        self.assertEqual("(x1) => (2 / x1)",  str(2 / _))
-        self.assertEqual("(x1) => (2 % x1)",  str(2 % _))
-        self.assertEqual("(x1) => (2 ** x1)", str(2 ** _))
+        self.assertEqual("(2 + _)",  str(2 + _))
+        self.assertEqual("(2 - _)",  str(2 - _))
+        self.assertEqual("(2 * _)",  str(2 * _))
+        self.assertEqual("(2 / _)",  str(2 / _))
+        self.assertEqual("(2 % _)",  str(2 % _))
+        self.assertEqual("(2 ** _)", str(2 ** _))
 
-        self.assertEqual("(x1) => (2 & x1)", str(2 & _))
-        self.assertEqual("(x1) => (2 | x1)", str(2 | _))
-        self.assertEqual("(x1) => (2 ^ x1)", str(2 ^ _))
+        self.assertEqual("(2 & _)", str(2 & _))
+        self.assertEqual("(2 | _)", str(2 | _))
+        self.assertEqual("(2 ^ _)", str(2 ^ _))
 
-        self.assertEqual("(x1) => (2 >> x1)", str(2 >> _))
-        self.assertEqual("(x1) => (2 << x1)", str(2 << _))
+        self.assertEqual("(2 >> _)", str(2 >> _))
+        self.assertEqual("(2 << _)", str(2 << _))
 
     def test_unary_string_converting(self):
-        self.assertEqual("(x1) => (+x1)", str(+_))
-        self.assertEqual("(x1) => (-x1)", str(-_))
-        self.assertEqual("(x1) => (~x1)", str(~_))
+        self.assertEqual("(+_)", str(+_))
+        self.assertEqual("(-_)", str(-_))
+        self.assertEqual("(~_)", str(~_))
 
     def test_multiple_string_converting(self):
-        self.assertEqual("(x1, x2) => (x1 + x2)", str(_ + _))
-        self.assertEqual("(x1, x2) => (x1 * x2)", str(_ * _))
-        self.assertEqual("(x1, x2) => (x1 - x2)", str(_ - _))
-        self.assertEqual("(x1, x2) => (x1 / x2)", str(_ / _))
-        self.assertEqual("(x1, x2) => (x1 % x2)", str(_ % _))
-        self.assertEqual("(x1, x2) => (x1 ** x2)", str(_ ** _))
+        self.assertEqual("(_ + _)", str(_ + _))
+        self.assertEqual("(_ * _)", str(_ * _))
+        self.assertEqual("(_ - _)", str(_ - _))
+        self.assertEqual("(_ / _)", str(_ / _))
+        self.assertEqual("(_ % _)", str(_ % _))
+        self.assertEqual("(_ ** _)", str(_ ** _))
 
-        self.assertEqual("(x1, x2) => (x1 & x2)", str(_ & _))
-        self.assertEqual("(x1, x2) => (x1 | x2)", str(_ | _))
-        self.assertEqual("(x1, x2) => (x1 ^ x2)", str(_ ^ _))
+        self.assertEqual("(_ & _)", str(_ & _))
+        self.assertEqual("(_ | _)", str(_ | _))
+        self.assertEqual("(_ ^ _)", str(_ ^ _))
 
-        self.assertEqual("(x1, x2) => (x1 >> x2)", str(_ >> _))
-        self.assertEqual("(x1, x2) => (x1 << x2)", str(_ << _))
+        self.assertEqual("(_ >> _)", str(_ >> _))
+        self.assertEqual("(_ << _)", str(_ << _))
 
-        self.assertEqual("(x1, x2) => (x1 > x2)",  str(_ > _))
-        self.assertEqual("(x1, x2) => (x1 < x2)",  str(_ < _))
-        self.assertEqual("(x1, x2) => (x1 >= x2)", str(_ >= _))
-        self.assertEqual("(x1, x2) => (x1 <= x2)", str(_ <= _))
-        self.assertEqual("(x1, x2) => (x1 == x2)", str(_ == _))
-        self.assertEqual("(x1, x2) => (x1 != x2)", str(_ != _))
+        self.assertEqual("(_ > _)",  str(_ > _))
+        self.assertEqual("(_ < _)",  str(_ < _))
+        self.assertEqual("(_ >= _)", str(_ >= _))
+        self.assertEqual("(_ <= _)", str(_ <= _))
+        self.assertEqual("(_ == _)", str(_ == _))
+        self.assertEqual("(_ != _)", str(_ != _))
 
     def test_reverse_string_converting(self):
-        self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
-        self.assertEqual("(x1, x2, x3) => (x1 + (x2 * x3))", str(_ + _ * _))
+        self.assertEqual("((_ + _) + _)", str(_ + _ + _))
+        self.assertEqual("(_ + (_ * _))", str(_ + _ * _))
 
 class CompositionTestCase(unittest.TestCase):
 
