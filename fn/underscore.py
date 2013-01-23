@@ -30,7 +30,7 @@ class T(object):
     __slots__ = ('_callback', '_format')
 
     def __init__(self, callback=identity, format='_'):
-        super().__init__()
+        super(object, self).__init__()
         self._callback = callback
         self._format = format
 
