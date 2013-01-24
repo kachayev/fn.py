@@ -46,6 +46,18 @@ If you are not sure, what your function is going to do, you can print it:
     print (_ + 2) # "(x1) => (x1 + 2)"
     print (_ + _ * _) # "(x1, x2, x3) => (x1 + (x2 * x3))"
 
+``_`` will fail with ``ArityError`` (``TypeError`` subclass) on inaccurate number of passed arguments. This is one more restrictions to ensure that you did everything right: 
+
+.. code-block:: python
+
+    >>> from fn import _
+    >>> (_ + _)(1)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "fn/underscore.py", line 82, in __call__
+        raise ArityError(self, self._arity, len(args))
+    fn.underscore.ArityError: (_ + _) expected 2 arguments, got 1
+
 
 Streams and infinite sequences declaration
 ------------------------------------------

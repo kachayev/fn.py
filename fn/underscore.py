@@ -1,3 +1,4 @@
+import re
 import operator
 
 from sys import version_info
@@ -13,34 +14,46 @@ def fmap(f, format=""):
     def applyier(self, other=None):
         fmt = "(%s)" % format.replace("self", self._format)
         if other is None:
-            return self.__class__(F(self) << f, fmt)
+            return self.__class__(F(self) << f, fmt, self._arity)
         elif isinstance(other, self.__class__):
-            call = lambda arg1: lambda arg2: f(self(arg1), other(arg2))
-            return self.__class__(call, fmt.replace("other", other._format))
+            return self.__class__((f, self, other), 
+                                  fmt.replace("other", other._format), 
+                                  self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
-            return self.__class__(call, fmt.replace("other", str(other)))
+            return self.__class__(call, fmt.replace("other", str(other)), self._arity)
     return applyier
+
+class ArityError(TypeError):
+    def __str__(self):
+        return "{0!r} expected {1} arguments, got {2}".format(*self.args)
 
 class _Callable(object):
     
-    __slots__ = '_callback', "_format"
+    __slots__ = "_callback", "_format", "_arity"
 
-    def __init__(self, callback=identity, format="_"):
+    def __init__(self, callback=identity, format="_", arity=1):
         self._callback = callback
         self._format = format
+        self._arity = arity
 
     def call(self, name, *args):
         """Call method from _ object by given name and arguments"""
         return self.__class__(F(apply) << operator.attrgetter(name) << F(self))
 
     def __getattr__(self, name):
-        return self.__class__(F(operator.attrgetter(name)) << F(self))
+        return self.__class__(F(operator.attrgetter(name)) << F(self), 
+                              "getattr(%s, %s)" % (self._format, name),  
+                              self._arity)
 
     def __getitem__(self, k):
         if isinstance(k, self.__class__):
-            return self.__class__(lambda arg1: lambda arg2: self(arg1)[k(arg2)])
-        return self.__class__(F(operator.itemgetter(k)) << F(self))
+            return self.__class__((operator.getitem, self, k),
+                                  "%s[%s]" % (self._format, k._format),
+                                  self._arity + k._arity)
+        return self.__class__(F(operator.itemgetter(k)) << F(self), 
+                              "%s[%s]" % (self._format, k),
+                              self._arity)
 
     def __str__(self):
         """Build readable representation for function
@@ -60,8 +73,19 @@ class _Callable(object):
 
         return "({left}) => {right}".format(left=", ".join(l), right=r)
 
+    def __repr__(self):
+        """Return original function notation to ensure that eval(repr(f)) == f"""
+        return re.sub(r"x\d", "_", str(self).split("=>")[1].strip())
+
     def __call__(self, *args):
-        return curry(self._callback, *args)
+        if len(args) != self._arity:
+            raise ArityError(self, self._arity, len(args))
+
+        if not isinstance(self._callback, tuple):
+            return self._callback(*args)
+
+        f, left, right = self._callback
+        return f(left(*args[:left._arity]), right(*args[left._arity:]))
 
     __add__ = fmap(operator.add, "self + other")
     __mul__ = fmap(operator.mul, "self * other")

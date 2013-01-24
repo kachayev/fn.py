@@ -4,7 +4,7 @@
 
 import unittest
 
-from fn import op, _, F, Stream, iters 
+from fn import op, _, F, Stream, iters, underscore
 
 import operator
 import itertools
@@ -198,6 +198,19 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(0, (_[_])(range(10), 0))
         self.assertEqual(8, (_[_ * (-1)])(range(10), 2))
 
+    def test_arity_error(self):
+        self.assertRaises(underscore.ArityError, _, 1, 2)
+        self.assertRaises(underscore.ArityError, _ + _, 1)
+        # can be catched as TypeError
+        self.assertRaises(TypeError, _, 1, 2)
+        self.assertRaises(TypeError, _ + _, 1)
+
+    def test_more_than_2_operations(self):
+        self.assertEqual(12, (_ * 2 + 10)(1))
+        self.assertEqual(6,  (_ + _ + _)(1,2,3))
+        self.assertEqual(10, (_ + _ + _ + _)(1,2,3,4))
+        self.assertEqual(7,  (_ + _ * _)(1,2,3))
+
     def test_string_converting(self):
         self.assertEqual("(x1) => x1", str(_))
 
@@ -267,6 +280,11 @@ class UnderscoreTestCase(unittest.TestCase):
     def test_reverse_string_converting(self):
         self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
         self.assertEqual("(x1, x2, x3) => (x1 + (x2 * x3))", str(_ + _ * _))
+
+    def test_repr(self):
+        self.assertEqual(_ / 2, eval(repr(_ / 2)))
+        self.assertEqual(_ + _, eval(repr(_ + _)))
+        self.assertEqual(_ + _ * _, eval(repr(_ + _ * _)))
 
 class CompositionTestCase(unittest.TestCase):
 
