@@ -4,7 +4,7 @@
 
 import unittest
 
-from fn import op, _, F, Stream, iters, underscore
+from fn import op, _, F, Stream, iters, underscore, monad
 
 import operator
 import itertools
@@ -511,6 +511,55 @@ class StreamTestCase(unittest.TestCase):
         # 35 elements should be already evaluated
         self.assertEqual(fib.cursor(), 35)
 
+class OptionTestCase(unittest.TestCase):
+
+    def test_create_option(self):
+        self.assertIsInstance(monad.Option("A"), monad.Full)
+        self.assertIsInstance(monad.Option(10), monad.Full)
+        self.assertIsInstance(monad.Option(10, lambda x: x > 7), monad.Full)
+        self.assertIsInstance(monad.Option(None), monad.Empty)
+        self.assertIsInstance(monad.Option(False), monad.Empty)
+        self.assertIsInstance(monad.Option(10, lambda x: x > 70), monad.Empty)
+
+    def test_map_filter(self):
+        class Request(dict):
+            def parameter(self, name):
+                return monad.Option(self.get(name, None))
+
+        r = Request(testing="Fixed", empty="   ")
+
+        # full chain
+        self.assertEqual("FIXED", r.parameter("testing")
+                                   .map(operator.methodcaller("strip"))
+                                   .filter(len)
+                                   .map(operator.methodcaller("upper"))
+                                   .getOr(""))
+
+        # breaks on filter
+        self.assertEqual("", r.parameter("empty")
+                              .map(operator.methodcaller("strip"))
+                              .filter(len)
+                              .map(operator.methodcaller("upper"))
+                              .getOr(""))
+
+        # breaks on parameter
+        self.assertEqual("", r.parameter("missed")
+                              .map(operator.methodcaller("strip"))
+                              .filter(len)
+                              .map(operator.methodcaller("upper"))
+                              .getOr(""))
+
+    def test_stringify(self):
+        self.assertEqual("Full(10)", str(monad.Full(10)))
+        self.assertEqual("Full(in box!)", str(monad.Full("in box!")))
+        self.assertEqual("Empty()", str(monad.Empty()))
+        self.assertEqual("Empty()", str(monad.Option(None)))
+
+    def test_option_repr(self):
+        self.assertEqual("Full(10)", repr(monad.Full(10)))
+        self.assertEqual("Full(in box!)", repr(monad.Full("in box!")))
+        self.assertEqual("Empty()", repr(monad.Empty()))
+        self.assertEqual("Empty()", repr(monad.Option(None)))
 
 if __name__ == '__main__':
     unittest.main()
