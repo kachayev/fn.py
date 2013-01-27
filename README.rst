@@ -157,6 +157,7 @@ of lazy functionality for few functions to work the same way in Python
 -  ``range`` (returns ``xrange`` in Python 2+)
 -  ``filterfalse`` (returns ``itertools.ifilterfalse`` in Python 2+)
 -  ``zip_longest`` (returns ``itertools.izip_longest`` in Python 2+)
+-  ``accumulate`` (backported to Python < 3.3)
 
 Second part of module is high-level recipes to work with iterators. Most
 of them taken from `Python

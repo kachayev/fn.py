@@ -455,6 +455,14 @@ class IteratorsTestCase(unittest.TestCase):
         # string is not a list
         self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
 
+    def test_accumulate(self):
+        self.assertEqual([1,3,6,10,15], list(iters.accumulate([1,2,3,4,5])))
+        self.assertEqual([1,2,6,24,120], list(iters.accumulate([1,2,3,4,5], operator.mul)))
+
+    def test_filterfalse(self):
+        l = iters.filterfalse(lambda x: x > 10, [1,2,3,11,12])
+        self.assertEqual([1,2,3], list(l))
+
 class StreamTestCase(unittest.TestCase):
 
     def test_from_list(self):

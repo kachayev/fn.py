@@ -1,6 +1,11 @@
 History
 =======
 
+27.01.2012
+----------
+
+- ``iters.accumulate`` - backported version for Python < 3.3
+
 23.01.2012
 ----------
 
