@@ -549,6 +549,22 @@ class OptionTestCase(unittest.TestCase):
                               .map(operator.methodcaller("upper"))
                               .getOr(""))
 
+    def test_optionable_decorator(self):
+        class Request(dict):
+            @monad.optionable
+            def parameter(self, name):
+                return self.get(name, None)
+
+        r = Request(testing="Fixed", empty="   ")
+
+        # full chain
+        self.assertEqual("FIXED", r.parameter("testing")
+                                   .map(operator.methodcaller("strip"))
+                                   .filter(len)
+                                   .map(operator.methodcaller("upper"))
+                                   .getOr(""))
+
+
     def test_stringify(self):
         self.assertEqual("Full(10)", str(monad.Full(10)))
         self.assertEqual("Full(in box!)", str(monad.Full("in box!")))

@@ -12,11 +12,10 @@ Python variant:
               .filter(len)
               .map(methodcaller("upper"))
               .getOr("")
-
-XXX: add wrapper decorator, return Full(x) and Empty for function results.
 """
 
 from collections import namedtuple
+from functools import wraps
 
 class Option(object):
 
@@ -86,3 +85,10 @@ class Empty(Option):
         return "Empty()"
 
     __repr__ = __str__
+
+def optionable(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return Option(f(*args, **kwargs))
+    
+    return wrapper
