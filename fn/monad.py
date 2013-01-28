@@ -20,6 +20,11 @@ from functools import wraps
 class Option(object):
 
     def __new__(tp, value, checker=bool):
+        if isinstance(value, Option):
+            # Option(Full) -> Full
+            # Option(Empty) -> Empty
+            return value
+
         return Full(value) if checker(value) else Empty()
 
 class Full(Option):
@@ -28,7 +33,11 @@ class Full(Option):
     __new__ = object.__new__
 
     def __init__(self, value, checker=bool):
-        self.x = value
+        if isinstance(value, Full):
+            # Option(Full) -> Full
+            self.x = value.getOr("")
+        else:
+            self.x = value
 
     def map(self, callback):
         return Full(callback(self.x))
@@ -76,7 +85,7 @@ class Empty(Option):
         return callback(*args, **kwargs)
 
     def orElse(self, default):
-        return Option(default)
+        return Option(defalut)
 
     def orCall(self, callback, *args, **kwargs):
         return Option(callback(*args, **kwargs))

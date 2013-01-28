@@ -549,6 +549,41 @@ class OptionTestCase(unittest.TestCase):
                               .map(operator.methodcaller("upper"))
                               .getOr(""))
 
+    def test_lazy_orcall(self):
+        def from_mimetype(request):
+            # you can return both value or Option
+            return request.get("mimetype", None)
+
+        def from_extension(request):
+            # you can return both value or Option
+            return monad.Option(request.get("url", None))\
+                        .map(lambda s: s.split(".")[-1])
+
+
+        # extract value from extension
+        r = dict(url="myfile.png")
+        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
+                                     .orCall(from_mimetype, r) \
+                                     .orCall(from_extension, r) \
+                                     .map(operator.methodcaller("upper")) \
+                                     .getOr(""))
+
+        # extract value from mimetype
+        r = dict(url="myfile.svg", mimetype="png")
+        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
+                                     .orCall(from_mimetype, r) \
+                                     .orCall(from_extension, r) \
+                                     .map(operator.methodcaller("upper")) \
+                                     .getOr(""))
+
+        # type is set directly
+        r = dict(url="myfile.jpeg", mimetype="svg", type="png")
+        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
+                                     .orCall(from_mimetype, r) \
+                                     .orCall(from_extension, r) \
+                                     .map(operator.methodcaller("upper")) \
+                                     .getOr(""))
+
     def test_optionable_decorator(self):
         class Request(dict):
             @monad.optionable
@@ -563,7 +598,6 @@ class OptionTestCase(unittest.TestCase):
                                    .filter(len)
                                    .map(operator.methodcaller("upper"))
                                    .getOr(""))
-
 
     def test_stringify(self):
         self.assertEqual("Full(10)", str(monad.Full(10)))
