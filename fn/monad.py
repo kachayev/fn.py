@@ -85,7 +85,7 @@ class Empty(Option):
         return callback(*args, **kwargs)
 
     def orElse(self, default):
-        return Option(defalut)
+        return Option(default)
 
     def orCall(self, callback, *args, **kwargs):
         return Option(callback(*args, **kwargs))
