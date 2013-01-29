@@ -3,11 +3,17 @@
 """Tests for Fn.py library"""
 
 import unittest
+import operator
+import itertools
+
+from sys import version_info
 
 from fn import op, _, F, Stream, iters, underscore, monad
 
-import operator
-import itertools
+class InstanceChecker(object):
+    if version_info[0] == 2 and version_info[1] <= 6:
+        def assertIsInstance(self, inst, cls):
+            self.assertTrue(isinstance(inst, cls))
 
 class OperatorTestCase(unittest.TestCase):
 
@@ -511,7 +517,7 @@ class StreamTestCase(unittest.TestCase):
         # 35 elements should be already evaluated
         self.assertEqual(fib.cursor(), 35)
 
-class OptionTestCase(unittest.TestCase):
+class OptionTestCase(unittest.TestCase, InstanceChecker):
 
     def test_create_option(self):
         self.assertIsInstance(monad.Option("A"), monad.Full)

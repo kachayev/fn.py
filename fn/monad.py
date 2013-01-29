@@ -30,7 +30,9 @@ class Option(object):
 class Full(Option):
 
     __slots__ = "x", 
-    __new__ = object.__new__
+
+    def __new__(tp, *args, **kwargs):
+        return object.__new__(tp)
 
     def __init__(self, value, checker=bool):
         if isinstance(value, Full):
@@ -46,6 +48,8 @@ class Full(Option):
         return self if callback(self.x) else Empty()
 
     def exists(self, callback):
+        # XXX: need to reimplement this method and 
+        # add isEmpty (or something like this) instead
         return True 
 
     def getOr(self, default):
@@ -67,7 +71,8 @@ class Full(Option):
 
 class Empty(Option):
 
-    __new__ = object.__new__
+    def __new__(tp, *args, **kwargs):
+        return object.__new__(tp)
 
     def map(self, callback):
         return Empty()
@@ -85,7 +90,7 @@ class Empty(Option):
         return callback(*args, **kwargs)
 
     def orElse(self, default):
-        return Option(defalut)
+        return Option(default)
 
     def orCall(self, callback, *args, **kwargs):
         return Option(callback(*args, **kwargs))
