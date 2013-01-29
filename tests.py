@@ -617,5 +617,14 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertEqual("Empty()", repr(monad.Empty()))
         self.assertEqual("Empty()", repr(monad.Option(None)))
 
+    def test_static_constructor(self):
+        self.assertEqual(monad.Empty(),  monad.Option.from_value(None))
+        self.assertEqual(monad.Full(10), monad.Option.from_value(10))
+        self.assertEqual(monad.Empty(),  monad.Option.from_call(lambda: None))
+        self.assertEqual(monad.Full(10), monad.Option.from_call(operator.add, 8, 2))
+        self.assertEqual(monad.Empty(), 
+                         monad.Option.from_call(lambda d, k: d[k], 
+                                                {"a":1}, "b", exc=KeyError))
+
 if __name__ == '__main__':
     unittest.main()

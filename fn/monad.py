@@ -1,21 +1,64 @@
 """
-Example of Option usage (from Scala documentation):
+``fn.monad.Option`` represents optional values, each instance of 
+``Option`` can be either instance of ``Full`` or ``Empty``. 
+It provides you with simple way to write long computation sequences 
+and get rid of many ``if/else`` blocks. See usage examples below. 
 
-    val name: Option[String] = request getParameter "name"
-    val upper = name map { _.trim } filter { _.length != 0 } map { _.toUpperCase }
-    println(upper getOrElse "")
+Assume that you have ``Request`` class that gives you parameter 
+value by its name. To get uppercase notation for non-empty striped value:
 
-Python variant:
+    class Request(dict):
+        def parameter(self, name):
+            return self.get(name, None)
 
-    name = request.parameter("name")
-    print name.map(methodcaller(trim))
-              .filter(len)
-              .map(methodcaller("upper"))
-              .getOr("")
+    r = Request(testing="Fixed", empty="   ")
+    param = r.parameter("testing")
+    if param is None:
+        fixed = ""
+    else:
+        param = param.strip()
+        if len(param) == 0:
+            fixed = ""
+        else:
+            fixed = param.upper()
+
+
+Hmm, looks ugly.. Update code with ``fn.monad.Option``:
+
+    from operator import methodcaller
+    from fn.monad import optionable
+
+    class Request(dict):
+        @optionable
+        def parameter(self, name):
+            return self.get(name, None)
+
+    r = Request(testing="Fixed", empty="   ")
+    fixed = r.parameter("testing")
+             .map(methodcaller("strip"))
+             .filter(len)
+             .map(methodcaller("upper"))
+             .getOr("")
+
+``fn.monad.Option.orCall`` is good method for trying several 
+variant to end computation. I.e. use have ``Request`` class 
+with optional attributes ``type``, ``mimetype``, ``url``. 
+You need to evaluate "request type" using at least on attribute:
+
+    from fn.monad import Option
+
+    request = dict(url="face.png", mimetype="PNG")
+    tp = Option(request.get("type", None)) \ # check "type" key first
+            .orCall(from_mimetype, request) \ # or.. check "mimetype" key
+            .orCall(from_extension, request) \ # or... get "url" and check extension
+            .getOr("application/undefined")
+
+
 """
 
 from collections import namedtuple
 from functools import wraps
+from operator import eq
 
 class Option(object):
 
@@ -27,7 +70,24 @@ class Option(object):
 
         return Full(value) if checker(value) else Empty()
 
+    @staticmethod
+    def from_value(value):
+        return Option(value)
+
+    @staticmethod
+    def from_call(callback, *args, **kwargs):
+        """Execute callback and catch possible (all by default)
+        exceptions. If exception is raised Empty will be returned.
+        """
+        exc = kwargs.pop("except", Exception)
+        try:
+            return Option(callback(*args, **kwargs)) 
+        except exc:
+            return Empty()
+
+
 class Full(Option):
+    """Represents value that is ready for further computations"""
 
     __slots__ = "x", 
 
@@ -69,10 +129,21 @@ class Full(Option):
 
     __repr__ = __str__
 
+    def __eq__(self, other):
+        if not isinstance(other, Full):
+            return False
+        return eq(self.x, other.x)
+
+
 class Empty(Option):
+    """Represents empty option (without value)"""
+
+    __object = None
 
     def __new__(tp, *args, **kwargs):
-        return object.__new__(tp)
+        if Empty.__object is None:
+            Empty.__object = object.__new__(tp)
+        return Empty.__object
 
     def map(self, callback):
         return Empty()
@@ -99,6 +170,9 @@ class Empty(Option):
         return "Empty()"
 
     __repr__ = __str__
+
+    def __eq__(self, other):
+        return isinstance(other, Empty)
 
 def optionable(f):
     @wraps(f)
