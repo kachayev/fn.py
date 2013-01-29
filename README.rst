@@ -237,7 +237,8 @@ Hmm, looks ugly.. Update code with ``fn.monad.Option``:
     from fn.monad import Option
 
     request = dict(url="face.png", mimetype="PNG")
-    tp = Option(request.get("type", None)) \ # check "type" key first
+    tp = Option \
+            .from_value(request.get("type", None)) \ # check "type" key first
             .orCall(from_mimetype, request) \ # or.. check "mimetype" key
             .orCall(from_extension, request) \ # or... get "url" and check extension
             .getOr("application/undefined")
@@ -279,8 +280,6 @@ Work in progress (!)
 "Roadmap":
 
 -  Trampolines decorator
--  Error handling (``Maybe``, ``Either`` from Haskell, ``Option`` from
-   Scala etc)
 -  Add to ``fn.iters`` module ``foldl``, ``foldr``, ``findelem``,
    ``findindex``
 -  C-accelerator for most modules
