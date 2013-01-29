@@ -191,12 +191,11 @@ Functional style for error-handling
 
 ``fn.monad.Option`` represents optional values, each instance of ``Option`` can be either instance of ``Full`` or ``Empty``. It provides you with simple way to write long computation sequences and get rid of many ``if/else`` blocks. See usage examples below. 
 
-Assume, you have ``request`` class that gives you parameter value by it's name. To get uppercase notation for non-empty striped value:
+Assume that you have ``Request`` class that gives you parameter value by its name. To get uppercase notation for non-empty striped value:
 
 .. code-block:: python
 
     class Request(dict):
-        @optionable
         def parameter(self, name):
             return self.get(name, None)
 
@@ -212,7 +211,7 @@ Assume, you have ``request`` class that gives you parameter value by it's name. 
             fixed = param.upper()
 
 
-With ``fn.monad.Option``:
+Hmm, looks ugly.. Update code with ``fn.monad.Option``:
 
 .. code-block:: python
 
@@ -230,6 +229,18 @@ With ``fn.monad.Option``:
              .filter(len)
              .map(methodcaller("upper"))
              .getOr("")
+
+``fn.monad.Option.orCall`` is good method for trying several variant to end computation. I.e. use have ``Request`` class with optional attributes ``type``, ``mimetype``, ``url``. You need to evaluate "request type" using at least on attribute:
+
+.. code-block:: python
+
+    from fn.monad import Option
+
+    request = dict(url="face.png", mimetype="PNG")
+    tp = Option(request.get("type", None)) \ # check "type" key first
+            .orCall(from_mimetype, request) \ # or.. check "mimetype" key
+            .orCall(from_extension, request) \ # or... get "url" and check extension
+            .getOr("application/undefined")
 
 
 Trampolines decorator
