@@ -542,21 +542,21 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
                                    .map(operator.methodcaller("strip"))
                                    .filter(len)
                                    .map(operator.methodcaller("upper"))
-                                   .getOr(""))
+                                   .get_or(""))
 
         # breaks on filter
         self.assertEqual("", r.parameter("empty")
                               .map(operator.methodcaller("strip"))
                               .filter(len)
                               .map(operator.methodcaller("upper"))
-                              .getOr(""))
+                              .get_or(""))
 
         # breaks on parameter
         self.assertEqual("", r.parameter("missed")
                               .map(operator.methodcaller("strip"))
                               .filter(len)
                               .map(operator.methodcaller("upper"))
-                              .getOr(""))
+                              .get_or(""))
 
     def test_empty_check(self):
         self.assertTrue(monad.Empty().empty)
@@ -575,30 +575,29 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
             return monad.Option(request.get("url", None))\
                         .map(lambda s: s.split(".")[-1])
 
-
         # extract value from extension
         r = dict(url="myfile.png")
         self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .orCall(from_mimetype, r) \
-                                     .orCall(from_extension, r) \
+                                     .or_call(from_mimetype, r) \
+                                     .or_call(from_extension, r) \
                                      .map(operator.methodcaller("upper")) \
-                                     .getOr(""))
+                                     .get_or(""))
 
         # extract value from mimetype
         r = dict(url="myfile.svg", mimetype="png")
         self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .orCall(from_mimetype, r) \
-                                     .orCall(from_extension, r) \
+                                     .or_call(from_mimetype, r) \
+                                     .or_call(from_extension, r) \
                                      .map(operator.methodcaller("upper")) \
-                                     .getOr(""))
+                                     .get_or(""))
 
         # type is set directly
         r = dict(url="myfile.jpeg", mimetype="svg", type="png")
         self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .orCall(from_mimetype, r) \
-                                     .orCall(from_extension, r) \
+                                     .or_call(from_mimetype, r) \
+                                     .or_call(from_extension, r) \
                                      .map(operator.methodcaller("upper")) \
-                                     .getOr(""))
+                                     .get_or(""))
 
     def test_optionable_decorator(self):
         class Request(dict):
@@ -613,7 +612,7 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
                                    .map(operator.methodcaller("strip"))
                                    .filter(len)
                                    .map(operator.methodcaller("upper"))
-                                   .getOr(""))
+                                   .get_or(""))
 
     def test_stringify(self):
         self.assertEqual("Full(10)", str(monad.Full(10)))

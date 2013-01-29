@@ -228,7 +228,7 @@ Hmm, looks ugly.. Update code with ``fn.monad.Option``:
              .map(methodcaller("strip"))
              .filter(len)
              .map(methodcaller("upper"))
-             .getOr("")
+             .get_or("")
 
 ``fn.monad.Option.orCall`` is good method for trying several variant to end computation. I.e. use have ``Request`` class with optional attributes ``type``, ``mimetype``, ``url``. You need to evaluate "request type" using at least on attribute:
 
@@ -239,9 +239,9 @@ Hmm, looks ugly.. Update code with ``fn.monad.Option``:
     request = dict(url="face.png", mimetype="PNG")
     tp = Option \
             .from_value(request.get("type", None)) \ # check "type" key first
-            .orCall(from_mimetype, request) \ # or.. check "mimetype" key
-            .orCall(from_extension, request) \ # or... get "url" and check extension
-            .getOr("application/undefined")
+            .or_call(from_mimetype, request) \ # or.. check "mimetype" key
+            .or_call(from_extension, request) \ # or... get "url" and check extension
+            .get_or("application/undefined")
 
 
 Trampolines decorator
