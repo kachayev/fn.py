@@ -524,7 +524,10 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertIsInstance(monad.Option(10), monad.Full)
         self.assertIsInstance(monad.Option(10, lambda x: x > 7), monad.Full)
         self.assertIsInstance(monad.Option(None), monad.Empty)
-        self.assertIsInstance(monad.Option(False), monad.Empty)
+        self.assertIsInstance(monad.Option(False), monad.Full)
+        self.assertIsInstance(monad.Option(0), monad.Full)
+        self.assertIsInstance(monad.Option(False, checker=bool), monad.Empty)
+        self.assertIsInstance(monad.Option(0, checker=bool), monad.Empty)
         self.assertIsInstance(monad.Option(10, lambda x: x > 70), monad.Empty)
 
     def test_map_filter(self):

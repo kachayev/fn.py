@@ -57,12 +57,12 @@ You need to evaluate "request type" using at least on attribute:
 """
 
 from collections import namedtuple
-from functools import wraps
-from operator import eq
+from functools import wraps, partial
+from operator import eq, is_not
 
 class Option(object):
 
-    def __new__(tp, value, checker=bool):
+    def __new__(tp, value, checker=partial(is_not, None)):
         if isinstance(value, Option):
             # Option(Full) -> Full
             # Option(Empty) -> Empty
@@ -79,12 +79,11 @@ class Option(object):
         """Execute callback and catch possible (all by default)
         exceptions. If exception is raised Empty will be returned.
         """
-        exc = kwargs.pop("except", Exception)
+        exc = kwargs.pop("exc", Exception)
         try:
             return Option(callback(*args, **kwargs)) 
         except exc:
             return Empty()
-
 
 class Full(Option):
     """Represents value that is ready for further computations"""
@@ -94,12 +93,9 @@ class Full(Option):
     def __new__(tp, *args, **kwargs):
         return object.__new__(tp)
 
-    def __init__(self, value, checker=bool):
-        if isinstance(value, Full):
-            # Option(Full) -> Full
-            self.x = value.getOr("")
-        else:
-            self.x = value
+    def __init__(self, value, *args):
+        # Option(Full) -> Full
+        self.x = value.getOr("") if isinstance(value, Full) else value
 
     def map(self, callback):
         return Full(callback(self.x))
