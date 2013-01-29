@@ -189,10 +189,48 @@ cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
 Functional style for error-handling
 -----------------------------------
 
--  Maybe
--  Either
+``fn.monad.Option`` represents optional values, each instance of ``Option`` can be either instance of ``Full`` or ``Empty``. It provides you with simple way to write long computation sequences and get rid of many ``if/else`` blocks. See usage examples below. 
 
-**TODO: Implementation, code samples**
+Assume, you have ``request`` class that gives you parameter value by it's name. To get uppercase notation for non-empty striped value:
+
+.. code-block:: python
+
+    class Request(dict):
+        @optionable
+        def parameter(self, name):
+            return self.get(name, None)
+
+    r = Request(testing="Fixed", empty="   ")
+    param = r.parameter("testing")
+    if param is None:
+        fixed = ""
+    else:
+        param = param.strip()
+        if len(param) == 0:
+            fixed = ""
+        else:
+            fixed = param.upper()
+
+
+With ``fn.monad.Option``:
+
+.. code-block:: python
+
+    from operator import methodcaller
+    from fn.monad import optionable
+
+    class Request(dict):
+        @optionable
+        def parameter(self, name):
+            return self.get(name, None)
+
+    r = Request(testing="Fixed", empty="   ")
+    fixed = r.parameter("testing")
+             .map(methodcaller("strip"))
+             .filter(len)
+             .map(methodcaller("upper"))
+             .getOr("")
+
 
 Trampolines decorator
 ---------------------
