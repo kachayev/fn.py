@@ -89,6 +89,7 @@ class Full(Option):
     """Represents value that is ready for further computations"""
 
     __slots__ = "x", 
+    empty = False 
 
     def __new__(tp, *args, **kwargs):
         return object.__new__(tp)
@@ -102,11 +103,6 @@ class Full(Option):
 
     def filter(self, callback):
         return self if callback(self.x) else Empty()
-
-    def exists(self, callback):
-        # XXX: need to reimplement this method and 
-        # add isEmpty (or something like this) instead
-        return True 
 
     def getOr(self, default):
         return self.x
@@ -135,6 +131,7 @@ class Empty(Option):
     """Represents empty option (without value)"""
 
     __object = None
+    empty = True
 
     def __new__(tp, *args, **kwargs):
         if Empty.__object is None:
@@ -146,9 +143,6 @@ class Empty(Option):
 
     def filter(self, callback):
         return Empty()
-
-    def exists(self, callback):
-        return False
 
     def getOr(self, default):
         return default

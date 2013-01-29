@@ -558,6 +558,13 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
                               .map(operator.methodcaller("upper"))
                               .getOr(""))
 
+    def test_empty_check(self):
+        self.assertTrue(monad.Empty().empty)
+        self.assertTrue(monad.Option(None).empty)
+        self.assertTrue(monad.Option.from_call(lambda: None).empty)
+        self.assertFalse(monad.Option(10).empty)
+        self.assertFalse(monad.Full(10).empty)
+
     def test_lazy_orcall(self):
         def from_mimetype(request):
             # you can return both value or Option
