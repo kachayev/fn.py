@@ -5,6 +5,7 @@ History
 ----------
 
 - ``iters.accumulate`` - backported version for Python < 3.3
+- first implementation for ``monad.Option`` with tests and README samples
 
 23.01.2012
 ----------
