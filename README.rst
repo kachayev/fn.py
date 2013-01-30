@@ -230,7 +230,7 @@ Hmm, looks ugly.. Update code with ``fn.monad.Option``:
              .map(methodcaller("upper"))
              .get_or("")
 
-``fn.monad.Option.orCall`` is good method for trying several variant to end computation. I.e. use have ``Request`` class with optional attributes ``type``, ``mimetype``, ``url``. You need to evaluate "request type" using at least on attribute:
+``fn.monad.Option.or_call`` is good method for trying several variant to end computation. I.e. use have ``Request`` class with optional attributes ``type``, ``mimetype``, ``url``. You need to evaluate "request type" using at least on attribute:
 
 .. code-block:: python
 
