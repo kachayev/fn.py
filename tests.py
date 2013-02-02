@@ -6,9 +6,9 @@ import unittest
 import operator
 import itertools
 
-from sys import version_info
+from sys import version_info, getrecursionlimit
 
-from fn import op, _, F, Stream, iters, underscore, monad
+from fn import op, _, F, Stream, iters, underscore, monad, recur
 
 class InstanceChecker(object):
     if version_info[0] == 2 and version_info[1] <= 6:
@@ -634,6 +634,31 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertEqual(monad.Empty(), 
                          monad.Option.from_call(lambda d, k: d[k], 
                                                 {"a":1}, "b", exc=KeyError))
+
+class TrampolineTestCase(unittest.TestCase):
+
+    def test_tco_decorator(self):
+        def recur_accumulate(origin, f=operator.add, acc=0):
+            n = next(origin, None)
+            if n is None: return acc
+            return recur_accumulate(origin, f, f(acc, n))
+
+        # this works normally
+        self.assertEqual(10, recur_accumulate(iter(range(5))))
+
+        # such count of recursive calls should fail
+        limit = getrecursionlimit() * 10
+        r = iter(range(limit))
+        self.assertRaises(RuntimeError, recur_accumulate, r)
+
+        # with recur decorator it should run without problems
+        @recur.tco
+        def tco_accumulate(origin, f=operator.add, acc=0):
+            n = next(origin, None)
+            if n is None: return False, acc
+            return True, (origin, f, f(acc, n))
+
+        self.assertEqual(49995000, tco_accumulate(iter(range(limit))))
 
 if __name__ == '__main__':
     unittest.main()
