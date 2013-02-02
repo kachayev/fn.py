@@ -259,11 +259,12 @@ This variant works, but it's really ugly. Why? It will utilize memory too heavy 
 
 .. code-block:: python
 
+    >>> import sys
     >>> fact(sys.getrecursionlimit() * 2)
-    ... many many lines of codes ...
+    ... many many lines of stacktrace ...
     RuntimeError: maximum recursion depth exceeded
 
-(which is good, cause it prevents you from terrible mistakes in your code).
+Which is good, cause it prevents you from terrible mistakes in your code.
 
 How we can optimize this solution? Answer is simple, lets transform function to use tail call:
 
