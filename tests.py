@@ -2,16 +2,15 @@
 
 """Tests for Fn.py library"""
 
+import sys
 import unittest
 import operator
 import itertools
 
-from sys import version_info, getrecursionlimit
-
 from fn import op, _, F, Stream, iters, underscore, monad, recur
 
 class InstanceChecker(object):
-    if version_info[0] == 2 and version_info[1] <= 6:
+    if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
         def assertIsInstance(self, inst, cls):
             self.assertTrue(isinstance(inst, cls))
 
@@ -646,10 +645,12 @@ class TrampolineTestCase(unittest.TestCase):
         # this works normally
         self.assertEqual(10, recur_accumulate(iter(range(5))))
 
-        # such count of recursive calls should fail
-        limit = getrecursionlimit() * 10
-        r = iter(range(limit))
-        self.assertRaises(RuntimeError, recur_accumulate, r)
+        limit = sys.getrecursionlimit() * 10
+        # such count of recursive calls should fail on CPython,
+        # for PyPy we skip this test cause on PyPy the limit is
+        # approximative and checked at a lower level
+        if not hasattr(sys, 'pypy_version_info'):
+            self.assertRaises(RuntimeError, recur_accumulate, iter(range(limit)))
 
         # with recur decorator it should run without problems
         @recur.tco
