@@ -255,7 +255,15 @@ Trampolines decorator
         if n == 0: return 1
         return n * fact(n-1)
 
-This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) python will fail with ``RuntimeError: maximum recursion depth exceeded`` (which is good, cause it prevents you from terrible mistakes in you code).
+This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) python will fail with 
+
+.. code-block:: python
+
+    >>> fact(sys.getrecursionlimit() * 2)
+    ... many many lines of codes ...
+    RuntimeError: maximum recursion depth exceeded
+
+(which is good, cause it prevents you from terrible mistakes in your code).
 
 How we can optimize this solution? Answer is simple, lets transform function to use tail call:
 
@@ -267,7 +275,7 @@ How we can optimize this solution? Answer is simple, lets transform function to 
 
 Why this variant is better? Cause you don't need to remember previous values to calculate final result. More about `tail call optimizaion <http://en.wikipedia.org/wiki/Tail_call>`_ on Wikipedia. But... Python interpreter will execute this function the same way as previous one, so you won't win nothing.
 
-``fn.recur.tco`` gives you mechanism to write "optimized" a bit tail call recursion (using "trampoline" approach):
+``fn.recur.tco`` gives you mechanism to write "optimized a bit" tail call recursion (using "trampoline" approach):
 
 .. code-block:: python
 
@@ -278,7 +286,11 @@ Why this variant is better? Cause you don't need to remember previous values to 
         if n == 0: return False, acc
         return True, (n-1, acc*n)
 
-``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output: ``(False, result)`` means that finished, ``(True, args, kwargs)`` means that we need to call function again with other arguments.
+``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output: 
+
+- ``(False, result)`` means that we finished 
+- ``(True, args, kwargs)`` means that we need to call function again with other arguments
+- ``(func, args, kwargs)`` to switch function to be executed inside while loop
 
 **Attention:** be careful with mutable/imutable data structures processing.
 
