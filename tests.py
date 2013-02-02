@@ -659,7 +659,7 @@ class TrampolineTestCase(unittest.TestCase):
             if n is None: return False, acc
             return True, (origin, f, f(acc, n))
 
-        self.assertEqual(49995000, tco_accumulate(iter(range(limit))))
+        self.assertEqual(sum(range(limit)), tco_accumulate(iter(range(limit))))
 
 if __name__ == '__main__':
     unittest.main()
