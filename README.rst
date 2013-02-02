@@ -293,7 +293,7 @@ Why this variant is better? Cause you don't need to remember previous values to 
 - ``(True, args, kwargs)`` means that we need to call function again with other arguments
 - ``(func, args, kwargs)`` to switch function to be executed inside while loop
 
-**Attention:** be careful with mutable/imutable data structures processing.
+**Attention:** be careful with mutable/immutable data structures processing.
 
 Installation
 ------------
@@ -318,14 +318,13 @@ You can also build library from source
     $ cd fn.py
     $ python setup.py install
 
-Work in progress (!)
---------------------
+Work in progress
+----------------
 
 "Roadmap":
 
--  Trampolines decorator
--  Add to ``fn.iters`` module ``foldl``, ``foldr``, ``findelem``,
-   ``findindex``
+-  Add to ``fn.op`` module ``foldl``, ``foldr``
+-  Add to ``fn.iters`` module ``findelem``, ``findindex``
 -  C-accelerator for most modules
 
 Ideas to think about:
