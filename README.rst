@@ -323,6 +323,7 @@ Work in progress
 
 "Roadmap":
 
+- ``fn.monad.Either`` to deal with error logging 
 -  Add to ``fn.op`` module ``foldl``, ``foldr``
 -  Add to ``fn.iters`` module ``findelem``, ``findindex``
 -  C-accelerator for most modules
