@@ -1,5 +1,5 @@
 from sys import version_info
-from collections import deque
+from collections import deque, Iterable
 from operator import add, itemgetter, attrgetter
 from functools import partial
 from itertools import (islice, chain,                        
@@ -32,6 +32,10 @@ if version_info[0] == 2:
 else:
     from itertools import filterfalse
     from itertools import zip_longest
+
+# Use str as the base string type for python2/3
+if version_info[0] == 2:
+    str = basestring
 
 def take(limit, base): 
     return islice(base, limit)
@@ -189,18 +193,19 @@ def iter_except(func, exception, first=None):
     except exception:
         pass
 
-def flatten(lists):
-    """Flatten any level of nesting lists.
-    Reimplemented to work not with all nested levels (not only one).
+
+def flatten(items):
+    """Flatten any level of nested iterables (not including strings).
+    Reimplemented to work with all nested levels (not only one).
 
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
-    for l in lists:
-        if isinstance(l, list):
-            for t in flatten(l):
-                yield t
+    for item in items:
+        if isinstance(item, Iterable) and not isinstance(item, str):
+            for i in flatten(item):
+                yield i
         else:
-            yield l
+            yield item
 
 if version_info[0] == 3 and version_info[1] >= 3:
     from itertools import accumulate
