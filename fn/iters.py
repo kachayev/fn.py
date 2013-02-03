@@ -1,5 +1,5 @@
 from sys import version_info
-from collections import deque
+from collections import deque, Iterable
 from operator import add, itemgetter, attrgetter
 from functools import partial
 from itertools import (islice, chain,                        
@@ -189,18 +189,22 @@ def iter_except(func, exception, first=None):
     except exception:
         pass
 
-def flatten(lists):
-    """Flatten any level of nesting lists.
-    Reimplemented to work not with all nested levels (not only one).
+
+def flatten(items):
+    """Flatten any level of nested iterables (not including strings, bytes or
+    bytearrays).
+    Reimplemented to work with all nested levels (not only one).
 
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
-    for l in lists:
-        if isinstance(l, list):
-            for t in flatten(l):
-                yield t
+    for item in items:
+        is_iterable = isinstance(item, Iterable)
+        is_string_or_bytes = isinstance(item, (str, bytes, bytearray))
+        if is_iterable and not is_string_or_bytes:
+            for i in flatten(item):
+                yield i
         else:
-            yield l
+            yield item
 
 if version_info[0] == 3 and version_info[1] >= 3:
     from itertools import accumulate

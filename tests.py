@@ -453,12 +453,23 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual(["c", "b", "a"], list(it))
 
     def test_flatten(self):
+        # flatten nested lists
         self.assertEqual([1,2,3,4], list(iters.flatten([[1,2], [3,4]])))
         self.assertEqual([1,2,3,4,5,6], list(iters.flatten([[1,2], [3, [4,5,6]]])))
-        # flat list should return themself 
+        # flatten nested tuples, sets, and frozen sets
+        self.assertEqual([1,2,3,4,5,6], list(iters.flatten(((1,2), (3, (4,5,6))))))
+        self.assertEqual([1,2,3], list(iters.flatten(set([1, frozenset([2,3])]))))
+        # flatten nested generators
+        generator_func = lambda n: (num for num in range(0, n))
+        generators = (generator_func(n) for n in range(1, 4))
+        self.assertEqual([0,0,1,0,1,2], list(iters.flatten(generators)))
+        # flat list should return itself
         self.assertEqual([1,2,3], list(iters.flatten([1,2,3])))
-        # string is not a list
+        # Don't flatten strings, bytes, or bytearrays
         self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
+        self.assertEqual([2, b'abc', 1], list(iters.flatten([2, b'abc', 1])))
+        barray = bytearray(b'abc')
+        self.assertEqual([2, bytearray(b'abc'), 1], list(iters.flatten([2, bytearray(b'abc'), 1])))
 
     def test_accumulate(self):
         self.assertEqual([1,3,6,10,15], list(iters.accumulate([1,2,3,4,5])))
