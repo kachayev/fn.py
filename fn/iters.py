@@ -33,10 +33,6 @@ else:
     from itertools import filterfalse
     from itertools import zip_longest
 
-# Use str as the base string type for python2/3
-if version_info[0] == 2:
-    str = basestring
-
 def take(limit, base): 
     return islice(base, limit)
 
@@ -195,13 +191,16 @@ def iter_except(func, exception, first=None):
 
 
 def flatten(items):
-    """Flatten any level of nested iterables (not including strings).
+    """Flatten any level of nested iterables (not including strings, bytes or
+    bytearrays).
     Reimplemented to work with all nested levels (not only one).
 
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
     for item in items:
-        if isinstance(item, Iterable) and not isinstance(item, str):
+        is_iterable = isinstance(item, Iterable)
+        is_string_or_bytes = isinstance(item, (str, bytes, bytearray))
+        if is_iterable and not is_string_or_bytes:
             for i in flatten(item):
                 yield i
         else:
