@@ -1,6 +1,12 @@
 History
 =======
 
+02.02.2012
+----------
+
+- prelimitary implementation of ``recur.tco`` to deal with recursive functions
+- ``iters.flatten`` is reimplemented to work with different iterators
+
 27.01.2012
 ----------
 

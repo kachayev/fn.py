@@ -647,6 +647,7 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
 class TrampolineTestCase(unittest.TestCase):
 
     def test_tco_decorator(self):
+
         def recur_accumulate(origin, f=operator.add, acc=0):
             n = next(origin, None)
             if n is None: return acc
@@ -670,6 +671,20 @@ class TrampolineTestCase(unittest.TestCase):
             return True, (origin, f, f(acc, n))
 
         self.assertEqual(sum(range(limit)), tco_accumulate(iter(range(limit))))
+
+    def test_tco_different_functions(self):
+
+        @recur.tco
+        def recur_inc2(curr, acc=0):
+            if curr == 0: return False, acc
+            return recur_dec, (curr-1, acc+2)
+
+        @recur.tco
+        def recur_dec(curr, acc=0):
+            if curr == 0: return False, acc
+            return recur_inc2, (curr-1, acc-1)
+
+        self.assertEqual(5000, recur_inc2(10000))
 
 if __name__ == '__main__':
     unittest.main()
