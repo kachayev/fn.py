@@ -339,8 +339,6 @@ Work in progress
 
 Ideas to think about:
 
--  "Pipeline" notation for composition (back-order):
-   ``F() >> list >> partial(map, int)``
 -  Curried function builder to simplify
    ``lambda arg1: lambda arg2: ...``
 -  Scala-style for-yield loop to simplify long map/filter blocks
