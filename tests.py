@@ -310,6 +310,16 @@ class CompositionTestCase(unittest.TestCase):
     def test_underscore(self):
         self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))    
 
+    def test_pipe_composition(self):
+        def f(x): return x * 2
+        def g(x): return x + 10
+
+        self.assertEqual(20, (F() >> f >> g)(5))
+
+    def test_pipe_partial(self):
+        func = F() >> (iters.filter, _ < 6) >> sum
+        self.assertEqual(15, func(iters.range(10)))
+
 class IteratorsTestCase(unittest.TestCase):
 
     def test_take(self):

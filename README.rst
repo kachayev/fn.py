@@ -126,6 +126,16 @@ application and functions composition.
     assert list(map(f, [0, 1, 2])) == [1, 101, 201]
     assert list(map(F() << str << (_ ** 2) << (_ + 1), range(3))) == ["1", "4", "9"]
 
+It also give you move readable in many cases "pipe" notation to deal with functions composition:
+
+.. code-block:: python
+
+    from fn import F, _
+    from fn.iters import filter, range
+
+    func = F() >> (filter, _ < 6) >> sum
+    assert func(range(10)) == 15
+
 You can find more examples for compositions usage in ``fn._``
 implementation `source
 code <https://github.com/kachayev/fn.py/blob/master/fn/underscore.py>`__.
