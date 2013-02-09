@@ -105,6 +105,58 @@ sequence can be calculated as:
     assert fib[20] == 6765
     assert list(fib[30:35]) == [832040,1346269,2178309,3524578,5702887]
 
+Trampolines decorator
+---------------------
+
+``fn.recur.tco`` is a workaround for dealing with TCO without heavy stack utilization. Let's start from simple example of recursive factorial calculation:
+
+.. code-block:: python
+
+    def fact(n):
+        if n == 0: return 1
+        return n * fact(n-1)
+
+This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) CPython will fail with 
+
+.. code-block:: python
+
+    >>> import sys
+    >>> fact(sys.getrecursionlimit() * 2)
+    ... many many lines of stacktrace ...
+    RuntimeError: maximum recursion depth exceeded
+
+Which is good, cause it prevents you from terrible mistakes in your code.
+
+How can we optimize this solution? Answer is simple, lets transform function to use tail call:
+
+.. code-block:: python
+
+    def fact(n, acc=1):
+        if n == 0: return acc
+        return fact(n-1, acc*n)
+
+Why this variant is better? Cause you don't need to remember previous values to calculate final result. More about `tail call optimizaion <http://en.wikipedia.org/wiki/Tail_call>`_ on Wikipedia. But... Python interpreter will execute this function the same way as previous one, so you won't win nothing.
+
+``fn.recur.tco`` gives you mechanism to write "optimized a bit" tail call recursion (using "trampoline" approach):
+
+.. code-block:: python
+
+    from fn import recur
+
+    @recur.tco
+    def fact(n, acc=1):
+        if n == 0: return False, acc
+        return True, (n-1, acc*n)
+
+``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output: 
+
+- ``(False, result)`` means that we finished 
+- ``(True, args, kwargs)`` means that we need to call function again with other arguments
+- ``(func, args, kwargs)`` to switch function to be executed inside while loop
+
+**Attention:** be careful with mutable/immutable data structures processing.
+
+
 High-level operations with functions
 ------------------------------------
 
@@ -253,57 +305,6 @@ Hmm, looks ugly.. Update code with ``fn.monad.Option``:
             .or_call(from_extension, request) \ # or... get "url" and check extension
             .get_or("application/undefined")
 
-
-Trampolines decorator
----------------------
-
-``fn.recur.tco`` is a workaround for dealing with TCO without heavy stack utilization. Let's start from simple example of recursive factorial calculation:
-
-.. code-block:: python
-
-    def fact(n):
-        if n == 0: return 1
-        return n * fact(n-1)
-
-This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) CPython will fail with 
-
-.. code-block:: python
-
-    >>> import sys
-    >>> fact(sys.getrecursionlimit() * 2)
-    ... many many lines of stacktrace ...
-    RuntimeError: maximum recursion depth exceeded
-
-Which is good, cause it prevents you from terrible mistakes in your code.
-
-How can we optimize this solution? Answer is simple, lets transform function to use tail call:
-
-.. code-block:: python
-
-    def fact(n, acc=1):
-        if n == 0: return acc
-        return fact(n-1, acc*n)
-
-Why this variant is better? Cause you don't need to remember previous values to calculate final result. More about `tail call optimizaion <http://en.wikipedia.org/wiki/Tail_call>`_ on Wikipedia. But... Python interpreter will execute this function the same way as previous one, so you won't win nothing.
-
-``fn.recur.tco`` gives you mechanism to write "optimized a bit" tail call recursion (using "trampoline" approach):
-
-.. code-block:: python
-
-    from fn import recur
-
-    @recur.tco
-    def fact(n, acc=1):
-        if n == 0: return False, acc
-        return True, (n-1, acc*n)
-
-``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output: 
-
-- ``(False, result)`` means that we finished 
-- ``(True, args, kwargs)`` means that we need to call function again with other arguments
-- ``(func, args, kwargs)`` to switch function to be executed inside while loop
-
-**Attention:** be careful with mutable/immutable data structures processing.
 
 Installation
 ------------
