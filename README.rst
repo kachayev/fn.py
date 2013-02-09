@@ -135,7 +135,7 @@ How can we optimize this solution? Answer is simple, lets transform function to 
         if n == 0: return acc
         return fact(n-1, acc*n)
 
-Why this variant is better? Cause you don't need to remember previous values to calculate final result. More about `tail call optimizaion <http://en.wikipedia.org/wiki/Tail_call>`_ on Wikipedia. But... Python interpreter will execute this function the same way as previous one, so you won't win nothing.
+Why this variant is better? Cause you don't need to remember previous values to calculate final result. More about `tail call optimization <http://en.wikipedia.org/wiki/Tail_call>`_ on Wikipedia. But... Python interpreter will execute this function the same way as previous one, so you won't win nothing.
 
 ``fn.recur.tco`` gives you mechanism to write "optimized a bit" tail call recursion (using "trampoline" approach):
 
