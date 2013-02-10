@@ -3,6 +3,19 @@ from functools import partial
 from .op import identity, flip
 
 class F(object):
+    """Provide simple syntax for functions composition
+    (through << and >> operators) and partial function 
+    application (through simple tuple syntax). 
+
+    Usage example:
+
+    >>> func = F() << (_ + 10) << (_ + 5)
+    >>> print(func(10))
+    25
+    >>> func = F() >> (filter, _ < 6) >> sum
+    >>> print(func(range(10))) 
+    15
+    """
 
     __slots__ = "f", 
 
