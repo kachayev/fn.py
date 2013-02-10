@@ -43,7 +43,6 @@ class OperatorTestCase(unittest.TestCase):
         zipper = F() << list << op.zipwith(_ + _)
         self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
 
-
 class UnderscoreTestCase(unittest.TestCase):
 
     def test_identity_default(self):
