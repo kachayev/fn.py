@@ -16,7 +16,7 @@ from functional approach even in mostly-imperative program.
 
 More about functional approach from my Pycon UA 2012 talks: `Functional
 Programming with
-Python <http://ua.pycon.org/static/talks/kachayev/#/>`_.
+Python <http://kachayev.github.com/talks/uapycon2012/index.html>`_.
 
 Scala-style lambdas definition
 ------------------------------
