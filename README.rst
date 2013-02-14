@@ -358,5 +358,4 @@ How to find me
 --------------
 
 Twitter: `@kachayev <https://twitter.com/kachayev>`_
-
 Email: kachayev <at> gmail.com
