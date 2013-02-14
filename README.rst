@@ -353,3 +353,10 @@ Contribute
    master branch (or branch off of it).
 3. Write a test which shows that the bug was fixed or that the feature
    works as expected.
+
+How to find me
+--------------
+
+Twitter: `@kachayev <https://twitter.com/kachayev>`_
+
+Email: kachayev <at> gmail.com
