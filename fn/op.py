@@ -38,33 +38,33 @@ def zipwith(f):
     'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
     return F(starmap, f) << zip
 
-def foldl(f):
+def foldl(f, init=None):
     """Return function to fold iterator to scala value 
     using passed function as reducer.
 
     Usage:
     >>> print foldl(_ + _)([0,1,2,3,4])
     10
-    >>> print foldl(_ * _)([1,2,3], 1)
+    >>> print foldl(_ * _, 1)([1,2,3])
     6
     """
-    def fold(it, init=None): 
+    def fold(it): 
         args = [f, it]
         if init is not None: args.append(init)
         return iters.reduce(*args)
 
     return fold
 
-def foldr(f):
+def foldr(f, init=None):
     """Return function to fold iterator to scala value using 
     passed function as reducer in reverse order (consume values 
     from iterator from right-to-left).
 
     Usage:
-    >>> print foldr(call)([lambda s: s**2, lambda k: k+10], 10)
+    >>> print foldr(call, 10)([lambda s: s**2, lambda k: k+10])
     400
     """
-    def fold(it, init=None): 
+    def fold(it): 
         args = [flip(f), reversed(it)]
         if init is not None: args.append(init)
         return iters.reduce(*args)

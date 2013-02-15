@@ -44,20 +44,19 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
 
     def test_foldl(self):
-        summer = op.foldl(operator.add)
-        self.assertEqual(10, summer([0,1,2,3,4]))
-        self.assertEqual(20, summer([0,1,2,3,4], 10))
-        self.assertEqual(20, summer(iters.range(5), 10))
+        self.assertEqual(10, op.foldl(operator.add)([0,1,2,3,4]))
+        self.assertEqual(20, op.foldl(operator.add, 10)([0,1,2,3,4]))
+        self.assertEqual(20, op.foldl(operator.add, 10)(iters.range(5)))
         self.assertEqual(10, op.foldl(_ + _)(range(5)))
 
     def test_foldr(self):
         summer = op.foldr(operator.add)
-        self.assertEqual(10, summer([0,1,2,3,4]))
-        self.assertEqual(20, summer([0,1,2,3,4], 10))
-        self.assertEqual(20, summer(iters.range(5), 10))
+        self.assertEqual(10, op.foldr(operator.add)([0,1,2,3,4]))
+        self.assertEqual(20, op.foldr(operator.add, 10)([0,1,2,3,4]))
+        self.assertEqual(20, op.foldr(operator.add, 10)(iters.range(5)))
         # specific case for right-side folding
         self.assertEqual(100, 
-                         op.foldr(op.call)([lambda s: s**2, lambda k: k+10], 0))
+                         op.foldr(op.call, 0)([lambda s: s**2, lambda k: k+10]))
 
 class UnderscoreTestCase(unittest.TestCase):
 

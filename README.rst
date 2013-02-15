@@ -221,8 +221,8 @@ Use case specific for right-side folding is:
     
     from fn.op import foldr, call 
 
-    assert 100 == foldr(call)([lambda s: s**2, lambda k: k+10], 0)
-    assert 400 == foldr(call)([lambda s: s**2, lambda k: k+10], 10)
+    assert 100 == foldr(call, 0 )([lambda s: s**2, lambda k: k+10])
+    assert 400 == foldr(call, 10)([lambda s: s**2, lambda k: k+10])
 
 Itertools recipes
 -----------------
