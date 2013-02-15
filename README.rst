@@ -210,9 +210,9 @@ that will reverse arguments order before apply.
 .. code-block:: python
 
     from fn import op, _
-    assert 6 == op.foldl(_ + _)([1,2,3])
 
     folder = op.foldr(_ * _, 1)
+    assert 6 == op.foldl(_ + _)([1,2,3])
     assert 6 == folder([1,2,3])
 
 Use case specific for right-side folding is:
@@ -221,6 +221,7 @@ Use case specific for right-side folding is:
     
     from fn.op import foldr, call 
 
+    assert 100 == foldr(call)([lambda s: s**2, lambda k: k+10], 0)
     assert 400 == foldr(call)([lambda s: s**2, lambda k: k+10], 10)
 
 Itertools recipes
