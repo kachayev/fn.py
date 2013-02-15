@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from sys import version_info
 
 identity = lambda arg: arg
@@ -30,7 +31,7 @@ def flip(f):
 def curry(f, arg, *rest):
     return curry(f(arg), *rest) if rest else f(arg)
 
-import iters
+from .iters import *
 from .func import F
 from itertools import starmap
 
@@ -51,7 +52,7 @@ def foldl(f, init=None):
     def fold(it): 
         args = [f, it]
         if init is not None: args.append(init)
-        return iters.reduce(*args)
+        return reduce(*args)
 
     return fold
 
@@ -67,6 +68,6 @@ def foldr(f, init=None):
     def fold(it): 
         args = [flip(f), reversed(it)]
         if init is not None: args.append(init)
-        return iters.reduce(*args)
+        return reduce(*args)
 
     return fold
