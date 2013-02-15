@@ -7,6 +7,9 @@ def _apply(f, args=None, kwargs=None):
 
 apply = apply if version_info[0] == 2 else _apply
 
+def call(f, *args, **kwargs):
+    return f(*args, **kwargs)
+
 def flip(f):
     """Return function that will apply arguments in reverse order"""
 
@@ -14,21 +17,56 @@ def flip(f):
     # in order to optimize operation of "duble flipping",
     # so flip(flip(a)) is a
     flipper = getattr(f, "__flipback__", None)
+
     if flipper is not None:
         return flipper
 
-    def _flipper(a, b):
+    def _flipper(a, b): 
         return f(b, a)
-
-    _flipper.__flipback__ = f
+    
+    setattr(_flipper, "__flipback__", f)
     return _flipper
 
 def curry(f, arg, *rest):
     return curry(f(arg), *rest) if rest else f(arg)
 
+import iters
 from .func import F
 from itertools import starmap
 
 def zipwith(f): 
     'zipwith(f)(seq1, seq2, ..) -> [f(seq1[0], seq2[0], ..), f(seq1[1], seq2[1], ..), ...]'
     return F(starmap, f) << zip
+
+def foldl(f):
+    """Return function to fold iterator to scala value 
+    using passed function as reducer.
+
+    Usage:
+    >>> print foldl(_ + _)([0,1,2,3,4])
+    10
+    >>> print foldl(_ * _)([1,2,3], 1)
+    6
+    """
+    def fold(it, init=None): 
+        args = [f, it]
+        if init is not None: args.append(init)
+        return iters.reduce(*args)
+
+    return fold
+
+def foldr(f):
+    """Return function to fold iterator to scala value using 
+    passed function as reducer in reverse order (consume values 
+    from iterator from right-to-left).
+
+    Usage:
+    >>> print foldr(call)([lambda s: s**2, lambda k: k+10], 10)
+    400
+    """
+    def fold(it, init=None): 
+        args = [flip(f), reversed(it)]
+        if init is not None: args.append(init)
+        return iters.reduce(*args)
+
+    return fold

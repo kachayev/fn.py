@@ -205,6 +205,24 @@ that will reverse arguments order before apply.
     assert flip(sub)(20,10) == -10
     assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
+``fn.op.foldl`` and ``fn.op.foldr`` are folding operators. Each accepts function with arity 2 and returns function that can be used to reduce iterable to scalar: from left-to-right and from right-to-left in case of ``foldl`` and ``foldr`` respectively. 
+
+.. code-block:: python
+
+    from fn import op, _
+    assert 6 == op.foldl(_ + _)([1,2,3])
+
+    folder = op.foldr(_ * _, 1)
+    assert 6 == folder([1,2,3])
+
+Use case specific for right-side folding is:
+
+.. code-block:: python
+    
+    from fn.op import foldr, call 
+
+    assert 400 == foldr(call)([lambda s: s**2, lambda k: k+10], 10)
+
 Itertools recipes
 -----------------
 
@@ -334,7 +352,6 @@ Work in progress
 
 "Roadmap":
 
--  Add to ``fn.op`` module ``foldl``, ``foldr``
 - ``fn.monad.Either`` to deal with error logging 
 -  C-accelerator for most modules
 
