@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from sys import version_info
 
 identity = lambda arg: arg
@@ -16,9 +15,10 @@ def flip(f):
 
     # Original function is saved in special attribute
     # in order to optimize operation of "duble flipping",
-    # so flip(flip(a)) is a
+    # so flip(flip(A)) is A
+    # Do not use this approach for underscore callable, 
+    # see https://github.com/kachayev/fn.py/issues/23
     flipper = getattr(f, "__flipback__", None)
-
     if flipper is not None:
         return flipper
 
@@ -31,8 +31,8 @@ def flip(f):
 def curry(f, arg, *rest):
     return curry(f(arg), *rest) if rest else f(arg)
 
-from .iters import *
 from .func import F
+from .uniform import * 
 from itertools import starmap
 
 def zipwith(f): 

@@ -5,7 +5,7 @@ from sys import version_info
 from itertools import repeat, count
 
 from .op import identity, curry, apply, flip
-from .iters import map, zip
+from .uniform import map, zip
 from .func import F
 
 div = operator.div if version_info[0] == 2 else operator.truediv
@@ -31,6 +31,9 @@ class ArityError(TypeError):
 class _Callable(object):
     
     __slots__ = "_callback", "_format", "_arity"
+    # Do not use "flipback" approach for underscore callable, 
+    # see https://github.com/kachayev/fn.py/issues/23
+    __flipback__ = None
 
     def __init__(self, callback=identity, format="_", arity=1):
         self._callback = callback

@@ -2,36 +2,19 @@ from sys import version_info
 from collections import deque, Iterable
 from operator import add, itemgetter, attrgetter
 from functools import partial
-from itertools import (islice, chain,                        
-                       starmap, repeat, tee, cycle,
-                       takewhile, dropwhile,
+from itertools import (islice, 
+                       chain,                        
+                       starmap, 
+                       repeat, 
+                       tee, 
+                       cycle,
+                       takewhile, 
+                       dropwhile,
                        combinations)
 
 from .op import flip
 from .func import F
-
-# Syntax sugar to deal with Python 2/Python 3 
-# differences: this one will return generator
-# even in Python 2.*
-if version_info[0] == 2:
-    from itertools import izip as zip, imap as map, ifilter as filter
-
-filter = filter
-map = map
-zip = zip
-
-if version_info[0] == 3:
-    from functools import reduce
-
-reduce = reduce 
-range = xrange if version_info[0] == 2 else  range
-
-if version_info[0] == 2:
-    from itertools import ifilterfalse as filterfalse
-    from itertools import izip_longest as zip_longest
-else:
-    from itertools import filterfalse
-    from itertools import zip_longest
+from .uniform import *
 
 def take(limit, base): 
     return islice(base, limit)

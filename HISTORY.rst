@@ -1,6 +1,12 @@
 History
 =======
 
+16.02.2012
+----------
+
+- fixed @23 about flipping of underscore function
+- added special uniform module
+
 02.02.2012
 ----------
 

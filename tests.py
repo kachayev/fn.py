@@ -33,6 +33,9 @@ class OperatorTestCase(unittest.TestCase):
         # flipping of flipped function should use optimization
         self.assertTrue(operator.sub is op.flip(op.flip(operator.sub)))
 
+    def test_flip_with_shortcut(self):
+        self.assertEqual(10, op.flip(_ - _)(2, 12))
+
     def test_zipwith(self):
         zipper = op.zipwith(operator.add)
         self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))

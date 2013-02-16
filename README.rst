@@ -227,7 +227,7 @@ Use case specific for right-side folding is:
 Itertools recipes
 -----------------
 
-``fn.iters`` module consists from two parts. First one is "unification"
+``fn.uniform`` provides you with "unification"
 of lazy functionality for few functions to work the same way in Python
 2+/3+:
 
@@ -240,7 +240,7 @@ of lazy functionality for few functions to work the same way in Python
 -  ``zip_longest`` (returns ``itertools.izip_longest`` in Python 2+)
 -  ``accumulate`` (backported to Python < 3.3)
 
-Second part of module is high-level recipes to work with iterators. Most
+``fn.iters`` is high-level recipes to work with iterators. Most
 of them taken from `Python
 docs <http://docs.python.org/2.7/library/itertools.html#itertools.product>`_
 and adopted to work both with Python 2+/3+. Such recipes as ``drop``,
