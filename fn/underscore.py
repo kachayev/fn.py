@@ -4,20 +4,19 @@ import operator
 from sys import version_info
 from itertools import repeat, count
 
-from .op import identity, curry, apply, flip
+from .op import identity, apply, flip
 from .uniform import map, zip
 from .func import F
 
 div = operator.div if version_info[0] == 2 else operator.truediv
 
-def fmap(f, format=""):
-    def applyier(self, other=None):
+def fmap(f, format):
+    def applyier(self, other):
         fmt = "(%s)" % format.replace("self", self._format)
-        if other is None:
-            return self.__class__(F(self) << f, fmt, self._arity)
-        elif isinstance(other, self.__class__):
-            return self.__class__((f, self, other), 
-                                  fmt.replace("other", other._format), 
+
+        if isinstance(other, self.__class__):
+            return self.__class__((f, self, other),
+                                  fmt.replace("other", other._format),
                                   self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
@@ -28,10 +27,16 @@ class ArityError(TypeError):
     def __str__(self):
         return "{0!r} expected {1} arguments, got {2}".format(*self.args)
 
+def unary_fmap(f, format):
+    def applyier(self):
+        fmt = "(%s)" % format.replace("self", self._format)
+        return self.__class__(F(self) << f, fmt, self._arity)
+    return applyier
+
 class _Callable(object):
-    
+
     __slots__ = "_callback", "_format", "_arity"
-    # Do not use "flipback" approach for underscore callable, 
+    # Do not use "flipback" approach for underscore callable,
     # see https://github.com/kachayev/fn.py/issues/23
     __flipback__ = None
 
@@ -45,8 +50,8 @@ class _Callable(object):
         return self.__class__(F(apply) << operator.attrgetter(name) << F(self))
 
     def __getattr__(self, name):
-        return self.__class__(F(operator.attrgetter(name)) << F(self), 
-                              "getattr(%s, %s)" % (self._format, name),  
+        return self.__class__(F(operator.attrgetter(name)) << F(self),
+                              "getattr(%s, %s)" % (self._format, name),
                               self._arity)
 
     def __getitem__(self, k):
@@ -54,7 +59,7 @@ class _Callable(object):
             return self.__class__((operator.getitem, self, k),
                                   "%s[%s]" % (self._format, k._format),
                                   self._arity + k._arity)
-        return self.__class__(F(operator.itemgetter(k)) << F(self), 
+        return self.__class__(F(operator.itemgetter(k)) << F(self),
                               "%s[%s]" % (self._format, k),
                               self._arity)
 
@@ -65,10 +70,10 @@ class _Callable(object):
         (_ + _*10): (x1, x2) => (x1 + (x2*10))
         """
         # args iterator with produce infinite sequence
-        # args -> (x1, x2, x3, ...) 
+        # args -> (x1, x2, x3, ...)
         args = map("".join, zip(repeat("x"), map(str, count(1))))
         l, r = [], self._format
-        # replace all "_" signs from left to right side 
+        # replace all "_" signs from left to right side
         while r.count("_"):
             n = next(args)
             r = r.replace("_", n, 1)
@@ -115,9 +120,9 @@ class _Callable(object):
     __eq__ = fmap(operator.eq, "self == other")
     __ne__ = fmap(operator.ne, "self != other")
 
-    __neg__ = fmap(operator.neg, "-self")
-    __pos__ = fmap(operator.pos, "+self")
-    __invert__ = fmap(operator.invert, "~self")
+    __neg__ = unary_fmap(operator.neg, "-self")
+    __pos__ = unary_fmap(operator.pos, "+self")
+    __invert__ = unary_fmap(operator.invert, "~self")
 
     __radd__ = fmap(flip(operator.add), "other + self")
     __rmul__ = fmap(flip(operator.mul), "other * self")
