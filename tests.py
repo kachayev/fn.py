@@ -313,6 +313,11 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
         self.assertEqual("(x1, x2, x3) => (x1 + (x2 * x3))", str(_ + _ * _))
 
+    def test_multi_underscore_string_converting(self):
+        self.assertEqual("(x1) => (x1 + '_')", str(_ + "_"))
+        self.assertEqual("(x1, x2) => getattr((x1 + x2), '__and_now__')", str((_ + _).__and_now__))
+        self.assertEqual("(x1, x2) => x1['__name__'][x2]", str(_['__name__'][_]))
+
     def test_repr(self):
         self.assertEqual(_ / 2, eval(repr(_ / 2)))
         self.assertEqual(_ + _, eval(repr(_ + _)))
