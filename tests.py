@@ -191,6 +191,16 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertTrue((_ == 10)(10))
         self.assertFalse((_ == 10)(9))
 
+    def test_none(self):
+        self.assertTrue((_ == None)(None))
+
+        class pushlist(list):
+            def __lshift__(self, item):
+                self.append(item)
+                return self
+
+        self.assertEqual([None], (_ << None)(pushlist()))
+
     def test_comparator_multiple(self):
         self.assertTrue((_ < _)(1, 2))
         self.assertFalse((_ < _)(2, 1))
