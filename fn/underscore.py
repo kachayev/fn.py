@@ -17,10 +17,11 @@ def fmap(f, format):
         if isinstance(other, self.__class__):
             return self.__class__((f, self, other),
                                   fmt.replace("other", other._format),
+                                  self._format_args + other._format_args,
                                   self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
-            return self.__class__(call, fmt.replace("other", str(other)), self._arity)
+            return self.__class__(call, fmt.replace("other", "%r"), (other,), self._arity)
     return applyier
 
 class ArityError(TypeError):
@@ -30,19 +31,20 @@ class ArityError(TypeError):
 def unary_fmap(f, format):
     def applyier(self):
         fmt = "(%s)" % format.replace("self", self._format)
-        return self.__class__(F(self) << f, fmt, self._arity)
+        return self.__class__(F(self) << f, fmt, self._format_args, self._arity)
     return applyier
 
 class _Callable(object):
 
-    __slots__ = "_callback", "_format", "_arity"
+    __slots__ = "_callback", "_format", "_format_args", "_arity"
     # Do not use "flipback" approach for underscore callable,
     # see https://github.com/kachayev/fn.py/issues/23
     __flipback__ = None
 
-    def __init__(self, callback=identity, format="_", arity=1):
+    def __init__(self, callback=identity, format="_", format_args=tuple(), arity=1):
         self._callback = callback
         self._format = format
+        self._format_args = format_args
         self._arity = arity
 
     def call(self, name, *args):
@@ -51,16 +53,19 @@ class _Callable(object):
 
     def __getattr__(self, name):
         return self.__class__(F(operator.attrgetter(name)) << F(self),
-                              "getattr(%s, %s)" % (self._format, name),
+                              "getattr(%s, %%r)" % (self._format,),
+                              self._format_args + (name,),
                               self._arity)
 
     def __getitem__(self, k):
         if isinstance(k, self.__class__):
             return self.__class__((operator.getitem, self, k),
                                   "%s[%s]" % (self._format, k._format),
+                                  self._format_args + k._format_args,
                                   self._arity + k._arity)
         return self.__class__(F(operator.itemgetter(k)) << F(self),
-                              "%s[%s]" % (self._format, k),
+                              "%s[%%r]" % (self._format,),
+                              self._format_args + (k,),
                               self._arity)
 
     def __str__(self):
@@ -79,6 +84,7 @@ class _Callable(object):
             r = r.replace("_", n, 1)
             l.append(n)
 
+        r = r % self._format_args
         return "({left}) => {right}".format(left=", ".join(l), right=r)
 
     def __repr__(self):
@@ -98,7 +104,7 @@ class _Callable(object):
     __add__ = fmap(operator.add, "self + other")
     __mul__ = fmap(operator.mul, "self * other")
     __sub__ = fmap(operator.sub, "self - other")
-    __mod__ = fmap(operator.mod, "self % other")
+    __mod__ = fmap(operator.mod, "self %% other")
     __pow__ = fmap(operator.pow, "self ** other")
 
     __and__ = fmap(operator.and_, "self & other")
@@ -127,7 +133,7 @@ class _Callable(object):
     __radd__ = fmap(flip(operator.add), "other + self")
     __rmul__ = fmap(flip(operator.mul), "other * self")
     __rsub__ = fmap(flip(operator.sub), "other - self")
-    __rmod__ = fmap(flip(operator.mod), "other % self")
+    __rmod__ = fmap(flip(operator.mod), "other %% self")
     __rpow__ = fmap(flip(operator.pow), "other ** self")
     __rdiv__ = fmap(flip(div), "other / self")
     __rdivmod__ = fmap(flip(divmod), "other / self")
