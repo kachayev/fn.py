@@ -7,6 +7,7 @@ History
 - fixed @23 about flipping of underscore function
 - added special uniform module
 - fixed @22 (underscore functions representation)
+- adjustments to unary operators processing in underscore
 
 02.02.2012
 ----------
