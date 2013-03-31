@@ -154,6 +154,24 @@ Why this variant is better? Cause you don't need to remember previous values to 
 - ``(True, args, kwargs)`` means that we need to call function again with other arguments
 - ``(func, args, kwargs)`` to switch function to be executed inside while loop
 
+The last variant is really useful, when you need to switch callable inside evaluation loop. Good example for such situation is recursive detection if given number is odd or even:
+
+.. code-block:: python
+
+    >>> from fn import recur
+    >>> @recur.tco
+    ... def even(x):
+    ...     if x == 0: return False, True
+    ...     return odd, (x-1,)
+    ... 
+    >>> @recur.tco
+    ... def odd(x):
+    ...     if x == 0: return False, False
+    ...     return even, (x-1,)
+    ... 
+    >>> print even(100000)
+    True
+
 **Attention:** be careful with mutable/immutable data structures processing.
 
 
