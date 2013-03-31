@@ -1,6 +1,11 @@
 History
 =======
 
+31.03.2012
+----------
+
+- added example of using tail call optimization with changing callable
+
 16.02.2012
 ----------
 
