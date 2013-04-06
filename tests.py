@@ -694,6 +694,12 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
                          monad.Option.from_call(lambda d, k: d[k], 
                                                 {"a":1}, "b", exc=KeyError))
 
+    def test_flatten_operation(self):
+        self.assertEqual(monad.Empty(), monad.Empty(monad.Empty()))
+        self.assertEqual(monad.Empty(), monad.Empty(monad.Full(10)))
+        self.assertEqual(monad.Empty(), monad.Full(monad.Empty()))
+        self.assertEqual("Full(20)", str(monad.Full(monad.Full(20))))
+
 class TrampolineTestCase(unittest.TestCase):
 
     def test_tco_decorator(self):

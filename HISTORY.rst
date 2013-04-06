@@ -5,6 +5,7 @@ History
 ----------
 
 - added initial origin param to ``fn.Stream``
+- ``monad.Option`` is flatten by default, Full(Empty) -> Empty, Empty(Full) -> Empty
 
 31.03.2013
 ----------

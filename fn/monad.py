@@ -91,8 +91,11 @@ class Full(Option):
     __slots__ = "x", 
     empty = False 
 
-    def __new__(tp, *args, **kwargs):
-        return object.__new__(tp)
+    def __new__(tp, value, *args, **kwargs):
+        # Full(Empty) -> Full
+        if isinstance(value, Empty):
+            return Empty()
+        return object.__new__(tp) 
 
     def __init__(self, value, *args):
         # Option(Full) -> Full
