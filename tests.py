@@ -568,6 +568,14 @@ class StreamTestCase(unittest.TestCase):
         # 35 elements should be already evaluated
         self.assertEqual(fib.cursor(), 35)
 
+    def test_origin_param(self):
+        self.assertEqual([100], list(Stream(100)))
+        self.assertEqual([1,2,3], list(Stream(1, 2, 3)))
+        self.assertEqual([1,2,3,10,20,30], list(Stream(1, 2, 3) << [10,20,30]))
+
+    def test_origin_param_string(self):
+        self.assertEqual(["stream"], list(Stream("stream")))
+
 class OptionTestCase(unittest.TestCase, InstanceChecker):
 
     def test_create_option(self):

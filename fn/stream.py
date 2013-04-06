@@ -33,10 +33,10 @@ class Stream(object):
         if version_info[0] == 2:
             next = __next__
 
-    def __init__(self):
+    def __init__(self, *origin):
         self._collection = []
         self._last = -1 # not started yet
-        self._origin = []
+        self._origin = iter(origin) if origin else []
 
     def __lshift__(self, rvalue):
         iterator = rvalue() if callable(rvalue) else rvalue
