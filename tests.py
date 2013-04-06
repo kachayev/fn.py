@@ -67,8 +67,8 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual([20, 40, 80, 160, 320], list(iters.take(5, doubler(10))))
 
     def test_unfold_finite(self):
-        halfer = op.unfold(lambda x: (x/2, x/2) if x > 1 else None)
-        self.assertEqual([5,2,1], list(halfer(10)))
+        countdown = op.unfold(lambda x: (x-1, x-2) if x > 1 else None)
+        self.assertEqual([9,7,5,3,1], list(countdown(10)))
 
 class UnderscoreTestCase(unittest.TestCase):
 
