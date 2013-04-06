@@ -71,3 +71,25 @@ def foldr(f, init=None):
         return reduce(*args)
 
     return fold
+
+def unfold(f):
+    """Return function to unfold value into stream using 
+    passed function as values producer. Passed function should 
+    accept current cursor and should return: 
+      * tuple of two elements (value, cursor), value will be added 
+        to output, cursor will be used for next function call 
+      * None in order to stop producing sequence 
+
+    Usage:
+    >>> doubler = unfold(lambda x: (x*2, x*2))
+    >>> list(islice(doubler(10), 0, 10))
+    [20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240]
+    """
+    def _unfolder(start):
+        value, curr = None, start
+        while 1:
+            step = f(curr)
+            if step is None: break
+            value, curr = step
+            yield value
+    return _unfolder

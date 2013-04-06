@@ -61,6 +61,15 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual(100, 
                          op.foldr(op.call, 0)([lambda s: s**2, lambda k: k+10]))
 
+    def test_unfold_infinite(self):
+        doubler = op.unfold(lambda x: (x*2, x*2))
+        self.assertEqual(20, next(doubler(10)))
+        self.assertEqual([20, 40, 80, 160, 320], list(iters.take(5, doubler(10))))
+
+    def test_unfold_finite(self):
+        halfer = op.unfold(lambda x: (x/2, x/2) if x > 1 else None)
+        self.assertEqual([5,2,1], list(halfer(10)))
+
 class UnderscoreTestCase(unittest.TestCase):
 
     def test_identity_default(self):

@@ -6,6 +6,7 @@ History
 
 - added initial origin param to ``fn.Stream``
 - ``monad.Option`` is flatten by default, Full(Empty) -> Empty, Empty(Full) -> Empty
+- added ``op.unfold`` operator 
 
 31.03.2013
 ----------
