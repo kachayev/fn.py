@@ -186,6 +186,15 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(["test", "case"], (_.call("split"))("test case"))
         self.assertEqual("str", _.__name__(str))
 
+    def test_call_method_args(self):
+        self.assertEqual(["test", "case"], (_.call("split", "-"))("test-case"))
+        self.assertEqual(["test-case"], (_.call("split", "-", 0))("test-case"))
+
+    def test_call_method_kwargs(self):
+        test_dict = {'num': 23}
+        _.call("update", num = 42)(test_dict)
+        self.assertEqual({'num': 42}, (test_dict))
+
     def test_comparator(self):
         self.assertTrue((_ < 7)(1))
         self.assertFalse((_ < 7)(10))

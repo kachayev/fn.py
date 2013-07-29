@@ -47,9 +47,9 @@ class _Callable(object):
         self._format_args = format_args
         self._arity = arity
 
-    def call(self, name, *args):
+    def call(self, name, *args, **kwargs):
         """Call method from _ object by given name and arguments"""
-        return self.__class__(F(apply) << operator.attrgetter(name) << F(self))
+        return self.__class__(F(lambda f: apply(f, args, kwargs)) << operator.attrgetter(name) << F(self))
 
     def __getattr__(self, name):
         return self.__class__(F(operator.attrgetter(name)) << F(self),
