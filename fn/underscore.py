@@ -49,7 +49,7 @@ class _Callable(object):
 
     def call(self, name, *args):
         """Call method from _ object by given name and arguments"""
-        return self.__class__(F(apply) << operator.attrgetter(name) << F(self))
+        return self.__class__(F(flip(apply), args) << operator.attrgetter(name) << F(self))
 
     def __getattr__(self, name):
         return self.__class__(F(operator.attrgetter(name)) << F(self),
