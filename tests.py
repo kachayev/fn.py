@@ -398,6 +398,18 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertListEqual([[0]], list(iters.compact([[], [0]])))
         self.assertListEqual([{"a": 1}], list(iters.compact([{}, {"a": 1}])))
 
+    def test_reject(self):
+        self.assertListEqual([1, 3, 5],
+                             list(iters.reject(lambda n: n % 2 == 0,
+                                               iters.range(1, 7))))
+        self.assertListEqual([None, False, "", 0, 0.0, (), [], {}],
+                             list(iters.reject(None,
+                                               [None, False, True,
+                                                "", "non-empty",
+                                                0, 1, 0.0, 0.1,
+                                                (), ("",), [], [1],
+                                                {}, {"a": 1}])))
+
     def test_consume(self):
         # full consuming, without limitation
         r = iters.range(10)

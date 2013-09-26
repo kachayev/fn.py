@@ -36,6 +36,15 @@ def compact(iterable):
     """
     return filter(lambda x: x, iterable)
 
+def reject(func, iterable):
+    """Return an iterator yielding those items of iterable for which func(item)
+    is false. If func is None, return the items that are false.
+    """
+    fn = ((lambda *args, **kwargs: not func(*args, **kwargs))
+          if func is not None else
+          (lambda x: not x))
+    return filter(fn, iterable)
+
 def consume(iterator, n=None):
     """Advance the iterator n-steps ahead. If n is none, consume entirely.
 
