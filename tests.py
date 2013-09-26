@@ -388,6 +388,16 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([0,1], list(iters.droplast(3, range(5))))
         self.assertEqual([], list(iters.droplast(10, range(2))))
 
+    def test_compact(self):
+        self.assertListEqual([], list(iters.compact([None])))
+        self.assertListEqual([True], list(iters.compact([False, True])))
+        self.assertListEqual([1, 0.1], list(iters.compact([0, 1, 0.0, 0.1])))
+        self.assertListEqual([" ", "non-empty"],
+                             list(iters.compact(["", " ", "non-empty"])))
+        self.assertListEqual([("",)], list(iters.compact([(), ("",)])))
+        self.assertListEqual([[0]], list(iters.compact([[], [0]])))
+        self.assertListEqual([{"a": 1}], list(iters.compact([{}, {"a": 1}])))
+
     def test_consume(self):
         # full consuming, without limitation
         r = iters.range(10)

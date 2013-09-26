@@ -31,6 +31,11 @@ def droplast(n, iterable):
     t1, t2 = tee(iterable)
     return map(itemgetter(0), zip(t1, islice(t2, n, None)))
 
+def compact(iterable):
+    """Return an iterator with all of its falsey items filtered out.
+    """
+    return filter(lambda x: x, iterable)
+
 def consume(iterator, n=None):
     """Advance the iterator n-steps ahead. If n is none, consume entirely.
 
