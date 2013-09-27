@@ -410,6 +410,22 @@ class IteratorsTestCase(unittest.TestCase):
                                                 (), ("",), [], [1],
                                                 {}, {"a": 1}])))
 
+    def test_groupby(self):
+        self.assertDictEqual(
+            {"even": [2, 4, 6, 8], "odd": [1, 3, 5, 7, 9]},
+            dict([(k, list(si)) for k, si in
+                  iters.groupby(lambda n: "even" if n % 2 == 0 else "odd",
+                                iters.range(1, 10))])
+        )
+
+    def test_countby(self):
+        self.assertDictEqual(
+            {"even": 5, "odd": 3},
+            dict([(k, v) for k, v in
+                  iters.countby(lambda n: "even" if n % 2 == 0 else "odd",
+                                [1, 2, 3, 4, 5, 6, 8, 10])])
+        )
+
     def test_consume(self):
         # full consuming, without limitation
         r = iters.range(10)
