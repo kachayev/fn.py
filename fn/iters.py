@@ -1,5 +1,5 @@
 from sys import version_info
-from collections import deque, Iterable
+from collections import deque, Iterable, defaultdict
 from operator import add, itemgetter, attrgetter
 from functools import partial
 from itertools import (islice, 
@@ -10,7 +10,8 @@ from itertools import (islice,
                        cycle,
                        takewhile, 
                        dropwhile,
-                       combinations)
+                       combinations,
+                       groupby as igroupby)
 
 from .op import flip
 from .func import F
@@ -30,6 +31,37 @@ def droplast(n, iterable):
     "Return iterator to produce items from origin except last n"
     t1, t2 = tee(iterable)
     return map(itemgetter(0), zip(t1, islice(t2, n, None)))
+
+def compact(iterable):
+    """Return an iterator with all of its falsey items filtered out.
+    """
+    return filter(lambda x: x, iterable)
+
+def reject(func, iterable):
+    """Return an iterator yielding those items of iterable for which func(item)
+    is false. If func is None, return the items that are false.
+    """
+    fn = ((lambda *args, **kwargs: not func(*args, **kwargs))
+          if func is not None else
+          (lambda x: not x))
+    return filter(fn, iterable)
+
+def groupby(func, iterable):
+    """Return a generator yielding those items of iterable grouped by each
+    value of func(item).
+    """
+    return ((k, si)
+            for k, si in igroupby(sorted(iterable, key=func), func))
+
+def countby(func, iterable):
+    """Return a generator yielding a count for the number of items grouped by
+    each value of func(item).
+    """
+    dd = defaultdict(int)
+    for i in iterable:
+        dd[func(i)] += 1
+    return ((k, v) for k, v in
+            (dd.items() if version_info[0] == 3 else dd.iteritems()))
 
 def consume(iterator, n=None):
     """Advance the iterator n-steps ahead. If n is none, consume entirely.

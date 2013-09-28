@@ -388,6 +388,42 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([0,1], list(iters.droplast(3, range(5))))
         self.assertEqual([], list(iters.droplast(10, range(2))))
 
+    def test_compact(self):
+        self.assertEqual([], list(iters.compact([None])))
+        self.assertEqual([True], list(iters.compact([False, True])))
+        self.assertEqual([1, 0.1], list(iters.compact([0, 1, 0.0, 0.1])))
+        self.assertEqual([" ", "non-empty"],
+                         list(iters.compact(["", " ", "non-empty"])))
+        self.assertEqual([("",)], list(iters.compact([(), ("",)])))
+        self.assertEqual([[0]], list(iters.compact([[], [0]])))
+        self.assertEqual([{"a": 1}], list(iters.compact([{}, {"a": 1}])))
+
+    def test_reject(self):
+        self.assertEqual([1, 3, 5],
+                         list(iters.reject(lambda n: n % 2 == 0,
+                                           iters.range(1, 7))))
+        self.assertEqual([None, False, "", 0, 0.0, (), [], {}],
+                         list(iters.reject(None,
+                                           [None, False, True, "", "non-empty",
+                                            0, 1, 0.0, 0.1, (), ("",), [], [1],
+                                            {}, {"a": 1}])))
+
+    def test_groupby(self):
+        self.assertEqual(
+            {"even": [2, 4, 6, 8], "odd": [1, 3, 5, 7, 9]},
+            dict([(k, list(si)) for k, si in
+                  iters.groupby(lambda n: "even" if n % 2 == 0 else "odd",
+                                iters.range(1, 10))])
+        )
+
+    def test_countby(self):
+        self.assertEqual(
+            {"even": 5, "odd": 3},
+            dict([(k, v) for k, v in
+                  iters.countby(lambda n: "even" if n % 2 == 0 else "odd",
+                                [1, 2, 3, 4, 5, 6, 8, 10])])
+        )
+
     def test_consume(self):
         # full consuming, without limitation
         r = iters.range(10)
