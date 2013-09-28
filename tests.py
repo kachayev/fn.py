@@ -389,14 +389,14 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([], list(iters.droplast(10, range(2))))
 
     def test_compact(self):
-        self.assertListEqual([], list(iters.compact([None])))
-        self.assertListEqual([True], list(iters.compact([False, True])))
-        self.assertListEqual([1, 0.1], list(iters.compact([0, 1, 0.0, 0.1])))
-        self.assertListEqual([" ", "non-empty"],
-                             list(iters.compact(["", " ", "non-empty"])))
-        self.assertListEqual([("",)], list(iters.compact([(), ("",)])))
-        self.assertListEqual([[0]], list(iters.compact([[], [0]])))
-        self.assertListEqual([{"a": 1}], list(iters.compact([{}, {"a": 1}])))
+        self.assertEqual([], list(iters.compact([None])))
+        self.assertEqual([True], list(iters.compact([False, True])))
+        self.assertEqual([1, 0.1], list(iters.compact([0, 1, 0.0, 0.1])))
+        self.assertEqual([" ", "non-empty"],
+                         list(iters.compact(["", " ", "non-empty"])))
+        self.assertEqual([("",)], list(iters.compact([(), ("",)])))
+        self.assertEqual([[0]], list(iters.compact([[], [0]])))
+        self.assertEqual([{"a": 1}], list(iters.compact([{}, {"a": 1}])))
 
     def test_reject(self):
         self.assertEqual([1, 3, 5],
