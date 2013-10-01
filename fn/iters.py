@@ -56,6 +56,9 @@ def nth(iterable, n, default=None):
 head = partial(flip(nth), 0)
 tail = partial(drop, 1)
 
+# shortcut to remove all falsey items from iterable
+compact = partial(filter, None)
+
 def padnone(iterable):
     """Returns the sequence elements and then returns None indefinitely.
     Useful for emulating the behavior of the built-in map() function.
