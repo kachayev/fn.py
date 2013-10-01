@@ -1,6 +1,6 @@
 from sys import version_info
 from collections import deque, Iterable
-from operator import add, itemgetter, attrgetter
+from operator import add, itemgetter, attrgetter, not_
 from functools import partial
 from itertools import (islice, 
                        chain,                        
@@ -14,6 +14,7 @@ from itertools import (islice,
 
 from .op import flip
 from .func import F
+from .underscore import shortcut as _
 from .uniform import *
 
 def take(limit, base): 
@@ -55,6 +56,15 @@ def nth(iterable, n, default=None):
 # and all but first item from iterator respectively
 head = partial(flip(nth), 0)
 tail = partial(drop, 1)
+
+# shortcut to remove all falsey items from iterable
+compact = partial(filter, None)
+
+def reject(func, iterable):
+    """Return an iterator yielding those items of iterable for which func(item)
+    is false. If func is None, return the items that are false.
+    """
+    return filter(F(not_) << (func or _), iterable)
 
 def padnone(iterable):
     """Returns the sequence elements and then returns None indefinitely.

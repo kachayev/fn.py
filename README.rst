@@ -269,6 +269,7 @@ review status just now.
 -  ``take``, ``drop``
 -  ``takelast``, ``droplast``
 -  ``head``, ``tail``
+-  ``compact``, ``reject``
 -  ``consume``
 -  ``nth``
 -  ``padnone``, ``ncycles``
