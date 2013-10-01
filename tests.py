@@ -430,6 +430,21 @@ class IteratorsTestCase(unittest.TestCase):
 
         self.assertEqual([2,3], list(iters.tail(gen())))
 
+    def test_compact(self):
+        self.assertEqual([True, 1, 0.1, "non-empty", [""], (0,), {"a": 1}],
+                         list(iters.compact([None, False, True, 0, 1, 0.0, 0.1,
+                                             "", "non-empty", [], [""],
+                                             (), (0,), {}, {"a": 1}])))
+
+    def test_reject(self):
+        self.assertEqual([1, 3, 5, 7, 9],
+                         list(iters.reject(_ % 2 == 0, range(1, 11))))
+        self.assertEqual([None, False, 0, 0.0, "", [], (), {}],
+                         list(iters.reject(None, [None, False, True, 0, 1,
+                                                  0.0, 0.1, "", "non-empty",
+                                                  [], [""], (), (0,),
+                                                  {}, {"a": 1}])))
+
     def test_padnone(self):
         it = iters.padnone([10,11])
         self.assertEqual(10, next(it))
