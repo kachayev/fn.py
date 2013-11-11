@@ -85,6 +85,24 @@ class Option(object):
         except exc:
             return Empty()
 
+    def map(self, callback):
+        raise NotImplementedError()
+
+    def filter(self, callback):
+        raise NotImplementedError()
+
+    def get_or(self, default):
+        raise NotImplementedError()
+
+    def get_or_call(self, callback, *args, **kwargs):
+        raise NotImplementedError()
+
+    def or_else(self, default):
+        raise NotImplementedError()
+
+    def or_call(self, callback, *args, **kwargs):
+        raise NotImplementedError()
+
 class Full(Option):
     """Represents value that is ready for further computations"""
 
