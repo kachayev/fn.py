@@ -810,7 +810,19 @@ class UnionBasedHeapsTestCase(unittest.TestCase):
         self.assertEqual([5, 10, 20, 30, 100], list(h))
 
     def _heap_custom_compare(self, cls):
-        pass
+        h = cls(cmp=lambda a,b: len(a) - len(b))
+        h = h.insert("give")
+        h = h.insert("few words")
+        h = h.insert("about")
+        h = h.insert("union heaps")
+        h = h.insert("implementation")
+
+        # Convert to list using iterator
+        self.assertEqual(["give",
+                          "about",
+                          "few words",
+                          "union heaps",
+                          "implementation"], list(h))
 
     def _heap_compare_with_keyfunc(self, cls):
         from operator import itemgetter
@@ -843,6 +855,12 @@ class UnionBasedHeapsTestCase(unittest.TestCase):
 
     def test_pairing_heap_key_func(self):
         self._heap_compare_with_keyfunc(PairingHeap)
+
+    def test_skew_heap_cmp_func(self):
+        self._heap_custom_compare(SkewHeap)
+
+    def test_pairing_heap_cmp_func(self):
+        self._heap_custom_compare(PairingHeap)
 
 if __name__ == '__main__':
     unittest.main()
