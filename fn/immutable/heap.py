@@ -36,7 +36,11 @@ class SkewHeap(_MergeBased):
     In Haskell type definition it should looks like following:
     data Skew a = Empty | Node a (Skew a) (Skew a)
 
-    More information on Wikipedia: http://en.wikipedia.org/wiki/Skew_heap
+    More information on Wikipedia:
+    [1] http://en.wikipedia.org/wiki/Skew_heap
+
+    One can also check slides from my KyivPy#11 talk "Union-based heaps":
+    [2] http://goo.gl/VMgdG2
 
     Basic usage sample:
 
@@ -100,13 +104,16 @@ class PairingHeap(_MergeBased):
 
     Pairing heap has and excellent practical amortized performance. The amortized
     time per extract is less than O(log n), find-min/find-max, merge and insert are O(1).
-    More information about performance bounds you can find here:
 
-    [1] "The Pairing Heap: A New Form of Self-Adjusting Heap"
-    (http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/papers/pairing-heaps.pdf)
+    More information about performance bounds you can find here:
+    "The Pairing Heap: A New Form of Self-Adjusting Heap"
+    [1] http://www.cs.cmu.edu/afs/cs.cmu.edu/user/sleator/www/papers/pairing-heaps.pdf
 
     More general information on Wikipedia:
     [2] http://en.wikipedia.org/wiki/Pairing_heap
+
+    One can also check slides from my KyivPy#11 talk "Union-based heaps":
+    [3] http://goo.gl/VMgdG2
 
     Basic usage sample:
 
