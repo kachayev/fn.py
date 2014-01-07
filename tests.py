@@ -776,7 +776,7 @@ class TrampolineTestCase(unittest.TestCase):
 
         self.assertEqual(5000, recur_inc2(10000))
 
-class ImmutableDataStructureTestCase(unittest.TestCase):
+class UnionBasedHeapsTestCase(unittest.TestCase):
 
     def _heap_basic_operations(self, cls):
         # Create new heap with 3 elements
@@ -813,7 +813,18 @@ class ImmutableDataStructureTestCase(unittest.TestCase):
         pass
 
     def _heap_compare_with_keyfunc(self, cls):
-        pass
+        from operator import itemgetter
+
+        # Create new heap with 5 elements
+        h = cls(key=itemgetter(1))
+        h = h.insert((10, 10))
+        h = h.insert((30, 15))
+        h = h.insert((20, 110))
+        h = h.insert((40, -10))
+        h = h.insert((50, 100))
+
+        # Convert to list using iterator
+        self.assertEqual([(40,-10), (10,10), (30,15), (50,100), (20,110)], list(h))
 
     def test_skew_heap_basic(self):
         self._heap_basic_operations(SkewHeap)
@@ -824,8 +835,14 @@ class ImmutableDataStructureTestCase(unittest.TestCase):
     def test_skew_heap_iterator(self):
         self._heap_iterator(SkewHeap)
 
-    def test_pairing_hap_iterator(self):
+    def test_pairing_heap_iterator(self):
         self._heap_iterator(PairingHeap)
+
+    def test_skew_heap_key_func(self):
+        self._heap_compare_with_keyfunc(SkewHeap)
+
+    def test_pairing_heap_key_func(self):
+        self._heap_compare_with_keyfunc(PairingHeap)
 
 if __name__ == '__main__':
     unittest.main()
