@@ -1,3 +1,8 @@
+from functools import partial
+from fn.op import identity
+
+default_cmp = (lambda a,b: -1 if (a < b) else 1)
+
 class _MergeBased(object):
 
     def __nonzero__(self):
@@ -10,7 +15,13 @@ class _MergeBased(object):
         curr = self
         while curr:
             r, curr = curr.extract()
-            yield r    
+            yield r
+
+    def __cmp__(self, other):
+        if (not self) and (not other): return 0
+        if not self: return 1
+        if not other: return -1
+        return self.cmpfn(self.keyfn(self.root), self.keyfn(other.root))
 
 class SkewHeap(_MergeBased):
     """A skew heap (or self-adjusting heap) is a heap data structure
@@ -44,17 +55,20 @@ class SkewHeap(_MergeBased):
     (20, <fn.immutable.heap.SkewHeap object at 0x10b14c1b0>)
     """
 
-    __slots__ = ("root", "left", "right")
+    __slots__ = ("root", "left", "right", "keyfn", "cmpfn", "_make_heap")
 
-    def __init__(self, el=None, left=None, right=None):
+    def __init__(self, el=None, left=None, right=None, key=None, cmp=None):
         """Creates skew heap with one element (or empty one)"""
         self.root = el
         self.left = left
         self.right = right
+        self.keyfn = key or identity
+        self.cmpfn = cmp or default_cmp
+        self._make_heap = partial(self.__class__, key=self.keyfn, cmp=self.cmpfn)        
 
     def insert(self, el):
         """Returns new skew heap with additional element"""
-        return SkewHeap(el).union(self)
+        return self._make_heap(el).union(self)
 
     def extract(self):
         """Returns pair of values:
@@ -63,18 +77,17 @@ class SkewHeap(_MergeBased):
 
         Or None and empty heap if self is an empty heap.
         """
-        if not self: return None, SkewHeap()
-        return self.root, self.left.union(self.right) if self.left else SkewHeap()
+        if not self: return None, self._make_heap()
+        return self.root, self.left.union(self.right) if self.left else self._make_heap()
 
     def union(self, other):
         """Merge two heaps and returns new one (skew merging)"""
         if not self: return other
         if not other: return self
 
-        # xxx: custom compare function
-        if self.root < other.root:
-            return SkewHeap(self.root, other.union(self.right), self.left)
-        return SkewHeap(other.root, self.union(other.right), other.left)
+        if self < other:
+            return self._make_heap(self.root, other.union(self.right), self.left)
+        return self._make_heap(other.root, self.union(other.right), other.left)
 
 class PairingHeap(_MergeBased):
     """A pairing heap is either an empty heap, or a pair consisting of a root
@@ -112,18 +125,21 @@ class PairingHeap(_MergeBased):
     ('b', <fn.immutable.heap.PairingHeap object at 0x10b13f9b0>)
     """
 
-    __slots__ = ("root", "subs")
+    __slots__ = ("root", "subs", "keyfn", "cmpfn", "_make_heap")
 
-    def __init__(self, el=None, subs=None):
+    def __init__(self, el=None, subs=None, key=None, cmp=None):
         """Creates singlton from given element 
         (pairing heap with one element or empty one)
         """
         self.root = el
         self.subs = subs
+        self.keyfn = key or identity
+        self.cmpfn = cmp or default_cmp
+        self._make_heap = partial(self.__class__, key=self.keyfn, cmp=self.cmpfn)
 
     def insert(self, el):
         """Returns new pairing heap with additional element"""
-        return self.union(PairingHeap(el))
+        return self.union(self._make_heap(el))
 
     def extract(self):
         """Returns pair of values:
@@ -132,8 +148,8 @@ class PairingHeap(_MergeBased):
 
         Or None and empty heap if self is an empty heap.
         """
-        if not self: return None, SkewHeap()
-        return self.root, PairingHeap._pairing(self.subs)
+        if not self: return None, self._make_heap()
+        return self.root, PairingHeap._pairing(self._make_heap, self.subs)
 
     def union(self, other):
         """Returns new heap as a result of merging two given
@@ -145,15 +161,14 @@ class PairingHeap(_MergeBased):
         if not self: return other
         if not other: return self
 
-        # xxx: custom compare function
-        if self.root < other.root:
-            return PairingHeap(self.root, (other, self.subs))
-        return PairingHeap(other.root, (self, other.subs))
+        if self < other:
+            return self._make_heap(self.root, (other, self.subs))
+        return self._make_heap(other.root, (self, other.subs))
 
-    @classmethod
-    def _pairing(cls, hs):
-        if hs is None: return cls()
+    @staticmethod
+    def _pairing(heap, hs):
+        if hs is None: return heap()
         (h1, tail) = hs
         if tail is None: return h1
         (h2, tail) = tail
-        return cls._pairing((h1.union(h2), tail))
+        return PairingHeap._pairing(heap, (h1.union(h2), tail))
