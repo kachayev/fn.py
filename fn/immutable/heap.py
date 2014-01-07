@@ -22,7 +22,26 @@ class SkewHeap(_MergeBased):
     * a heap with only one element is a skew heap
     * the result of skew merging two skew heaps is also a skew heap
 
-    More information: http://en.wikipedia.org/wiki/Skew_heap
+    In Haskell type definition it should looks like following:
+    data Skew a = Empty | Node a (Skew a) (Skew a)
+
+    More information on Wikipedia: http://en.wikipedia.org/wiki/Skew_heap
+
+    Basic usage sample:
+
+    >>> from fn.immutable import SkewHeap
+    >>> s = SkewHeap(10)
+    >>> s = s.insert(20)
+    >>> s
+    <fn.immutable.heap.SkewHeap object at 0x10b14c050>
+    >>> s = s.insert(30)
+    >>> s
+    <fn.immutable.heap.SkewHeap object at 0x10b14c158> # <-- other object
+    >>> s.extract()
+    (10, <fn.immutable.heap.SkewHeap object at 0x10b14c050>)
+    >>> _, s = s.extract()
+    >>> s.extract()
+    (20, <fn.immutable.heap.SkewHeap object at 0x10b14c1b0>)
     """
 
     __slots__ = ("root", "left", "right")
@@ -63,8 +82,8 @@ class PairingHeap(_MergeBased):
     requires that all the root elements of the subheaps in the list are not
     smaller (bigger) than the root element of the heap.
 
-    In Haskell-like type definition it should looks like following:
-    type PairingHeap[Elem] = Empty | Heap(elem: Elem, subheaps: List[PairingHeap[Elem]])
+    In Haskell type definition it should looks like following:
+    data Pairing a = Empty | Node a [Pairing a]
 
     Pairing heap has and excellent practical amortized performance. The amortized
     time per extract is less than O(log n), find-min/find-max, merge and insert are O(1).
@@ -75,6 +94,22 @@ class PairingHeap(_MergeBased):
 
     More general information on Wikipedia:
     [2] http://en.wikipedia.org/wiki/Pairing_heap
+
+    Basic usage sample:
+
+    >>> from fn.immutable import PairingHeap
+    >>> ph = PairingHeap("a")
+    >>> ph = ph.insert("b")
+    >>> ph
+    <fn.immutable.heap.PairingHeap object at 0x10b13fa00>
+    >>> ph = ph.insert("c")
+    >>> ph
+    <fn.immutable.heap.PairingHeap object at 0x10b13fa50>
+    >>> ph.extract()
+    ('a', <fn.immutable.heap.PairingHeap object at 0x10b13fa00>)
+    >>> _, ph = ph.extract()
+    >>> ph.extract()
+    ('b', <fn.immutable.heap.PairingHeap object at 0x10b13f9b0>)
     """
 
     __slots__ = ("root", "subs")
