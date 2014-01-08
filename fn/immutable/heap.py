@@ -23,6 +23,12 @@ class _MergeBased(object):
         if not other: return -1
         return self.cmpfn(self.keyfn(self.root), self.keyfn(other.root))
 
+    def __lt__(self, other):
+        if (not self) and (not other): return 0
+        if not self: return True
+        if not other: return False
+        return self.cmpfn(self.keyfn(self.root), self.keyfn(other.root)) < 0
+
 class SkewHeap(_MergeBased):
     """A skew heap (or self-adjusting heap) is a heap data structure
     implemented as a binary-tree. Amortized complexity analytics can
