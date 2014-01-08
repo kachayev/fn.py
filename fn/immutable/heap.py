@@ -17,12 +17,6 @@ class _MergeBased(object):
             r, curr = curr.extract()
             yield r
 
-    def __cmp__(self, other):
-        if (not self) and (not other): return 0
-        if not self: return 1
-        if not other: return -1
-        return self.cmpfn(self.keyfn(self.root), self.keyfn(other.root))
-
     def __lt__(self, other):
         if (not self) and (not other): return 0
         if not self: return True
