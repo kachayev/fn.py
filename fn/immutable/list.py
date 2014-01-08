@@ -54,8 +54,24 @@ class LinkedList(object):
     def __nonzero__(self):
         return self.tail is not None
 
-class Stack(object):
-    pass
+class Stack(LinkedList):
+    """Technically it's a LinkedList, but it provides more familiar
+    API for Stack operations: push and pop. It also distinguishes between
+    empty and non-empty structure, so trying to pop from empty stack will
+    throw exception.
+    """
+    def push(self, el):
+        self.cons(el)
+
+    def pop(self):
+        if not self: raise ValueError("Stack is empty")
+        return self.head, self.tail
+
+    def is_empty(self):
+        return not self
 
 class Deque(object):
+    pass
+
+class Vector(object):
     pass
