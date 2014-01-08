@@ -58,8 +58,9 @@ class Stack(LinkedList):
     """Technically it's a LinkedList, but it provides more familiar
     API for Stack operations: push and pop. It also distinguishes between
     empty and non-empty structure, so trying to pop from empty stack will
-    throw exception.
+    throw ValueError.
     """
+
     def push(self, el):
         self.cons(el)
 
