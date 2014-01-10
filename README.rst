@@ -174,6 +174,99 @@ The last variant is really useful, when you need to switch callable inside evalu
 
 **Attention:** be careful with mutable/immutable data structures processing.
 
+Itertools recipes
+-----------------
+
+``fn.uniform`` provides you with "unification"
+of lazy functionality for few functions to work the same way in Python
+2+/3+:
+
+-  ``map`` (returns ``itertools.imap`` in Python 2+)
+-  ``filter`` (returns ``itertools.ifilter`` in Python 2+)
+-  ``reduce`` (returns ``functools.reduce`` in Python 3+)
+-  ``zip`` (returns ``itertools.izip`` in Python 2+)
+-  ``range`` (returns ``xrange`` in Python 2+)
+-  ``filterfalse`` (returns ``itertools.ifilterfalse`` in Python 2+)
+-  ``zip_longest`` (returns ``itertools.izip_longest`` in Python 2+)
+-  ``accumulate`` (backported to Python < 3.3)
+
+``fn.iters`` is high-level recipes to work with iterators. Most
+of them taken from `Python
+docs <http://docs.python.org/2.7/library/itertools.html#itertools.product>`_
+and adopted to work both with Python 2+/3+. Such recipes as ``drop``,
+``takelast``, ``droplast``, ``splitat``, ``splitby`` I have already
+submitted as `docs patch <http://bugs.python.org/issue16774>`_ which is
+review status just now.
+
+-  ``take``, ``drop``
+-  ``takelast``, ``droplast``
+-  ``head``, ``tail``
+-  ``compact``, ``reject``
+-  ``consume``
+-  ``nth``
+-  ``padnone``, ``ncycles``
+-  ``repeatfunc``
+-  ``grouper``, ``powerset``, ``pairwise``
+-  ``roundrobin``
+-  ``partition``, ``splitat``, ``splitby``
+-  ``flatten``
+-  ``iter_except``
+
+More information about use cases you can find in docstrings for each
+function in `source
+code <https://github.com/kachayev/fn.py/blob/master/fn/iters.py>`__ and
+in `test
+cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
+
+Persistent data structures
+--------------------------
+
+Persistent data structure is a data structure that always preserves the previous version of itself when it is modified (more formal information on `Wikipedia <http://en.wikipedia.org/wiki/Persistent_data_structure>`). Each operation with such data structure yields a new updated structure instead of in-place modification (all previous versions are potentially available or GC-ed when possible).
+
+Lets take a quick look:
+
+.. code-block:: python
+
+    >>> from fn.immutable import SkewHeap
+    >>> s1 = SkewHeap(10)
+    >>> s2 = s.insert(20)
+    >>> s2
+    <fn.immutable.heap.SkewHeap object at 0x10b14c050>
+    >>> s3 = s.insert(30)
+    >>> s3
+    <fn.immutable.heap.SkewHeap object at 0x10b14c158> # <-- other object
+    >>> s3.extract()
+    (10, <fn.immutable.heap.SkewHeap object at 0x10b14c050>)
+    >>> s3.extract() # <-- s3 isn't changed
+    (10, <fn.immutable.heap.SkewHeap object at 0x10b11c052>)
+
+If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breathe and read about few techniques that makes persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>` and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`.
+
+To see how it works in "pictures", you can check great slides from Zach Allaun's talk (StrangeLoop 2013): `"Functional Vectors, Maps And Sets In Julia" <https://github.com/strangeloop/StrangeLoop2013/blob/master/slides/sessions/Allaun-FunctionalVectorsMapsAndSetsInJulia.pdf>`.
+
+And, if you are brave enough, go and read:
+
+- Chris Okasaki, "Purely Functional Data Structures" (`Amazon <http://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504>`)
+- Fethi Rabhi and Guy Lapalme, "Algorithms: A Functional Programming Approach" (`Amazon <http://www.amazon.com/Algorithms-Functional-Programming-Approach-International/dp/0201596040/>`)
+
+Available immutable data structures in `fn.immutable` module:
+
+- ``LinkedList``: most "obvious" persistent data structure, used as building block for other list-based structures (stack, queue)
+- ``Stack``: wraps linked list implementation with well-known pop/push API
+- ``Queue``: uses two linked lists and lazy copy to provide `O(1)` enqueue and dequeue operations
+- ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <https://cs.uwaterloo.ca/~imunro/cs840/p155-buchsbaum.pdf>`
+- ``Vector`` (in progress): ~``O(1)`` access to elements by index, implementation is based on ``BitmappedTrie``
+- ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf>`
+- ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf>`
+- ``Dict`` (in progress): persistent hash map implementation based on ``BitmappedTrie``
+- ``FingerTree`` (in progress): `"Finger Trees: A Simple General-purpose Data Structure" <http://www.soi.city.ac.uk/~ross/papers/FingerTree.html>`
+
+Use appropriate doc strings to get more information about each data structure as well as sample code.
+
+Quick additional note. Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
+
+- `"The Value of Values" <http://www.infoq.com/presentations/Value-Values>`
+- `"Persistent Data Structures and Managed References" <http://www.infoq.com/presentations/Value-Identity-State-Rich-Hickey>`
 
 High-level operations with functions
 ------------------------------------
@@ -242,49 +335,6 @@ Use case specific for right-side folding is:
     assert 100 == foldr(call, 0 )([lambda s: s**2, lambda k: k+10])
     assert 400 == foldr(call, 10)([lambda s: s**2, lambda k: k+10])
 
-Itertools recipes
------------------
-
-``fn.uniform`` provides you with "unification"
-of lazy functionality for few functions to work the same way in Python
-2+/3+:
-
--  ``map`` (returns ``itertools.imap`` in Python 2+)
--  ``filter`` (returns ``itertools.ifilter`` in Python 2+)
--  ``reduce`` (returns ``functools.reduce`` in Python 3+)
--  ``zip`` (returns ``itertools.izip`` in Python 2+)
--  ``range`` (returns ``xrange`` in Python 2+)
--  ``filterfalse`` (returns ``itertools.ifilterfalse`` in Python 2+)
--  ``zip_longest`` (returns ``itertools.izip_longest`` in Python 2+)
--  ``accumulate`` (backported to Python < 3.3)
-
-``fn.iters`` is high-level recipes to work with iterators. Most
-of them taken from `Python
-docs <http://docs.python.org/2.7/library/itertools.html#itertools.product>`_
-and adopted to work both with Python 2+/3+. Such recipes as ``drop``,
-``takelast``, ``droplast``, ``splitat``, ``splitby`` I have already
-submitted as `docs patch <http://bugs.python.org/issue16774>`_ which is
-review status just now.
-
--  ``take``, ``drop``
--  ``takelast``, ``droplast``
--  ``head``, ``tail``
--  ``compact``, ``reject``
--  ``consume``
--  ``nth``
--  ``padnone``, ``ncycles``
--  ``repeatfunc``
--  ``grouper``, ``powerset``, ``pairwise``
--  ``roundrobin``
--  ``partition``, ``splitat``, ``splitby``
--  ``flatten``
--  ``iter_except``
-
-More information about use cases you can find in docstrings for each
-function in `source
-code <https://github.com/kachayev/fn.py/blob/master/fn/iters.py>`__ and
-in `test
-cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
 
 Functional style for error-handling
 -----------------------------------
