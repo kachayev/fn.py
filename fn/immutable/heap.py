@@ -8,6 +8,9 @@ class _MergeBased(object):
     def __nonzero__(self):
         return self.root is not None
 
+    def __bool__(self):
+        return self.__nonzero__()
+
     def __iter__(self):
         """Extract elements one-by-one.
         Note, that list(*Heap()) gives you sorted list as result.
@@ -18,7 +21,7 @@ class _MergeBased(object):
             yield r
 
     def __lt__(self, other):
-        if (not self) and (not other): return 0
+        if (not self) and (not other): return False
         if not self: return True
         if not other: return False
         return self.cmpfn(self.keyfn(self.root), self.keyfn(other.root)) < 0
