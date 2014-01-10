@@ -253,9 +253,9 @@ Available immutable data structures in `fn.immutable` module:
 
 - ``LinkedList``: most "obvious" persistent data structure, used as building block for other list-based structures (stack, queue)
 - ``Stack``: wraps linked list implementation with well-known pop/push API
-- ``Queue``: uses two linked lists and lazy copy to provide `O(1)` enqueue and dequeue operations
+- ``Queue``: uses two linked lists and lazy copy to provide O(1) enqueue and dequeue operations
 - ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <https://cs.uwaterloo.ca/~imunro/cs840/p155-buchsbaum.pdf>`_
-- ``Vector`` (in progress): near-``O(1)`` access to elements by index, implementation is based on ``BitmappedTrie``
+- ``Vector`` (in progress): near-O(1) access to elements by index, implementation is based on ``BitmappedTrie``
 - ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf>`_
 - ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf>`_
 - ``Dict`` (in progress): persistent hash map implementation based on ``BitmappedTrie``
