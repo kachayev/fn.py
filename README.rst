@@ -240,7 +240,7 @@ Lets take a quick look:
     >>> s3.extract() # <-- s3 isn't changed
     (10, <fn.immutable.heap.SkewHeap object at 0x10b11c052>)
 
-If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breathe and read about few techniques that makes persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>`_ and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`_.
+If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breathe and read about few techniques that make persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>`_ and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`_.
 
 To see how it works in "pictures", you can check great slides from Zach Allaun's talk (StrangeLoop 2013): `"Functional Vectors, Maps And Sets In Julia" <https://github.com/strangeloop/StrangeLoop2013/blob/master/slides/sessions/Allaun-FunctionalVectorsMapsAndSetsInJulia.pdf>`_.
 
@@ -255,7 +255,7 @@ Available immutable data structures in `fn.immutable` module:
 - ``Stack``: wraps linked list implementation with well-known pop/push API
 - ``Queue``: uses two linked lists and lazy copy to provide `O(1)` enqueue and dequeue operations
 - ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <https://cs.uwaterloo.ca/~imunro/cs840/p155-buchsbaum.pdf>`_
-- ``Vector`` (in progress): ~``O(1)`` access to elements by index, implementation is based on ``BitmappedTrie``
+- ``Vector`` (in progress): near-``O(1)`` access to elements by index, implementation is based on ``BitmappedTrie``
 - ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf>`_
 - ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf>`_
 - ``Dict`` (in progress): persistent hash map implementation based on ``BitmappedTrie``
@@ -263,9 +263,9 @@ Available immutable data structures in `fn.immutable` module:
 
 Use appropriate doc strings to get more information about each data structure as well as sample code.
 
-Quick additional note. Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
+**Quick additional note.** Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
 
-- `"The Value of Values" <http://www.infoq.com/presentations/Value-Values>`
+- `"The Value of Values" <http://www.infoq.com/presentations/Value-Values>`_
 - `"Persistent Data Structures and Managed References" <http://www.infoq.com/presentations/Value-Identity-State-Rich-Hickey>`_
 
 High-level operations with functions
