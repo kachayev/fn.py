@@ -71,8 +71,38 @@ class Stack(LinkedList):
     def is_empty(self):
         return not self
 
-class Deque(object):
-    pass
+class Queue(object):
+    """TBD
+    
+    Queue data structure description on Wikipedia:
+    [1] http://en.wikipedia.org/wiki/Queue_(abstract_data_type)
+    """
+
+    def enqueue(self, el):
+        """Returns new queue object with given element is added onto the end"""
+        pass
+
+    def dequeue(self):
+        """Return pair of values: the item from the front of the queue and
+        the new queue object without poped element.
+        """
+        pass
 
 class Vector(object):
+    pass
+
+class Deque(object):
+    """Double-ended queue is an  abstract data type that generalizes
+    a queue, for which elements can be added to or removed from either
+    the front (head) or back (tail).
+
+    More information on Wikipedia:
+    [1] http://en.wikipedia.org/wiki/Double-ended_queue
+
+    Implementation details are described here:
+    "Confluently Persistent Deques via Data Structural Bootstrapping"
+    [2] https://cs.uwaterloo.ca/~imunro/cs840/p155-buchsbaum.pdf
+
+    xxx: TBD
+    """
     pass
