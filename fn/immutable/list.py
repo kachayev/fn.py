@@ -1,3 +1,5 @@
+from fn.uniform import reduce
+
 class LinkedList(object):
     """Represents simplest singly linked list. Doesn't distinguish
     between empty and not-empty list (taking head of empty list will
@@ -72,21 +74,75 @@ class Stack(LinkedList):
         return not self
 
 class Queue(object):
-    """TBD
-    
+    """A queue is a particular kind of collection in which the entities in the collection
+    are kept in order and the principal operations on the collection are the addition of
+    entities to the rear terminal position, known as enqueue, and removal of entities from
+    the front terminal position, known as dequeue.
+
     Queue data structure description on Wikipedia:
     [1] http://en.wikipedia.org/wiki/Queue_(abstract_data_type)
+
+    Implementation based on two linked lists (left and right). Enqueue operation
+    performs cons on right list (the end of the queue). Dequeue peeks first element
+    from the left list (when possible), if left list is emptpy we populate left list
+    with element from right one-by-one (in natural reverse order). Complexity of both
+    operations are O(1).
+
+    Usage:
+
+    >>> from fn.immutable import Queue
+    >>> q = Queue()
+    >>> q1 = q.enqueue(10)
+    >>> q2 = q1.enqueue(20)
+    >>> el, tail = q2.dequeue()
+    >>> el
+    10
+    >>> tail.dequeue()
+    (20, <fn.immutable.list.Queue object at 0x1055554d0>)
     """
+
+    __slots__ = ("left", "right")
+
+    def __init__(self, left=None, right=None):
+        self.left = left if left is not None else LinkedList()
+        self.right = right if right is not None else LinkedList()
 
     def enqueue(self, el):
         """Returns new queue object with given element is added onto the end"""
-        pass
+        return Queue(self.left, self.right.cons(el))
 
     def dequeue(self):
         """Return pair of values: the item from the front of the queue and
         the new queue object without poped element.
         """
-        pass
+        if not self: raise ValueError("Queue is empty")
+        # if there is at least one element on the left, we can return it
+        if self.left:
+            return self.left.head, Queue(self.left.tail, self.right)
+
+        # in other case we need to copy right to left before
+        d = reduce(lambda acc, el: acc.cons(el), self.right, LinkedList())
+        return d.head, Queue(d.tail, LinkedList())
+
+    def is_empty(self):
+        return len(self) == 0
+
+    def __iter__(self):
+        curr = self
+        while curr:
+            el, curr = curr.dequeue()
+            yield el
+
+    def __nonzero__(self):
+        return len(self)
+
+    def __bool__(self):
+        return self.__nonzero__()
+
+    def __len__(self):
+        lleft = len(self.left) if self.left is not None else 0
+        lrigth = len(self.right) if self.right is not None else 0
+        return lleft + lright
 
 class Vector(object):
     pass
