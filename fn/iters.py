@@ -107,8 +107,7 @@ def group_by(keyfunc, iterable):
     """
     grouped = {}
     for item in iterable:
-        key = keyfunc(item)
-        grouped.setdefault(key, []).append(item)
+        grouped.setdefault(keyfunc(item), []).append(item)
     return grouped
 
 def roundrobin(*iterables):
