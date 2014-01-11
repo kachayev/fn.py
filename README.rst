@@ -221,7 +221,7 @@ cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
 Persistent data structures
 --------------------------
 
-Persistent data structure is a data structure that always preserves the previous version of itself when it is modified (more formal information on `Wikipedia <http://en.wikipedia.org/wiki/Persistent_data_structure>`_). Each operation with such data structure yields a new updated structure instead of in-place modification (all previous versions are potentially available or GC-ed when possible).
+Persistent data structure is a data structure that always preserves the previous version of itself when it is modified (more formal information on `Wikipedia <http://goo.gl/8VveOH>`_). Each operation with such data structure yields a new updated structure instead of in-place modification (all previous versions are potentially available or GC-ed when possible).
 
 Lets take a quick look:
 
@@ -242,31 +242,33 @@ Lets take a quick look:
 
 If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breathe and read about few techniques that make persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>`_ and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`_.
 
-To see how it works in "pictures", you can check great slides from Zach Allaun's talk (StrangeLoop 2013): `"Functional Vectors, Maps And Sets In Julia" <https://github.com/strangeloop/StrangeLoop2013/blob/master/slides/sessions/Allaun-FunctionalVectorsMapsAndSetsInJulia.pdf>`_.
+To see how it works in "pictures", you can check great slides from Zach Allaun's talk (StrangeLoop 2013): `"Functional Vectors, Maps And Sets In Julia" <http://goo.gl/Cp1Qsq>`_.
 
 And, if you are brave enough, go and read:
 
-- Chris Okasaki, "Purely Functional Data Structures" (`Amazon <http://www.amazon.com/Purely-Functional-Structures-Chris-Okasaki/dp/0521663504>`_)
-- Fethi Rabhi and Guy Lapalme, "Algorithms: A Functional Programming Approach" (`Amazon <http://www.amazon.com/Algorithms-Functional-Programming-Approach-International/dp/0201596040/>`_)
+- Chris Okasaki, "Purely Functional Data Structures" (`Amazon <http://goo.gl/c7ptkk>`_)
+- Fethi Rabhi and Guy Lapalme, "Algorithms: A Functional Programming Approach" (`Amazon <http://goo.gl/00BxTO>`_)
 
-Available immutable data structures in `fn.immutable` module:
+Available immutable data structures in ``fn.immutable`` module:
 
 - ``LinkedList``: most "obvious" persistent data structure, used as building block for other list-based structures (stack, queue)
 - ``Stack``: wraps linked list implementation with well-known pop/push API
 - ``Queue``: uses two linked lists and lazy copy to provide O(1) enqueue and dequeue operations
-- ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <https://cs.uwaterloo.ca/~imunro/cs840/p155-buchsbaum.pdf>`_
+- ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <http://goo.gl/vVTzx3>`_
 - ``Vector`` (in progress): near-O(1) access to elements by index, implementation is based on ``BitmappedTrie``
-- ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf>`_
-- ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf>`_
+- ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://goo.gl/R1PZME>`_
+- ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://goo.gl/aiVtPH>`_
 - ``Dict`` (in progress): persistent hash map implementation based on ``BitmappedTrie``
-- ``FingerTree`` (in progress): `"Finger Trees: A Simple General-purpose Data Structure" <http://www.soi.city.ac.uk/~ross/papers/FingerTree.html>`_
+- ``FingerTree`` (in progress): `"Finger Trees: A Simple General-purpose Data Structure" <http://goo.gl/Bzo0df>`_
 
 Use appropriate doc strings to get more information about each data structure as well as sample code.
 
-**Quick additional note.** Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
+To get more clear vision of how persistent heaps work (``SkewHeap`` and ``PairingHeap``), you can look at slides from my talk `"Union-based heaps" <http://goo.gl/VMgdG2>`_ (with analyzed data structures definitions in Python and Haskell).
 
-- `"The Value of Values" <http://www.infoq.com/presentations/Value-Values>`_
-- `"Persistent Data Structures and Managed References" <http://www.infoq.com/presentations/Value-Identity-State-Rich-Hickey>`_
+**Note.** Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
+
+- `"The Value of Values" <http://goo.gl/137UG5>`_
+- `"Persistent Data Structures and Managed References" <http://goo.gl/M3vZ7E>`_
 
 High-level operations with functions
 ------------------------------------
