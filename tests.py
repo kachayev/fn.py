@@ -490,6 +490,11 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual(["D","E","F"], list(b))
         self.assertEqual(["G","x","x"], list(c))
 
+    def test_group_by(self):
+        iterable = (s for s in ['1', '12', 'a', '123', 'ab'])
+        grouped = iters.group_by(lambda s: len(s), iterable)
+        self.assertEqual({1: ['1', 'a'], 2: ['12', 'ab'], 3: ['123']}, grouped)
+
     def test_roundrobin(self):
         r = iters.roundrobin('ABC', 'D', 'EF')
         self.assertEqual(["A","D","E","B","F","C"], list(r))

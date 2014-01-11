@@ -100,6 +100,17 @@ def grouper(n, iterable, fillvalue=None):
     args = [iter(iterable)] * n
     return zip_longest(*args, fillvalue=fillvalue)
 
+def group_by(keyfunc, iterable):
+    """Returns a dict of the elements from given iterable keyed by result
+    of keyfunc on each element. The value at each key will be a list of
+    the corresponding elements, in the order they appeared in the iterable.
+    """
+    grouped = {}
+    for item in iterable:
+        key = keyfunc(item)
+        grouped.setdefault(key, []).append(item)
+    return grouped
+
 def roundrobin(*iterables):
     """roundrobin('ABC', 'D', 'EF') --> A D E B F C
     Recipe originally credited to George Sakkis.
