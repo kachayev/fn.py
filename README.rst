@@ -229,10 +229,10 @@ Lets take a quick look:
 
     >>> from fn.immutable import SkewHeap
     >>> s1 = SkewHeap(10)
-    >>> s2 = s.insert(20)
+    >>> s2 = s1.insert(20)
     >>> s2
     <fn.immutable.heap.SkewHeap object at 0x10b14c050>
-    >>> s3 = s.insert(30)
+    >>> s3 = s2.insert(30)
     >>> s3
     <fn.immutable.heap.SkewHeap object at 0x10b14c158> # <-- other object
     >>> s3.extract()
