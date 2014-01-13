@@ -36,7 +36,7 @@ class LinkedList(object):
         self._count = 0 if tail is None else (len(tail) + 1)
 
     def cons(self, el):
-        return LinkedList(el, self)
+        return self.__class__(el, self)
 
     def __add__(self, el):
         return self.cons(el)
