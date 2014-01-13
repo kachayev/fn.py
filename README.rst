@@ -221,6 +221,8 @@ cases <https://github.com/kachayev/fn.py/blob/master/tests.py>`_.
 Persistent data structures
 --------------------------
 
+**Attention:** Persistent data structure are under active development.
+
 Persistent data structure is a data structure that always preserves the previous version of itself when it is modified (more formal information on `Wikipedia <http://goo.gl/8VveOH>`_). Each operation with such data structure yields a new updated structure instead of in-place modification (all previous versions are potentially available or GC-ed when possible).
 
 Lets take a quick look:
