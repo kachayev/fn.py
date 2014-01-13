@@ -927,7 +927,8 @@ class BankerQueueTestCase(unittest.TestCase):
         pass
 
     def test_queue_num_of_elements(self):
-        pass
+        self.assertEqual(0, len(Queue()))
+        self.assertEqual(3, len(Queue().enqueue(1).enqueue(2).enqueue(3)))
 
     def test_dequeue_from_empty(self):
         pass

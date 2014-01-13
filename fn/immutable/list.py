@@ -141,7 +141,7 @@ class Queue(object):
 
     def __len__(self):
         lleft = len(self.left) if self.left is not None else 0
-        lrigth = len(self.right) if self.right is not None else 0
+        lright = len(self.right) if self.right is not None else 0
         return lleft + lright
 
 class Vector(object):
