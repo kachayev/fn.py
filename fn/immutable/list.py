@@ -88,6 +88,9 @@ class Queue(object):
     with element from right one-by-one (in natural reverse order). Complexity of both
     operations are O(1).
 
+    Such implementation is also known as "Banker's Queue" in different papers,
+    i.e. in Chris Okasaki, "Purely Functional Data Structures"
+
     Usage:
 
     >>> from fn.immutable import Queue
@@ -109,6 +112,7 @@ class Queue(object):
 
     def enqueue(self, el):
         """Returns new queue object with given element is added onto the end"""
+        # xxx: check if we need to rebalance to prevent spikes
         return Queue(self.left, self.right.cons(el))
 
     def dequeue(self):
