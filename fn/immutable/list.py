@@ -64,7 +64,7 @@ class Stack(LinkedList):
     """
 
     def push(self, el):
-        self.cons(el)
+        return self.cons(el)
 
     def pop(self):
         if not self: raise ValueError("Stack is empty")
