@@ -112,8 +112,11 @@ class Queue(object):
 
     def enqueue(self, el):
         """Returns new queue object with given element is added onto the end"""
-        # xxx: check if we need to rebalance to prevent spikes
-        return Queue(self.left, self.right.cons(el))
+        # check if we need to rebalance to prevent spikes
+        if len(self.left) >= len(self.right):
+            return Queue(self.left, self.right.cons(el))
+        left = reduce(lambda acc, el: acc.cons(el), self.right, self.left)
+        return Queue(left, LinkedList().cons(el))
 
     def dequeue(self):
         """Return pair of values: the item from the front of the queue and
