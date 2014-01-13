@@ -54,8 +54,8 @@ def nth(iterable, n, default=None):
 
 # widely-spreaded shoutcuts to get first item 
 # and all but first item from iterator respectively
-head = partial(flip(nth), 0)
-tail = partial(drop, 1)
+head = first = partial(flip(nth), 0)
+tail = rest = partial(drop, 1)
 
 # shortcut to remove all falsey items from iterable
 compact = partial(filter, None)
