@@ -56,6 +56,9 @@ class LinkedList(object):
     def __nonzero__(self):
         return self.tail is not None
 
+    def __bool__(self):
+        return len(self) > 0
+
 class Stack(LinkedList):
     """Technically it's a LinkedList, but it provides more familiar
     API for Stack operations: push and pop. It also distinguishes between
@@ -144,7 +147,7 @@ class Queue(object):
         return len(self)
 
     def __bool__(self):
-        return self.__nonzero__()
+        return len(self) > 0
 
     def __len__(self):
         lleft = len(self.left) if self.left is not None else 0
