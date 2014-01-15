@@ -62,7 +62,7 @@ If you are not sure, what your function is going to do, you can print it:
 Streams and infinite sequences declaration
 ------------------------------------------
 
-Lazy-evaluated scala-style streams. Basic idea: evaluate each new
+Lazy-evaluated Scala-style streams. Basic idea: evaluate each new
 element "on demand" and share calculated elements between all created
 iterators. ``Stream`` object supports ``<<`` operator that means pushing
 new elements when it's necessary.
@@ -240,7 +240,7 @@ Lets take a quick look:
     >>> s3.extract() # <-- s3 isn't changed
     (10, <fn.immutable.heap.SkewHeap object at 0x10b11c052>)
 
-If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breathe and read about few techniques that make persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>`_ and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`_.
+If you think I'm totally crazy and it will work despairingly slow, just give it 5 minutes. Relax, take a deep breath and read about few techniques that make persistent data structures fast and efficient: `structural sharing <http://en.wikipedia.org/wiki/Persistent_data_structure#Examples_of_persistent_data_structures>`_ and `path copying <http://en.wikipedia.org/wiki/Persistent_data_structure#Path_Copying>`_.
 
 To see how it works in "pictures", you can check great slides from Zach Allaun's talk (StrangeLoop 2013): `"Functional Vectors, Maps And Sets In Julia" <http://goo.gl/Cp1Qsq>`_.
 
@@ -265,7 +265,7 @@ Use appropriate doc strings to get more information about each data structure as
 
 To get more clear vision of how persistent heaps work (``SkewHeap`` and ``PairingHeap``), you can look at slides from my talk `"Union-based heaps" <http://goo.gl/VMgdG2>`_ (with analyzed data structures definitions in Python and Haskell).
 
-**Note.** Most funcitonal languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
+**Note.** Most functional languages use persistent data structures as basic building blocks, well-known examples are Clojure, Haskell and Scala. Clojure community puts much effort to popularize programming based on the idea of data immutability. There are few amazing talk given by Rich Hickey (creator of Clojure), you can check them to find answers on both questions "How?" and "Why?":
 
 - `"The Value of Values" <http://goo.gl/137UG5>`_
 - `"Persistent Data Structures and Managed References" <http://goo.gl/M3vZ7E>`_
