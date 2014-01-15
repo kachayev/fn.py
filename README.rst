@@ -200,7 +200,7 @@ review status just now.
 
 -  ``take``, ``drop``
 -  ``takelast``, ``droplast``
--  ``head``, ``tail``
+-  ``head`` (alias: ``first``), ``tail`` (alias: ``rest``)
 -  ``compact``, ``reject``
 -  ``consume``
 -  ``nth``
