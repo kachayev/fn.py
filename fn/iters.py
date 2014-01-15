@@ -54,8 +54,8 @@ def nth(iterable, n, default=None):
 
 # widely-spreaded shoutcuts to get first item 
 # and all but first item from iterator respectively
-head = partial(flip(nth), 0)
-tail = partial(drop, 1)
+head = first = partial(flip(nth), 0)
+tail = rest = partial(drop, 1)
 
 # shortcut to remove all falsey items from iterable
 compact = partial(filter, None)
@@ -168,7 +168,7 @@ def pairwise(iterable):
     next(b, None)
     return zip(a, b)
 
-def iter_except(func, exception, first=None):
+def iter_except(func, exception, first_=None):
     """ Call a function repeatedly until an exception is raised.
 
     Converts a call-until-exception interface to an iterator interface.
@@ -185,8 +185,8 @@ def iter_except(func, exception, first=None):
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
     try:
-        if first is not None:
-            yield first()            # For database APIs needing an initial cast to db.first()
+        if first_ is not None:
+            yield first_()            # For database APIs needing an initial cast to db.first()
         while 1:
             yield func()
     except exception:

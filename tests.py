@@ -420,6 +420,9 @@ class IteratorsTestCase(unittest.TestCase):
 
         self.assertEqual(1, iters.head(gen()))
 
+    def test_first(self):
+        self.assertEqual(iters.first, iters.head)  # Check if same object
+
     def test_tail(self):
         self.assertEqual([1,2], list(iters.tail([0,1,2])))
         self.assertEqual([], list(iters.tail([])))
@@ -430,6 +433,9 @@ class IteratorsTestCase(unittest.TestCase):
             yield 3 
 
         self.assertEqual([2,3], list(iters.tail(gen())))
+
+    def test_rest(self):
+        self.assertEqual(iters.rest, iters.tail)  # Check if same object
 
     def test_compact(self):
         self.assertEqual([True, 1, 0.1, "non-empty", [""], (0,), {"a": 1}],
