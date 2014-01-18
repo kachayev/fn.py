@@ -154,9 +154,6 @@ class Queue(object):
         lright = len(self.right) if self.right is not None else 0
         return lleft + lright
 
-class Vector(object):
-    pass
-
 class Deque(object):
     """Double-ended queue is an  abstract data type that generalizes
     a queue, for which elements can be added to or removed from either
