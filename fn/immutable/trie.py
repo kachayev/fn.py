@@ -6,8 +6,26 @@ class Vector(object):
     "Bitmapped Vector Trie". As well as Clojure variant it supports access
     to items by index in log32N hops. 
 
+    Code structure inspired much by PersistenVector.java (Clojure core):
+    [1] http://goo.gl/sqtZ74
+
     Usage:
-    TBD
+    >>> from fn.immutable import Vector
+    >>> v = Vector()
+    >>> v1 = v.assoc(0, 10)
+    >>> v2 = v1.assoc(1, 20)
+    >>> v3 = v2.assoc(2, 30)
+    >>> v3.get(0)
+    10
+    >>> v3.get(1)
+    20
+    >>> v3.get(2)
+    30
+    >>> v4 = v2.assoc(2, 50)
+    >>> v3.get(2) # <-- previous version didn't change
+    30
+    >>> v4.get(2)
+    50
     """
 
     __slots__ = ("length", "shift", "root", "tail")
