@@ -8,7 +8,7 @@ import operator
 import itertools
 
 from fn import op, _, F, Stream, iters, underscore, monad, recur
-from fn.immutable import SkewHeap, PairingHeap, LinkedList, Stack, Queue
+from fn.immutable import SkewHeap, PairingHeap, LinkedList, Stack, Queue, Vector
 
 class InstanceChecker(object):
     if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
@@ -961,6 +961,15 @@ class BankerQueueTestCase(unittest.TestCase):
         self.assertEqual([], list(Queue()))
         self.assertEqual([1,2,3], list(Queue().enqueue(1).enqueue(2).enqueue(3)))
         self.assertEqual(60, sum(Queue().enqueue(10).enqueue(20).enqueue(30)))
+
+class VectorTestCase(unittest.TestCase):
+
+    def test_cons_operation(self):
+        v = Vector()
+        self.assertEqual(0, len(v))
+        v1 = v.cons(10)
+        self.assertEqual(1, len(v1))
+        self.assertEqual(0, len(v)) # previous value didn't change
 
 if __name__ == '__main__':
     unittest.main()
