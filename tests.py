@@ -8,6 +8,7 @@ import operator
 import itertools
 
 from fn import op, _, F, Stream, iters, underscore, monad, recur
+from fn.uniform import reduce
 from fn.immutable import SkewHeap, PairingHeap, LinkedList, Stack, Queue, Vector
 
 class InstanceChecker(object):

@@ -1,3 +1,5 @@
+from fn.uniform import reduce
+
 class Vector(object):
     """A vector is a collection of values indexed by contiguous integers.
     Based on Philip Bagwell's "Array Mapped Trie" and Rick Hickey's 
