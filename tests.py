@@ -1000,7 +1000,10 @@ class VectorTestCase(unittest.TestCase):
         pass
 
     def test_setitem_should_not_be_implemented(self):
-        pass
+        def f():
+            v = Vector().cons(20)
+            v[0] = 10
+        self.assertRaises(NotImplementedError, f)
 
     def test_subvector_operation(self):
         pass
