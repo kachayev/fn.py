@@ -1,4 +1,6 @@
+from fn import Stream
 from fn.uniform import reduce
+from fn.iters import takewhile
 
 class Vector(object):
     """A vector is a collection of values indexed by contiguous integers.
@@ -39,6 +41,12 @@ class Vector(object):
 
         def __str__(self):
             return str(self.array)
+
+        def __iter__(self):
+            s = reduce(lambda acc, el: acc << (el if isinstance(el, self.__class__) else [el]),
+                       takewhile(lambda el: el is not None, self.array),
+                       Stream())
+            return iter(s)
 
     def __init__(self, length=0, shift=None, root=None, tail=None):
         self.length = length
@@ -116,7 +124,7 @@ class Vector(object):
 
     def get(self, pos):
         """Returns a value accossiated with position"""
-        if pos < 0 or pos > self.length: raise IndexError()
+        if pos < 0 or pos >= self.length: raise IndexError()
         if pos >= self._tailoff(): return self.tail[pos & 0x01f]
         bottom = reduce(lambda node, level: node.array[(pos >> level) & 0x01f],
                         range(self.shift,0,-5), self.root)
@@ -124,7 +132,8 @@ class Vector(object):
 
     def peek(self):
         """Returns the last item in vector or None if vector is empty"""
-        pass
+        if self.length == 0: return None
+        return self.get(self.length-1)
 
     def pop(self):
         """Returns a new vector without the last item"""
@@ -138,7 +147,8 @@ class Vector(object):
         return self.length
 
     def __iter__(self):
-        pass
+        s = Stream() << self.root << self.tail
+        return iter(s)
 
     def __getitem__(self, pos):
         return self.get(pos)

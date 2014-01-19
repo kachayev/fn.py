@@ -989,17 +989,20 @@ class VectorTestCase(unittest.TestCase):
         # long vector
         up = reduce(lambda acc, el: acc.assoc(el, el*2), range(1500), Vector())
         self.assertEqual(2800, up.get(1400))
+        self.assertEqual(2998, up.get(1499))
 
     def test_push_pop_operations(self):
         pass
 
     def test_vector_iterator(self):
-        pass
+        v = reduce(lambda acc, el: acc.assoc(el, el+1), range(1500), Vector())
+        self.assertEqual(list(range(1, 1501)), list(v))
 
     def test_index_error(self):
-        up = reduce(lambda acc, el: acc.assoc(el, el+2), range(50), Vector())
-        self.assertRaises(IndexError, up.get, -1)
-        self.assertRaises(IndexError, up.get, 52)
+        v = reduce(lambda acc, el: acc.assoc(el, el+2), range(50), Vector())
+        self.assertRaises(IndexError, v.get, -1)
+        self.assertRaises(IndexError, v.get, 50)
+        self.assertRaises(IndexError, v.get, 52)
 
     def test_setitem_should_not_be_implemented(self):
         def f():
