@@ -970,8 +970,39 @@ class VectorTestCase(unittest.TestCase):
         v1 = v.cons(10)
         self.assertEqual(1, len(v1))
         self.assertEqual(0, len(v)) # previous value didn't change
-        up = reduce(lambda acc, el: acc.cons(el), range(50), Vector())
-        self.assertEqual(50, len(up))
+        up = reduce(lambda acc, el: acc.cons(el), range(513), Vector())
+        self.assertEqual(513, len(up))
+
+    def test_assoc_get_operations(self):
+        v = Vector()
+        v1 = v.assoc(0, 10)
+        v2 = v1.assoc(1, 20)
+        v3 = v2.assoc(2, 30)
+        self.assertEqual(10, v3.get(0))
+        self.assertEqual(20, v3.get(1))
+        self.assertEqual(30, v3.get(2))
+        # check persistence
+        v4 = v2.assoc(2, 50)
+        self.assertEqual(30, v3.get(2))
+        self.assertEqual(50, v4.get(2))
+        # long vector
+        up = reduce(lambda acc, el: acc.assoc(el, el*2), range(1500), Vector())
+        self.assertEqual(2800, up.get(1400))
+
+    def test_push_pop_operations(self):
+        pass
+
+    def test_vector_iterator(self):
+        pass
+
+    def test_index_error(self):
+        pass
+
+    def test_setitem_should_not_be_implemented(self):
+        pass
+
+    def test_subvector_operation(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

@@ -17,11 +17,14 @@ class Vector(object):
             self.array = values or [None]*32
             if init is not None: self.array[0] = init
 
+        def __str__(self):
+            return str(self.array)
+
     def __init__(self, length=0, shift=None, root=None, tail=None):
         self.length = length
         self.shift = shift if shift is not None else 5
         self.root = root or self.__class__._Node()
-        self.tail = None or []
+        self.tail = tail if tail is not None else []
 
     def assoc(self, pos, el):
         """Returns a new vector that contains el at given position.
@@ -30,7 +33,7 @@ class Vector(object):
         if pos < 0 or pos > self.length: raise IndexError()
         if pos == self.length: return self.cons(el)
         if pos < self._tailoff():
-            up = self.__class__._do_assoc(self.shift. self.root, pos, el)
+            up = self.__class__._do_assoc(self.shift, self.root, pos, el)
             return self.__class__(self.length, self.shift, up, self.tail)
 
         up = self.tail[:]
@@ -47,16 +50,16 @@ class Vector(object):
         if level == 0:
             r.array[pos & 0x01f] = el
         else:
-            sub = (i >> level) & 0x01f
+            sub = (pos >> level) & 0x01f
             r.array[sub] = cls._do_assoc(level-5, node.array[sub], pos, el)
         return r
 
     def cons(self, el):
         # if there is a room in tail, just append value to tail
         if (self.length - self._tailoff()) < 32:
-            up = self.tail[:]
-            up.append(el)
-            return self.__class__(self.length+1, self.shift, self.root, up)
+            tailup = self.tail[:]
+            tailup.append(el)
+            return self.__class__(self.length+1, self.shift, self.root, tailup)
 
         # if tail is already full, we need to push element into tree
         # (from the top)
@@ -93,7 +96,11 @@ class Vector(object):
 
     def get(self, pos):
         """Returns a value accossiated with position"""
-        pass
+        if pos < 0 or pos > self.length: raise IndexError()
+        if pos >= self._tailoff(): return self.tail[pos & 0x01f]
+        bottom = reduce(lambda node, level: node.array[(pos >> level) & 0x01f],
+                        range(self.shift,0,-5), self.root)
+        return bottom.array[pos & 0x01f]
 
     def peek(self):
         """Returns the last item in vector or None if vector is empty"""
