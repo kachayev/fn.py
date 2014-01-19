@@ -997,6 +997,7 @@ class VectorTestCase(unittest.TestCase):
     def test_vector_iterator(self):
         v = reduce(lambda acc, el: acc.assoc(el, el+1), range(1500), Vector())
         self.assertEqual(list(range(1, 1501)), list(v))
+        self.assertEqual(1125750, sum(v))
 
     def test_index_error(self):
         v = reduce(lambda acc, el: acc.assoc(el, el+2), range(50), Vector())
