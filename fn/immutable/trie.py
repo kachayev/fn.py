@@ -125,10 +125,7 @@ class Vector(object):
     def get(self, pos):
         """Returns a value accossiated with position"""
         if pos < 0 or pos >= self.length: raise IndexError()
-        if pos >= self._tailoff(): return self.tail[pos & 0x01f]
-        bottom = reduce(lambda node, level: node.array[(pos >> level) & 0x01f],
-                        range(self.shift,0,-5), self.root)
-        return bottom.array[pos & 0x01f]
+        return self._find_container(pos)[pos & 0x01f]
 
     def peek(self):
         """Returns the last item in vector or None if vector is empty"""
@@ -137,7 +134,41 @@ class Vector(object):
 
     def pop(self):
         """Returns a new vector without the last item"""
-        pass
+        if self.length == 0: raise ValueError("Vector is empty")
+        if self.length == 1: return self.__class__()
+        if self.length - self._tailoff() > 1:
+            return self.__class__(self.length-1, self.shift, self.root, self.tail[:-1])
+
+        tail = self._find_container(self.length - 2)
+        root = self._pop_tail(self.shift, self.root) or self.__class__._Node()
+        shift = self.shift
+
+        if shift > 5 and root.array[1] is None:
+            root = root.array[0]
+            shift -= 5
+
+        return self.__class__(self.length-1, shift, root, tail)
+
+    def _find_container(self, pos):
+        if pos < 0 or pos > self.length: raise IndexError()
+        if pos >= self._tailoff(): return self.tail
+        bottom = reduce(lambda node, level: node.array[(pos >> level) & 0x01f],
+                        range(self.shift,0,-5), self.root)
+        return bottom.array
+
+    def _pop_tail(self, level, node):
+        sub = ((self.length - 2) >> level) & 0x01f
+        if level > 5:
+            child = self._pop_tail(level-5, node.array[sub])
+            if child is None and sub == 0: return None
+            r = self.__class__._Node(node.array[:])
+            r.array[sub] = child
+            return r
+        elif sub == 0: return None
+        else:
+            r = self.__class__._Node(node.array[:])
+            r.array[sub] = None
+            return r
     
     def subvec(self, start, end=None):
         """Returns a new vector of the items in vector from start to end"""
@@ -155,4 +186,3 @@ class Vector(object):
 
     def __setitem__(self, pos, val):
         raise NotImplementedError()
-    

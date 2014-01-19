@@ -991,8 +991,10 @@ class VectorTestCase(unittest.TestCase):
         self.assertEqual(2800, up.get(1400))
         self.assertEqual(2998, up.get(1499))
 
-    def test_push_pop_operations(self):
-        pass
+    def test_pop_operations(self):
+        v = reduce(lambda acc, el: acc.cons(el), range(2000), Vector())
+        self.assertEqual(1999, len(v.pop()))
+        self.assertEqual(list(range(1999)), list(v.pop()))
 
     def test_vector_iterator(self):
         v = reduce(lambda acc, el: acc.assoc(el, el+1), range(1500), Vector())
