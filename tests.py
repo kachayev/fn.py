@@ -997,7 +997,9 @@ class VectorTestCase(unittest.TestCase):
         pass
 
     def test_index_error(self):
-        pass
+        up = reduce(lambda acc, el: acc.assoc(el, el+2), range(50), Vector())
+        self.assertRaises(IndexError, up.get, -1)
+        self.assertRaises(IndexError, up.get, 52)
 
     def test_setitem_should_not_be_implemented(self):
         def f():
