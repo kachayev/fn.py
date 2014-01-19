@@ -970,6 +970,8 @@ class VectorTestCase(unittest.TestCase):
         v1 = v.cons(10)
         self.assertEqual(1, len(v1))
         self.assertEqual(0, len(v)) # previous value didn't change
+        up = reduce(lambda acc, el: acc.cons(el), range(50), Vector())
+        self.assertEqual(50, len(up))
 
 if __name__ == '__main__':
     unittest.main()

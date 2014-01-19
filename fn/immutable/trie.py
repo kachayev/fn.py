@@ -17,9 +17,9 @@ class Vector(object):
             self.array = values or [None]*32
             if init is not None: self.array[0] = init
 
-    def __init__(self, length=0, shift=0, root=None, tail=None):
+    def __init__(self, length=0, shift=None, root=None, tail=None):
         self.length = length
-        self.shift = shift
+        self.shift = shift if shift is not None else 5
         self.root = root or self.__class__._Node()
         self.tail = None or []
 
@@ -71,7 +71,7 @@ class Vector(object):
             uproot = self._push_tail(self.shift, self.root, tailnode)
             shift = self.shift
 
-        return self.__class__(self.length+1, newshift, uproot, [el])
+        return self.__class__(self.length+1, shift, uproot, [el])
 
     def _push_tail(self, level, root, tail):
         sub = ((self.length - 1) >> level) & 0x01f
