@@ -52,7 +52,7 @@ def nth(iterable, n, default=None):
     """
     return next(islice(iterable, n, None), default)
 
-# widely-spreaded shoutcuts to get first item 
+# widely-spreaded shortcuts to get first item 
 # and all but first item from iterator respectively
 head = first = partial(flip(nth), 0)
 tail = rest = partial(drop, 1)
