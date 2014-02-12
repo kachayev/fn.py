@@ -473,6 +473,13 @@ class IteratorsTestCase(unittest.TestCase):
                                                   [], [""], (), (0,),
                                                   {}, {"a": 1}])))
 
+    def test_iterate(self):
+        it = iters.iterate(lambda x: x * x, 2)
+        self.assertEqual(2, next(it))  # 2
+        self.assertEqual(4, next(it))  # 2 * 2
+        self.assertEqual(16, next(it))  # 4 * 4
+        self.assertEqual(256, next(it))  # 16 * 16
+
     def test_padnone(self):
         it = iters.padnone([10,11])
         self.assertEqual(10, next(it))

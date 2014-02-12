@@ -257,6 +257,7 @@ review status just now.
 -  ``head`` (alias: ``first``), ``tail`` (alias: ``rest``)
 -  ``second``, ``ffirst``
 -  ``compact``, ``reject``
+-  ``iterate``
 -  ``consume``
 -  ``nth``
 -  ``padnone``, ``ncycles``

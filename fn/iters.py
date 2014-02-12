@@ -68,6 +68,13 @@ def reject(func, iterable):
     """
     return filter(F(not_) << (func or _), iterable)
 
+def iterate(f, x):
+    """Return an iterator yielding x, f(x), f(f(x)) etc.
+    """
+    while True:
+        yield x
+        x = f(x)
+
 def padnone(iterable):
     """Returns the sequence elements and then returns None indefinitely.
     Useful for emulating the behavior of the built-in map() function.
