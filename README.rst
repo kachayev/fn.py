@@ -97,7 +97,9 @@ Available immutable data structures in ``fn.immutable`` module:
 - ``LinkedList``: most "obvious" persistent data structure, used as building block for other list-based structures (stack, queue)
 - ``Stack``: wraps linked list implementation with well-known pop/push API
 - ``Queue``: uses two linked lists and lazy copy to provide O(1) enqueue and dequeue operations
-- ``Deque`` (in progress): `"Confluently Persistent Deques via Data Structural Bootstrapping" <http://goo.gl/vVTzx3>`_
+- ``Deque`` (in progress): `"Confluently Persistent Deques via Data
+  Structural Bootstrapping" <http://goo.gl/vVTzx3>`_
+- ``Deque`` based on ``FingerTree`` data structure (see more information below)
 - ``Vector``: O(log32(n)) access to elements by index (which is near-O(1) for reasonable vector size), implementation is based on ``BitmappedTrie``, almost drop-in replacement for built-in Python ``list``
 - ``SkewHeap``: self-adjusting heap implemented as a binary tree with specific branching model, uses heap merge as basic operation, more information - `"Self-adjusting heaps" <http://goo.gl/R1PZME>`_
 - ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://goo.gl/aiVtPH>`_
