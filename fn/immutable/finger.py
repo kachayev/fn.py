@@ -43,7 +43,7 @@ Deep = namedtuple("Deep", "measure,left,middle,right")
 class FingerTree(object):
 
     class Empty(Empty):
-        def empty(self): return True
+        def is_empty(self): return True
         def head(self): return None
         def last(self): return None
         def tail(self): return self
@@ -55,7 +55,7 @@ class FingerTree(object):
         def __iter__(self): return iter([])
 
     class Single(Single):
-        def empty(self): return False
+        def is_empty(self): return False
         def head(self): return self.elem
         def last(self): return self.elem
         def tail(self): return FingerTree.Empty(self.measure)
@@ -67,13 +67,13 @@ class FingerTree(object):
         def __iter__(self): return iter([self.elem])
 
     class Deep(Deep):
-        def empty(self): return False
+        def is_empty(self): return False
         def head(self): return self.left[0]
         def last(self): return self.right[-1]
 
         def tail(self):
             if len(self.left) == 1:
-                if self.middle.empty():
+                if self.middle.is_empty():
                     return FingerTree.from_iterable(self.measure, list(self.right))
                 return FingerTree.Deep(self.measure,
                                        [self.middle.head()],
@@ -83,7 +83,7 @@ class FingerTree(object):
 
         def butlast(self):
             if len(self.rigth) == 1:
-                if self.middle.empty():
+                if self.middle.is_empty():
                     return FingerTree.from_iterable(self.measure, list(self.left))
                 return FingerTree.Deep(self.measure,
                                        self.left,
@@ -123,3 +123,14 @@ class FingerTree(object):
         return FingerTree.Empty(measure)
 
 
+#####################################################
+# Possible applications of finger tree in practice
+#####################################################
+
+class Deque(object):
+    def __new__(_cls):
+        return FingerTree.Empty(lambda x: x)
+
+    @staticmethod
+    def from_iterable(it):
+        return FingerTree.from_iterable(lambda x: x, it)
