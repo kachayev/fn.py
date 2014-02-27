@@ -438,6 +438,26 @@ class IteratorsTestCase(unittest.TestCase):
     def test_rest(self):
         self.assertEqual(iters.rest, iters.tail)  # Check if same object
 
+    def test_second(self):
+        self.assertEqual(2, iters.second([1, 2, 3]))
+        self.assertEqual(None, iters.second([]))
+
+        def gen():
+            yield 10
+            yield 20
+            yield 30
+
+        self.assertEqual(20, iters.second(gen()))
+
+    def test_ffirst(self):
+        self.assertEqual(1, iters.ffirst([[1, 2], [3, 4]]))
+        self.assertEqual(None, iters.ffirst([[], [10, 20]]))
+
+        def gen():
+            yield (x * 10 for x in (10, 20, 30,))
+
+        self.assertEqual(100, iters.ffirst(gen()))
+
     def test_compact(self):
         self.assertEqual([True, 1, 0.1, "non-empty", [""], (0,), {"a": 1}],
                          list(iters.compact([None, False, True, 0, 1, 0.0, 0.1,
@@ -452,6 +472,13 @@ class IteratorsTestCase(unittest.TestCase):
                                                   0.0, 0.1, "", "non-empty",
                                                   [], [""], (), (0,),
                                                   {}, {"a": 1}])))
+
+    def test_iterate(self):
+        it = iters.iterate(lambda x: x * x, 2)
+        self.assertEqual(2, next(it))  # 2
+        self.assertEqual(4, next(it))  # 2 * 2
+        self.assertEqual(16, next(it))  # 4 * 4
+        self.assertEqual(256, next(it))  # 16 * 16
 
     def test_padnone(self):
         it = iters.padnone([10,11])

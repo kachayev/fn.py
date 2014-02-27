@@ -52,10 +52,12 @@ def nth(iterable, n, default=None):
     """
     return next(islice(iterable, n, None), default)
 
-# widely-spreaded shoutcuts to get first item 
-# and all but first item from iterator respectively
+# widely-spreaded shortcuts to get first item, all but first item,
+# second item, and first item of first item from iterator respectively
 head = first = partial(flip(nth), 0)
 tail = rest = partial(drop, 1)
+second = F(rest) >> first
+ffirst = F(first) >> first
 
 # shortcut to remove all falsey items from iterable
 compact = partial(filter, None)
@@ -65,6 +67,13 @@ def reject(func, iterable):
     is false. If func is None, return the items that are false.
     """
     return filter(F(not_) << (func or _), iterable)
+
+def iterate(f, x):
+    """Return an iterator yielding x, f(x), f(f(x)) etc.
+    """
+    while True:
+        yield x
+        x = f(x)
 
 def padnone(iterable):
     """Returns the sequence elements and then returns None indefinitely.

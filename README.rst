@@ -255,7 +255,9 @@ review status just now.
 -  ``take``, ``drop``
 -  ``takelast``, ``droplast``
 -  ``head`` (alias: ``first``), ``tail`` (alias: ``rest``)
+-  ``second``, ``ffirst``
 -  ``compact``, ``reject``
+-  ``iterate``
 -  ``consume``
 -  ``nth``
 -  ``padnone``, ``ncycles``
