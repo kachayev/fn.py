@@ -14,6 +14,8 @@ More information on Wikipedia: http://goo.gl/ppH2nE
 
 from collections import namedtuple
 
+from fn.uniform import reduce
+
 # data Node a = Node2 a a | Node3 a a a
 # data Digit a = One a | Two a a | Three a a a | Four a a a a 
 # data FingerTree a = Empty
