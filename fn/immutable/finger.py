@@ -38,13 +38,20 @@ class Node3(namedtuple("Node3", "a,b,c")):
         yield self.b
         yield self.c
 
-Empty = namedtuple("Empty", "measure") 
-Single = namedtuple("Single", "measure,elem")
-Deep = namedtuple("Deep", "measure,left,middle,right")
-
 class FingerTree(object):
 
-    class Empty(Empty):
+    class Empty(object):
+        def __init__(self, measure):
+            object.__setattr__(self, "measure", measure)
+
+        def __setattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be changed".format("Empty"))
+
+        def __delattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be deleted".format("Empty"))
+
         def is_empty(self): return True
         def head(self): return None
         def last(self): return None
@@ -56,7 +63,19 @@ class FingerTree(object):
             return FingerTree.Single(self.measure, v)
         def __iter__(self): return iter([])
 
-    class Single(Single):
+    class Single(object):
+        def __init__(self, measure, elem):
+            object.__setattr__(self, "measure", measure)
+            object.__setattr__(self, "elem", elem)
+
+        def __setattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be changed".format("Single"))
+
+        def __delattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be deleted".format("Single"))
+
         def is_empty(self): return False
         def head(self): return self.elem
         def last(self): return self.elem
@@ -68,7 +87,21 @@ class FingerTree(object):
             return FingerTree.Deep(self.measure, [self.elem], FingerTree.Empty(self.measure), [v])
         def __iter__(self): return iter([self.elem])
 
-    class Deep(Deep):
+    class Deep(object):
+        def __init__(self, measure, left, middle, right):
+            object.__setattr__(self, "measure", measure)
+            object.__setattr__(self, "left", left)
+            object.__setattr__(self, "middle", middle)
+            object.__setattr__(self, "right", right)
+
+        def __setattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be changed".format("Deep"))
+
+        def __delattr__(self, *args):
+            raise AttributeError("Attributes of {0} object "
+                                 "cannot be deleted".format("Deep"))
+
         def is_empty(self): return False
         def head(self): return self.left[0]
         def last(self): return self.right[-1]
