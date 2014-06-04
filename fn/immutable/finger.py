@@ -41,6 +41,8 @@ class Node3(namedtuple("Node3", "a,b,c")):
 class FingerTree(object):
 
     class Empty(object):
+        __slots__ = ("measure",)
+
         def __init__(self, measure):
             object.__setattr__(self, "measure", measure)
 
@@ -64,6 +66,8 @@ class FingerTree(object):
         def __iter__(self): return iter([])
 
     class Single(object):
+        __slots__ = ("measure", "elem",)
+
         def __init__(self, measure, elem):
             object.__setattr__(self, "measure", measure)
             object.__setattr__(self, "elem", elem)
@@ -88,6 +92,8 @@ class FingerTree(object):
         def __iter__(self): return iter([self.elem])
 
     class Deep(object):
+        __slots__ = ("measure", "left", "middle", "right",)
+
         def __init__(self, measure, left, middle, right):
             object.__setattr__(self, "measure", measure)
             object.__setattr__(self, "left", left)
