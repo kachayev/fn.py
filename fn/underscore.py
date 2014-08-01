@@ -21,7 +21,10 @@ def fmap(f, format):
                                   self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
-            return self.__class__(call, fmt.replace("other", "%r"), (other,), self._arity)
+            return self.__class__(call,
+                                  fmt.replace("other", "%r"),
+                                  self._format_args + (other,),
+                                  self._arity)
     return applyier
 
 class ArityError(TypeError):
