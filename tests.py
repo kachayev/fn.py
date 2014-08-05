@@ -346,7 +346,7 @@ class UnderscoreTestCase(unittest.TestCase):
     def test_repr_parse_str(self):
         self.assertEqual('=> ' + _, eval(repr('=> ' + _)))
         self.assertEqual(
-            reduce(lambda f, n: f.format(n), ('({} & _)',) * 11).format('_'),
+            reduce(lambda f, n: f.format(n), ('({0} & _)',) * 11).format('_'),
             repr(reduce(_ & _, (_,) * 12)),
         )
 
