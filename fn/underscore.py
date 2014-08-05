@@ -89,7 +89,7 @@ class _Callable(object):
 
     def __repr__(self):
         """Return original function notation to ensure that eval(repr(f)) == f"""
-        return re.sub(r"x\d", "_", str(self).split("=>", 1)[1].strip())
+        return re.sub(r"x\d+", "_", str(self).split("=>", 1)[1].strip())
 
     def __call__(self, *args):
         if len(args) != self._arity:
