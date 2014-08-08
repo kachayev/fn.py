@@ -349,6 +349,13 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(_ + _, eval(repr(_ + _)))
         self.assertEqual(_ + _ * _, eval(repr(_ + _ * _)))
 
+    def test_repr_parse_str(self):
+        self.assertEqual('=> ' + _, eval(repr('=> ' + _)))
+        self.assertEqual(
+            reduce(lambda f, n: f.format(n), ('({0} & _)',) * 11).format('_'),
+            repr(reduce(_ & _, (_,) * 12)),
+        )
+
 class CompositionTestCase(unittest.TestCase):
 
     def test_composition(self):
