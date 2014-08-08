@@ -1,4 +1,4 @@
-from functools import partial
+from functools import partial, wraps
 from inspect import getargspec
 
 from .op import identity, flip
@@ -66,6 +66,7 @@ def curried(func):
     >>> sum5(1, 2, 3)(4, 5)
     15
     """
+    @wraps(func)
     def _curried(*args, **kwargs):
         f = func
         count = 0
