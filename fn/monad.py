@@ -56,7 +56,6 @@ You need to evaluate "request type" using at least on attribute:
 
 """
 
-from collections import namedtuple
 from functools import wraps, partial
 from operator import eq, is_not
 
@@ -120,7 +119,7 @@ class Full(Option):
         self.x = value.get_or("") if isinstance(value, Full) else value
 
     def map(self, callback):
-        return Full(callback(self.x))
+        return Option.from_value(callback(self.x))
 
     def filter(self, callback):
         return self if callback(self.x) else Empty()

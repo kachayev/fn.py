@@ -23,7 +23,7 @@ setup(
     author='Alexey Kachayev',
     author_email='kachayev@gmail.com',
     url='https://github.com/kachayev/fn.py',
-    packages=['fn'],
+    packages=['fn', 'fn.immutable'],
     package_data={'': ['LICENSE', 'README.rst', 'HISTORY.rst']},
     include_package_data=True,
     install_requires=[],
