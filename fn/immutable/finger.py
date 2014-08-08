@@ -122,7 +122,6 @@ class FingerTree(object):
     def __new__(_cls, measure):
         return FingerTree.Empty(measure)
 
-
 #####################################################
 # Possible applications of finger tree in practice
 #####################################################
