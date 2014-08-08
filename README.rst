@@ -344,6 +344,24 @@ Use case specific for right-side folding is:
     assert 400 == foldr(call, 10)([lambda s: s**2, lambda k: k+10])
 
 
+Function currying
+-----------------
+
+``fn.func.curried`` is a decorator for building curried functions, for example:
+
+.. code-block:: python
+
+    >>> from fn.func import curried
+    >>> @curried
+    ... def sum5(a, b, c, d, e):
+    ...     return a + b + c + d + e
+    ...
+    >>> sum5(1)(2)(3)(4)(5)
+    15
+    >>> sum5(1, 2, 3)(4, 5)
+    15
+
+
 Functional style for error-handling
 -----------------------------------
 
@@ -435,8 +453,6 @@ Work in progress
 
 Ideas to think about:
 
--  Curried function builder to simplify
-   ``lambda arg1: lambda arg2: ...``
 -  Scala-style for-yield loop to simplify long map/filter blocks
 
 Contribute

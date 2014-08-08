@@ -1,4 +1,5 @@
 from functools import partial
+from inspect import getargspec
 
 from .op import identity, flip
 
@@ -49,3 +50,34 @@ class F(object):
     def  __call__(self, *args, **kwargs):
         """Overload apply operator"""
         return self.f(*args, **kwargs)
+
+
+def curried(func):
+    """A decorator that makes the function curried
+
+    Usage example:
+
+    >>> @curried
+    ... def sum5(a, b, c, d, e):
+    ...     return a + b + c + d + e
+    ...
+    >>> sum5(1)(2)(3)(4)(5)
+    15
+    >>> sum5(1, 2, 3)(4, 5)
+    15
+    """
+    def _curried(*args, **kwargs):
+        f = func
+        count = 0
+        while isinstance(f, partial):
+            if f.args:
+                count += len(f.args)
+            f = f.func
+
+        spec = getargspec(f)
+
+        if count == len(spec.args) - len(args):
+            return func(*args, **kwargs)
+
+        return curried(partial(func, *args, **kwargs))
+    return _curried
