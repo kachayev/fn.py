@@ -12,7 +12,7 @@ from .func import F
 
 div = operator.div if version_info[0] == 2 else operator.truediv
 
-letters = string.letters if version_info[0] == 3 else string.ascii_letters
+letters = string.letters if version_info[0] == 2 else string.ascii_letters
 
 def _random_name():
     return "".join(random.choice(letters) for _ in range(14))
