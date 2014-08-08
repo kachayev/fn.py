@@ -287,6 +287,8 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual("(x1) => (x1 == 2)", str(_ == 2))
         self.assertEqual("(x1) => (x1 != 2)", str(_ != 2))
 
+        self.assertEqual("(x1) => ((x1 * 2) + 1)", str((_ * 2 + 1)))
+
     def test_rigthside_string_converting(self):
         self.assertEqual("(x1) => (2 + x1)",  str(2 + _))
         self.assertEqual("(x1) => (2 - x1)",  str(2 - _))
@@ -329,9 +331,13 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual("(x1, x2) => (x1 == x2)", str(_ == _))
         self.assertEqual("(x1, x2) => (x1 != x2)", str(_ != _))
 
+        self.assertEqual("(x1, x2) => (((x1 / x2) - 1) * 100)", str((_ / _ - 1) * 100))
+
     def test_reverse_string_converting(self):
         self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
         self.assertEqual("(x1, x2, x3) => (x1 + (x2 * x3))", str(_ + _ * _))
+
+        self.assertEqual("(x1) => (1 + (2 * x1))", str((1 + 2 * _)))
 
     def test_multi_underscore_string_converting(self):
         self.assertEqual("(x1) => (x1 + '_')", str(_ + "_"))
