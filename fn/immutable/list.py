@@ -1,3 +1,4 @@
+from fn.op import foldr
 from fn.uniform import reduce
 
 class LinkedList(object):
@@ -58,6 +59,15 @@ class LinkedList(object):
 
     def __bool__(self):
         return len(self) > 0
+
+    @staticmethod
+    def from_iterable(it):
+        ''' iterable -> LinkedList
+
+        produces LinkedList with the contents of the consumed iterable
+        '''
+        return foldr(lambda x, y: y.cons(x), LinkedList())(tuple(it))
+
 
 class Stack(LinkedList):
     """Technically it's a LinkedList, but it provides more familiar
