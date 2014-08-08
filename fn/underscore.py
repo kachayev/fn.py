@@ -1,5 +1,7 @@
 import re
 import operator
+import string
+import random
 
 from sys import version_info
 from itertools import repeat, count
@@ -10,6 +12,9 @@ from .func import F
 
 div = operator.div if version_info[0] == 2 else operator.truediv
 
+def _random_name():
+    return "".join(random.choice(string.letters) for _ in range(14))
+
 def fmap(f, format):
     def applyier(self, other):
         fmt = "(%s)" % format.replace("self", self._format)
@@ -17,13 +22,14 @@ def fmap(f, format):
         if isinstance(other, self.__class__):
             return self.__class__((f, self, other),
                                   fmt.replace("other", other._format),
-                                  self._format_args + other._format_args,
+                                  dict(self._format_args.items() + other._format_args.items()),
                                   self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
+            name = _random_name()
             return self.__class__(call,
-                                  fmt.replace("other", "%r"),
-                                  self._format_args + (other,),
+                                  fmt.replace("other", "%%(%s)r" % name),
+                                  dict(self._format_args.items() + [(name, other)]),
                                   self._arity)
     return applyier
 
@@ -44,10 +50,10 @@ class _Callable(object):
     # see https://github.com/kachayev/fn.py/issues/23
     __flipback__ = None
 
-    def __init__(self, callback=identity, format="_", format_args=tuple(), arity=1):
+    def __init__(self, callback=identity, format="_", format_args=None, arity=1):
         self._callback = callback
         self._format = format
-        self._format_args = format_args
+        self._format_args = format_args or {}
         self._arity = arity
 
     def call(self, name, *args, **kwargs):
@@ -55,20 +61,22 @@ class _Callable(object):
         return self.__class__(F(lambda f: apply(f, args, kwargs)) << operator.attrgetter(name) << F(self))
 
     def __getattr__(self, name):
+        attr_name = _random_name()
         return self.__class__(F(operator.attrgetter(name)) << F(self),
-                              "getattr(%s, %%r)" % (self._format,),
-                              self._format_args + (name,),
+                              "getattr(%s, %%(%s)r)" % (self._format, attr_name),
+                              dict(self._format_args.items() + [(attr_name,name)]),
                               self._arity)
 
     def __getitem__(self, k):
         if isinstance(k, self.__class__):
             return self.__class__((operator.getitem, self, k),
                                   "%s[%s]" % (self._format, k._format),
-                                  self._format_args + k._format_args,
+                                  dict(self._format_args.items() + k._format_args.items()),
                                   self._arity + k._arity)
+        item_name = _random_name()
         return self.__class__(F(operator.itemgetter(k)) << F(self),
-                              "%s[%%r]" % (self._format,),
-                              self._format_args + (k,),
+                              "%s[%%(%s)r]" % (self._format,item_name),
+                              dict(self._format_args.items() + [(item_name,k)]),
                               self._arity)
 
     def __str__(self):
