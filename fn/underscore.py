@@ -24,14 +24,14 @@ def fmap(f, format):
         if isinstance(other, self.__class__):
             return self.__class__((f, self, other),
                                   fmt.replace("other", other._format),
-                                  dict(self._format_args.items() + other._format_args.items()),
+                                  dict(list(self._format_args.items()) + list(other._format_args.items())),
                                   self._arity + other._arity)
         else:
             call = F(flip(f), other) << F(self)
             name = _random_name()
             return self.__class__(call,
                                   fmt.replace("other", "%%(%s)r" % name),
-                                  dict(self._format_args.items() + [(name, other)]),
+                                  dict(list(self._format_args.items()) + [(name, other)]),
                                   self._arity)
     return applyier
 
@@ -66,19 +66,19 @@ class _Callable(object):
         attr_name = _random_name()
         return self.__class__(F(operator.attrgetter(name)) << F(self),
                               "getattr(%s, %%(%s)r)" % (self._format, attr_name),
-                              dict(self._format_args.items() + [(attr_name,name)]),
+                              dict(list(self._format_args.items()) + [(attr_name,name)]),
                               self._arity)
 
     def __getitem__(self, k):
         if isinstance(k, self.__class__):
             return self.__class__((operator.getitem, self, k),
                                   "%s[%s]" % (self._format, k._format),
-                                  dict(self._format_args.items() + k._format_args.items()),
+                                  dict(list(self._format_args.items()) + list(k._format_args.items())),
                                   self._arity + k._arity)
         item_name = _random_name()
         return self.__class__(F(operator.itemgetter(k)) << F(self),
                               "%s[%%(%s)r]" % (self._format,item_name),
-                              dict(self._format_args.items() + [(item_name,k)]),
+                              dict(list(self._format_args.items()) + [(item_name,k)]),
                               self._arity)
 
     def __str__(self):
