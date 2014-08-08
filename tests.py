@@ -928,6 +928,20 @@ class LinkedListsTestCase(unittest.TestCase):
     def tests_linked_list_iterator(self):
         self.assertEqual([30, 20, 10], list(LinkedList().cons(10).cons(20).cons(30)))
     
+    def test_from_iterable(self):
+        expected = [10, 20, 30]
+        actual = list(LinkedList.from_iterable(expected))
+        self.assertEqual(actual, expected)
+
+        actual = LinkedList.from_iterable(tuple(expected))
+        self.assertEqual(list(actual), expected)
+
+        actual = LinkedList.from_iterable(iter(expected))
+        self.assertEqual(list(actual), expected)
+
+        actual = LinkedList.from_iterable(LinkedList().cons(30).cons(20).cons(10))
+        self.assertEqual(list(actual), expected)
+
     def test_stack_push_pop_ordering(self):
         s1 = Stack()
         s2 = s1.push(1)
