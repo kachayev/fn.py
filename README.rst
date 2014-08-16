@@ -259,6 +259,7 @@ review status just now.
 -  ``head`` (alias: ``first``), ``tail`` (alias: ``rest``)
 -  ``second``, ``ffirst``
 -  ``compact``, ``reject``
+-  ``every``, ``some``
 -  ``iterate``
 -  ``consume``
 -  ``nth``
