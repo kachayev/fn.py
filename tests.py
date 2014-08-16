@@ -477,6 +477,22 @@ class IteratorsTestCase(unittest.TestCase):
                                              "", "non-empty", [], [""],
                                              (), (0,), {}, {"a": 1}])))
 
+    def test_every(self):
+        self.assertEqual(True, iters.every(_ % 2 == 0, [2, 4, 6]))
+        self.assertEqual(False, iters.every(_ % 2 == 0, [1, 3, 5]))
+        self.assertEqual(False, iters.every(_ % 2 == 0, [2, 4, 6, 7]))
+
+    def test_some(self):
+        self.assertEqual("one",
+                         iters.some(lambda k: {1: "one", 2: "two"}.get(k, ""),
+                                    [1, 2]))
+        self.assertEqual(None,
+                         iters.some(lambda k: {1: "one", 2: "two"}.get(k, ""),
+                                    [4, 3]))
+        self.assertEqual("two",
+                         iters.some(lambda k: {1: "one", 2: "two"}.get(k, ""),
+                                    [4, 3, 2]))
+
     def test_reject(self):
         self.assertEqual([1, 3, 5, 7, 9],
                          list(iters.reject(_ % 2 == 0, range(1, 11))))

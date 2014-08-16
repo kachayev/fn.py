@@ -62,6 +62,12 @@ ffirst = F(first) >> first
 # shortcut to remove all falsey items from iterable
 compact = partial(filter, None)
 
+# shortcuts to 1. return True if f(x) is logical true for every x in
+# iterable (False otherwise), and 2. return the first logical true
+# value of f(x) for any x in iterable (None otherwise) respectively
+every = F(partial(map)) >> all
+some = F(partial(map)) >> compact >> first
+
 def reject(func, iterable):
     """Return an iterator yielding those items of iterable for which func(item)
     is false. If func is None, return the items that are false.
