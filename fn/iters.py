@@ -14,7 +14,6 @@ from itertools import (islice,
 
 from .op import flip
 from .func import F
-from .underscore import shortcut as _
 from .uniform import *
 
 def take(limit, base): 
@@ -62,17 +61,14 @@ ffirst = F(first) >> first
 # shortcut to remove all falsey items from iterable
 compact = partial(filter, None)
 
+# filterfalse under alias 'reject'
+reject = filterfalse
+
 # shortcuts to 1. return True if f(x) is logical true for every x in
 # iterable (False otherwise), and 2. return the first logical true
 # value of f(x) for any x in iterable (None otherwise) respectively
 every = F(partial(map)) >> all
 some = F(partial(map)) >> compact >> first
-
-def reject(func, iterable):
-    """Return an iterator yielding those items of iterable for which func(item)
-    is false. If func is None, return the items that are false.
-    """
-    return filter(F(not_) << (func or _), iterable)
 
 def iterate(f, x):
     """Return an iterator yielding x, f(x), f(f(x)) etc.
