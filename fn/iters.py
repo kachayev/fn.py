@@ -51,6 +51,14 @@ def nth(iterable, n, default=None):
     """
     return next(islice(iterable, n, None), default)
 
+
+def first_true(iterable, default=False, pred=None):
+    """Returns the first true value in the iterable.
+    If no true value is found, returns *default*
+    http://docs.python.org/3.4/library/itertools.html#itertools-recipes
+    """
+    return next(filter(pred, iterable), default)
+
 # widely-spreaded shortcuts to get first item, all but first item,
 # second item, and first item of first item from iterator respectively
 head = first = partial(flip(nth), 0)

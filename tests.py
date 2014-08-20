@@ -395,6 +395,11 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([3,4], list(iters.drop(3, range(5))))
         self.assertEqual([], list(iters.drop(10, range(2))))
 
+    def test_first_true(self):
+        pred = _ == 5
+        self.assertEqual(5, iters.first_true(range(1, 10), pred=pred))
+        self.assertEqual(999, iters.first_true(range(6, 10), default=999, pred=pred))
+
     def test_takelast(self):
         self.assertEqual([8,9], list(iters.takelast(2, range(10))))
         self.assertEqual([0,1], list(iters.takelast(10, range(2))))
