@@ -60,7 +60,7 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual(20, op.foldr(operator.add, 10)([0,1,2,3,4]))
         self.assertEqual(20, op.foldr(operator.add, 10)(iters.range(5)))
         # specific case for right-side folding
-        self.assertEqual(100, 
+        self.assertEqual(100,
                          op.foldr(op.call, 0)([lambda s: s**2, lambda k: k+10]))
 
     def test_unfold_infinite(self):
@@ -85,7 +85,7 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(3, (_ - 2)(5))
         self.assertEqual(13, (_ - 2 + 10)(5))
         self.assertEqual([0,1,2], list(map(_ - 10, [10,11,12])))
-        # operator * 
+        # operator *
         self.assertEqual(10, (_ * 2)(5))
         self.assertEqual(50, (_ * 2 + 40)(5))
         self.assertEqual([0,10,20], list(map(_ * 10, [0,1,2])))
@@ -97,9 +97,9 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(100, (_ ** 2)(10))
         # operator %
         self.assertEqual(1, (_ % 2)(11))
-        # operator << 
+        # operator <<
         self.assertEqual(32, (_ << 2)(8))
-        # operator >> 
+        # operator >>
         self.assertEqual(2, (_ >> 2)(8))
         # operator (-a)
         self.assertEqual(10,  (-_)(-10))
@@ -124,7 +124,7 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(3, (8 - _)(5))
         self.assertEqual(13, (8 - _ + 10)(5))
         self.assertEqual([10,9,8], list(map(10 - _, [0,1,2])))
-        # operator * 
+        # operator *
         self.assertEqual(10, (2 * _)(5))
         self.assertEqual(50, (2 * _ + 40)(5))
         self.assertEqual([0,10,20], list(map(10 * _, [0,1,2])))
@@ -136,9 +136,9 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual(100, (10**_)(2))
         # operator %
         self.assertEqual(1, (11 % _)(2))
-        # operator << 
+        # operator <<
         self.assertEqual(32, (8 << _)(2))
-        # operator >> 
+        # operator >>
         self.assertEqual(2, (8 >> _)(2))
 
     def test_bitwise(self):
@@ -147,7 +147,7 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertFalse((_ & 1)(0))
         self.assertFalse((_ & 0)(1))
         self.assertFalse((_ & 0)(0))
-        # or 
+        # or
         self.assertTrue( (_ | 1)(1))
         self.assertTrue( (_ | 1)(0))
         self.assertTrue( (_ | 0)(1))
@@ -164,7 +164,7 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertFalse((1 & _)(0))
         self.assertFalse((0 & _)(1))
         self.assertFalse((0 & _)(0))
-        # or 
+        # or
         self.assertTrue( (1 | _)(1))
         self.assertTrue( (1 | _)(0))
         self.assertTrue( (0 | _)(1))
@@ -373,7 +373,7 @@ class CompositionTestCase(unittest.TestCase):
         self.assertEqual(25, f(10))
 
     def test_underscore(self):
-        self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))    
+        self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))
 
     def test_pipe_composition(self):
         def f(x): return x * 2
@@ -394,6 +394,11 @@ class IteratorsTestCase(unittest.TestCase):
     def test_drop(self):
         self.assertEqual([3,4], list(iters.drop(3, range(5))))
         self.assertEqual([], list(iters.drop(10, range(2))))
+
+    def test_first_true(self):
+        pred = _ == 5
+        self.assertEqual(5, iters.first_true(range(1, 10), pred=pred))
+        self.assertEqual(999, iters.first_true(range(6, 10), default=999, pred=pred))
 
     def test_takelast(self):
         self.assertEqual([8,9], list(iters.takelast(2, range(10))))
@@ -428,9 +433,9 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual(None, iters.head([]))
 
         def gen():
-            yield 1 
+            yield 1
             yield 2
-            yield 3 
+            yield 3
 
         self.assertEqual(1, iters.head(gen()))
 
@@ -442,9 +447,9 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([], list(iters.tail([])))
 
         def gen():
-            yield 1 
+            yield 1
             yield 2
-            yield 3 
+            yield 3
 
         self.assertEqual([2,3], list(iters.tail(gen())))
 
@@ -619,7 +624,7 @@ class IteratorsTestCase(unittest.TestCase):
         # Don't flatten strings, bytes, or bytearrays
         self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
         self.assertEqual([2, b'abc', 1], list(iters.flatten([2, b'abc', 1])))
-        self.assertEqual([2, bytearray(b'abc'), 1], 
+        self.assertEqual([2, bytearray(b'abc'), 1],
                          list(iters.flatten([2, bytearray(b'abc'), 1])))
 
     def test_accumulate(self):
@@ -647,7 +652,7 @@ class StreamTestCase(unittest.TestCase):
             yield 1
             yield 2
             yield 3
-        
+
         s = Stream() << gen << (4,5)
         assert list(s) == [1,2,3,4,5]
 
@@ -667,7 +672,7 @@ class StreamTestCase(unittest.TestCase):
         self.assertEqual(len(list(sf)), 2)
 
     def test_fib_infinite_stream(self):
-        from operator import add 
+        from operator import add
 
         f = Stream()
         fib = f << [0, 1] << iters.map(add, f, iters.drop(1, f))
@@ -800,8 +805,8 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertEqual(monad.Full(10), monad.Option.from_value(10))
         self.assertEqual(monad.Empty(),  monad.Option.from_call(lambda: None))
         self.assertEqual(monad.Full(10), monad.Option.from_call(operator.add, 8, 2))
-        self.assertEqual(monad.Empty(), 
-                         monad.Option.from_call(lambda d, k: d[k], 
+        self.assertEqual(monad.Empty(),
+                         monad.Option.from_call(lambda d, k: d[k],
                                                 {"a":1}, "b", exc=KeyError))
 
     def test_flatten_operation(self):
@@ -956,7 +961,7 @@ class LinkedListsTestCase(unittest.TestCase):
 
     def tests_linked_list_iterator(self):
         self.assertEqual([30, 20, 10], list(LinkedList().cons(10).cons(20).cons(30)))
-    
+
     def test_from_iterable(self):
         expected = [10, 20, 30]
         actual = list(LinkedList.from_iterable(expected))
@@ -999,7 +1004,7 @@ class LinkedListsTestCase(unittest.TestCase):
         self.assertEqual(6, sum(Stack().push(1).push(2).push(3)))
 
 class BankerQueueTestCase(unittest.TestCase):
-    
+
     def test_queue_basic_operations(self):
         q1 = Queue()
         q2 = q1.enqueue(1)
@@ -1087,7 +1092,7 @@ class VectorTestCase(unittest.TestCase):
         pass
 
 class FingerTreeDequeTestCase(unittest.TestCase):
-    
+
     def test_deque_basic_operations(self):
         d1 = Deque()
         d2 = d1.push_back(1)

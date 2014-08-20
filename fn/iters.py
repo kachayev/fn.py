@@ -2,13 +2,13 @@ from sys import version_info
 from collections import deque, Iterable
 from operator import add, itemgetter, attrgetter, not_
 from functools import partial
-from itertools import (islice, 
-                       chain,                        
-                       starmap, 
-                       repeat, 
-                       tee, 
+from itertools import (islice,
+                       chain,
+                       starmap,
+                       repeat,
+                       tee,
                        cycle,
-                       takewhile, 
+                       takewhile,
                        dropwhile,
                        combinations)
 
@@ -16,10 +16,10 @@ from .op import flip
 from .func import F
 from .uniform import *
 
-def take(limit, base): 
+def take(limit, base):
     return islice(base, limit)
 
-def drop(limit, base): 
+def drop(limit, base):
     return islice(base, limit, None)
 
 def takelast(n, iterable):
@@ -50,6 +50,14 @@ def nth(iterable, n, default=None):
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
     return next(islice(iterable, n, None), default)
+
+
+def first_true(iterable, default=False, pred=None):
+    """Returns the first true value in the iterable.
+    If no true value is found, returns *default*
+    http://docs.python.org/3.4/library/itertools.html#itertools-recipes
+    """
+    return next(filter(pred, iterable), default)
 
 # widely-spreaded shortcuts to get first item, all but first item,
 # second item, and first item of first item from iterator respectively
@@ -124,7 +132,7 @@ def group_by(keyfunc, iterable):
 def roundrobin(*iterables):
     """roundrobin('ABC', 'D', 'EF') --> A D E B F C
     Recipe originally credited to George Sakkis.
-    Reimplemented to work both in Python 2+ and 3+. 
+    Reimplemented to work both in Python 2+ and 3+.
 
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
@@ -224,9 +232,9 @@ if version_info[0] == 3 and version_info[1] >= 3:
     from itertools import accumulate
 else:
     def accumulate(iterable, func=add):
-        """Make an iterator that returns accumulated sums. 
-        Elements may be any addable type including Decimal or Fraction. 
-        If the optional func argument is supplied, it should be a 
+        """Make an iterator that returns accumulated sums.
+        Elements may be any addable type including Decimal or Fraction.
+        If the optional func argument is supplied, it should be a
         function of two arguments and it will be used instead of addition.
 
         Origin implementation:
