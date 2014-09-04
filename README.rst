@@ -172,7 +172,7 @@ Trampolines decorator
         if n == 0: return 1
         return n * fact(n-1)
 
-This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) CPython will fail with
+This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more than ``sys.getrecursionlimit()``) CPython will fail with
 
 .. code-block:: python
 
