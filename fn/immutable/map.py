@@ -8,6 +8,22 @@ class Map(object):
     - J. Nievergelt and E.M. Reingold, "Binary search trees of bounded balance", SIAM journal of computing 2(1), March 1973
 
     Based on Haskell "containers" Data.Map: http://hackage.haskell.org/package/containers-0.5.5.1/docs/Data-Map.html
+
+    Usage:
+    >>> from fn.immutable import Map
+    >>> v = Map.singleton("five", 5)
+    >>> v1 = v.insert("four", 4)
+    >>> v2 = v1.insert("two", 2)
+    >>> v3 = v2.insert("foo", "bar")
+    >>> v3.lookup("two")
+    2
+    >>> v3.lookup("five")
+    5
+    >>> v4 = v2.insert("foo", "baz")
+    >>> v3.lookup("foo") # <-- previous version didn't change
+    "bar"
+    >>> v4.lookup("foo")
+    "baz"
     """
 
     __slots__ = ("size", "balanceR", "balanceL", "delta", "ratio", "empty", "root", "null", "insert")
@@ -81,7 +97,7 @@ class Map(object):
 
     def lookup(self, k):
         if self.null():
-            return None
+            raise LookupError("Key not found")
         else:
             r = self.root
             if k == r.key:
@@ -150,7 +166,7 @@ class Map(object):
                                 Map(1 + lr.left.root.size + lr.right.root.left.size(), lr.key, lr.value, lr.left, lr.right.root.left),
                                 Map(1 + rrs+ lr.right.root.right.size(), k, x, lr.right.root.right, r))
                 else:
-                    return Map(1 + lr.size, rrs, k, x, l, r)
+                    return Map(1 + lr.size + rrs, k, x, l, r)
 
 
     @classmethod
