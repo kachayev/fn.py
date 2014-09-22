@@ -105,6 +105,7 @@ Available immutable data structures in ``fn.immutable`` module:
 - ``PairingHeap``: `"The Pairing-Heap: A New Form of Self-Adjusting Heap" <http://goo.gl/aiVtPH>`_
 - ``Dict`` (in progress): persistent hash map implementation based on ``BitmappedTrie``
 - ``FingerTree`` (in progress): `"Finger Trees: A Simple General-purpose Data Structure" <http://goo.gl/Bzo0df>`_
+- ``Map`` (in progress): `"Efficient sets -- a balancing act" <http://www.swiss.ai.mit.edu/~adams/BB/>`_
 
 Use appropriate doc strings to get more information about each data structure as well as sample code.
 
