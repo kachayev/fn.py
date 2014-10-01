@@ -46,7 +46,7 @@ If you are not sure, what your function is going to do, you can print it:
     print (_ + 2) # "(x1) => (x1 + 2)"
     print (_ + _ * _) # "(x1, x2, x3) => (x1 + (x2 * x3))"
 
-``_`` will fail with ``ArityError`` (``TypeError`` subclass) on inaccurate number of passed arguments. This is one more restrictions to ensure that you did everything right: 
+``_`` will fail with ``ArityError`` (``TypeError`` subclass) on inaccurate number of passed arguments. This is one more restrictions to ensure that you did everything right:
 
 .. code-block:: python
 
@@ -172,7 +172,7 @@ Trampolines decorator
         if n == 0: return 1
         return n * fact(n-1)
 
-This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) CPython will fail with 
+This variant works, but it's really ugly. Why? It will utilize memory too heavy cause of recursive storing all previous values to calculate final result. If you will execute this function with big ``n`` (more then ``sys.getrecursionlimit()``) CPython will fail with
 
 .. code-block:: python
 
@@ -204,9 +204,9 @@ Why this variant is better? Cause you don't need to remember previous values to 
         if n == 0: return False, acc
         return True, (n-1, acc*n)
 
-``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output: 
+``@recur.tco`` is a decorator that execute your function in ``while`` loop and check output:
 
-- ``(False, result)`` means that we finished 
+- ``(False, result)`` means that we finished
 - ``(True, args, kwargs)`` means that we need to call function again with other arguments
 - ``(func, args, kwargs)`` to switch function to be executed inside while loop
 
@@ -219,12 +219,12 @@ The last variant is really useful, when you need to switch callable inside evalu
     ... def even(x):
     ...     if x == 0: return False, True
     ...     return odd, (x-1,)
-    ... 
+    ...
     >>> @recur.tco
     ... def odd(x):
     ...     if x == 0: return False, False
     ...     return even, (x-1,)
-    ... 
+    ...
     >>> print even(100000)
     True
 
@@ -287,7 +287,7 @@ application and functions composition.
     from fn import F, _
     from operator import add, mul
 
-    # F(f, *args) means partial application 
+    # F(f, *args) means partial application
     # same as functools.partial but returns fn.F instance
     assert F(add, 1)(10) == 11
 
@@ -324,7 +324,7 @@ that will reverse arguments order before apply.
     assert flip(sub)(20,10) == -10
     assert list(map(apply, [add, mul], [(1,2), (10,20)])) == [3, 200]
 
-``fn.op.foldl`` and ``fn.op.foldr`` are folding operators. Each accepts function with arity 2 and returns function that can be used to reduce iterable to scalar: from left-to-right and from right-to-left in case of ``foldl`` and ``foldr`` respectively. 
+``fn.op.foldl`` and ``fn.op.foldr`` are folding operators. Each accepts function with arity 2 and returns function that can be used to reduce iterable to scalar: from left-to-right and from right-to-left in case of ``foldl`` and ``foldr`` respectively.
 
 .. code-block:: python
 
@@ -332,13 +332,13 @@ that will reverse arguments order before apply.
 
     folder = op.foldr(_ * _, 1)
     assert 6 == op.foldl(_ + _)([1,2,3])
-    assert 6 == folder([1,2,3])
+    assert 6 == op.foldr([1,2,3])
 
 Use case specific for right-side folding is:
 
 .. code-block:: python
-    
-    from fn.op import foldr, call 
+
+    from fn.op import foldr, call
 
     assert 100 == foldr(call, 0 )([lambda s: s**2, lambda k: k+10])
     assert 400 == foldr(call, 10)([lambda s: s**2, lambda k: k+10])
@@ -365,7 +365,7 @@ Function currying
 Functional style for error-handling
 -----------------------------------
 
-``fn.monad.Option`` represents optional values, each instance of ``Option`` can be either instance of ``Full`` or ``Empty``. It provides you with simple way to write long computation sequences and get rid of many ``if/else`` blocks. See usage examples below. 
+``fn.monad.Option`` represents optional values, each instance of ``Option`` can be either instance of ``Full`` or ``Empty``. It provides you with simple way to write long computation sequences and get rid of many ``if/else`` blocks. See usage examples below.
 
 Assume that you have ``Request`` class that gives you parameter value by its name. To get uppercase notation for non-empty striped value:
 
@@ -448,7 +448,7 @@ Work in progress
 
 "Roadmap":
 
-- ``fn.monad.Either`` to deal with error logging 
+- ``fn.monad.Either`` to deal with error logging
 -  C-accelerator for most modules
 
 Ideas to think about:
