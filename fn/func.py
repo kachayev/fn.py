@@ -40,11 +40,11 @@ class F(object):
         return self.__class__(*f) if isinstance(f, tuple) else f
 
     def __rshift__(self, g):
-        """Overload << operator for F instances"""
+        """Overload >> operator for F instances"""
         return self.__class__.__compose(self.__ensure_callable(g), self.f)
 
     def __lshift__(self, g):
-        """Overload >> operator for F instances"""
+        """Overload << operator for F instances"""
         return self.__class__.__compose(self.f, self.__ensure_callable(g))
 
     def  __call__(self, *args, **kwargs):
