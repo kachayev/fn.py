@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """Tests for Fn.py library"""
 
 import sys
@@ -9,12 +8,15 @@ import itertools
 
 from fn import op, _, F, Stream, iters, underscore, monad, recur
 from fn.uniform import reduce
-from fn.immutable import SkewHeap, PairingHeap, LinkedList, Stack, Queue, Vector, Deque
+from fn.immutable import (
+    SkewHeap, PairingHeap, LinkedList, Stack, Queue, Vector, Deque)
+
 
 class InstanceChecker(object):
     if sys.version_info[0] == 2 and sys.version_info[1] <= 6:
         def assertIsInstance(self, inst, cls):
             self.assertTrue(isinstance(inst, cls))
+
 
 class OperatorTestCase(unittest.TestCase):
 
@@ -27,7 +29,7 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual(1, op.curry(add, 0, 1))
 
     def test_apply(self):
-        self.assertEqual(10, op.apply(operator.add, [2,8]))
+        self.assertEqual(10, op.apply(operator.add, [2, 8]))
 
     def test_flip(self):
         self.assertEqual(10, op.flip(operator.sub)(2, 12))
@@ -40,37 +42,46 @@ class OperatorTestCase(unittest.TestCase):
 
     def test_zipwith(self):
         zipper = op.zipwith(operator.add)
-        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+        self.assertEqual(
+            [10, 11, 12], list(zipper([0, 1, 2], itertools.repeat(10)))
+        )
 
         zipper = op.zipwith(_ + _)
-        self.assertEqual([10,11,12], list(zipper([0,1,2], itertools.repeat(10))))
+        self.assertEqual(
+            [10, 11, 12], list(zipper([0, 1, 2], itertools.repeat(10)))
+        )
 
         zipper = F() << list << op.zipwith(_ + _)
-        self.assertEqual([10,11,12], zipper([0,1,2], itertools.repeat(10)))
+        self.assertEqual(
+            [10, 11, 12], zipper([0, 1, 2], itertools.repeat(10))
+        )
 
     def test_foldl(self):
-        self.assertEqual(10, op.foldl(operator.add)([0,1,2,3,4]))
-        self.assertEqual(20, op.foldl(operator.add, 10)([0,1,2,3,4]))
+        self.assertEqual(10, op.foldl(operator.add)([0, 1, 2, 3, 4]))
+        self.assertEqual(20, op.foldl(operator.add, 10)([0, 1, 2, 3, 4]))
         self.assertEqual(20, op.foldl(operator.add, 10)(iters.range(5)))
         self.assertEqual(10, op.foldl(_ + _)(range(5)))
 
     def test_foldr(self):
-        summer = op.foldr(operator.add)
-        self.assertEqual(10, op.foldr(operator.add)([0,1,2,3,4]))
-        self.assertEqual(20, op.foldr(operator.add, 10)([0,1,2,3,4]))
+        self.assertEqual(10, op.foldr(operator.add)([0, 1, 2, 3, 4]))
+        self.assertEqual(20, op.foldr(operator.add, 10)([0, 1, 2, 3, 4]))
         self.assertEqual(20, op.foldr(operator.add, 10)(iters.range(5)))
         # specific case for right-side folding
-        self.assertEqual(100,
-                         op.foldr(op.call, 0)([lambda s: s**2, lambda k: k+10]))
+        self.assertEqual(
+            100, op.foldr(op.call, 0)([lambda s: s ** 2, lambda k: k + 10])
+        )
 
     def test_unfold_infinite(self):
-        doubler = op.unfold(lambda x: (x*2, x*2))
+        doubler = op.unfold(lambda x: (x * 2, x * 2))
         self.assertEqual(20, next(doubler(10)))
-        self.assertEqual([20, 40, 80, 160, 320], list(iters.take(5, doubler(10))))
+        self.assertEqual(
+            [20, 40, 80, 160, 320], list(iters.take(5, doubler(10)))
+        )
 
     def test_unfold_finite(self):
-        countdown = op.unfold(lambda x: (x-1, x-2) if x > 1 else None)
-        self.assertEqual([9,7,5,3,1], list(countdown(10)))
+        countdown = op.unfold(lambda x: (x - 1, x - 2) if x > 1 else None)
+        self.assertEqual([9, 7, 5, 3, 1], list(countdown(10)))
+
 
 class UnderscoreTestCase(unittest.TestCase):
 
@@ -80,19 +91,19 @@ class UnderscoreTestCase(unittest.TestCase):
     def test_arithmetic(self):
         # operator +
         self.assertEqual(7, (_ + 2)(5))
-        self.assertEqual([10,11,12], list(map(_ + 10, [0,1,2])))
+        self.assertEqual([10, 11, 12], list(map(_ + 10, [0, 1, 2])))
         # operator -
         self.assertEqual(3, (_ - 2)(5))
         self.assertEqual(13, (_ - 2 + 10)(5))
-        self.assertEqual([0,1,2], list(map(_ - 10, [10,11,12])))
+        self.assertEqual([0, 1, 2], list(map(_ - 10, [10, 11, 12])))
         # operator *
         self.assertEqual(10, (_ * 2)(5))
         self.assertEqual(50, (_ * 2 + 40)(5))
-        self.assertEqual([0,10,20], list(map(_ * 10, [0,1,2])))
+        self.assertEqual([0, 10, 20], list(map(_ * 10, [0, 1, 2])))
         # operator /
         self.assertEqual(5, (_ / 2)(10))
         self.assertEqual(6, (_ / 2 + 1)(10))
-        self.assertEqual([1,2,3], list(map(_ / 10, [10,20,30])))
+        self.assertEqual([1, 2, 3], list(map(_ / 10, [10, 20, 30])))
         # operator **
         self.assertEqual(100, (_ ** 2)(10))
         # operator %
@@ -119,21 +130,21 @@ class UnderscoreTestCase(unittest.TestCase):
     def test_arithmetic_swap(self):
         # operator +
         self.assertEqual(7, (2 + _)(5))
-        self.assertEqual([10,11,12], list(map(10 + _, [0,1,2])))
+        self.assertEqual([10, 11, 12], list(map(10 + _, [0, 1, 2])))
         # operator -
         self.assertEqual(3, (8 - _)(5))
         self.assertEqual(13, (8 - _ + 10)(5))
-        self.assertEqual([10,9,8], list(map(10 - _, [0,1,2])))
+        self.assertEqual([10, 9, 8], list(map(10 - _, [0, 1, 2])))
         # operator *
         self.assertEqual(10, (2 * _)(5))
         self.assertEqual(50, (2 * _ + 40)(5))
-        self.assertEqual([0,10,20], list(map(10 * _, [0,1,2])))
+        self.assertEqual([0, 10, 20], list(map(10 * _, [0, 1, 2])))
         # operator /
         self.assertEqual(5, (10 / _)(2))
         self.assertEqual(6, (10 / _ + 1)(2))
-        self.assertEqual([10,5,2], list(map(100 / _, [10,20,50])))
+        self.assertEqual([10, 5, 2], list(map(100 / _, [10, 20, 50])))
         # operator **
-        self.assertEqual(100, (10**_)(2))
+        self.assertEqual(100, (10 ** _)(2))
         # operator %
         self.assertEqual(1, (11 % _)(2))
         # operator <<
@@ -143,46 +154,49 @@ class UnderscoreTestCase(unittest.TestCase):
 
     def test_bitwise(self):
         # and
-        self.assertTrue( (_ & 1)(1))
+        self.assertTrue((_ & 1)(1))
         self.assertFalse((_ & 1)(0))
         self.assertFalse((_ & 0)(1))
         self.assertFalse((_ & 0)(0))
         # or
-        self.assertTrue( (_ | 1)(1))
-        self.assertTrue( (_ | 1)(0))
-        self.assertTrue( (_ | 0)(1))
+        self.assertTrue((_ | 1)(1))
+        self.assertTrue((_ | 1)(0))
+        self.assertTrue((_ | 0)(1))
         self.assertFalse((_ | 0)(0))
         # xor
-        self.assertTrue( (_ ^ 1)(0))
-        self.assertTrue( (_ ^ 0)(1))
+        self.assertTrue((_ ^ 1)(0))
+        self.assertTrue((_ ^ 0)(1))
         self.assertFalse((_ ^ 1)(1))
         self.assertFalse((_ ^ 0)(0))
 
     def test_bitwise_swap(self):
         # and
-        self.assertTrue( (1 & _)(1))
+        self.assertTrue((1 & _)(1))
         self.assertFalse((1 & _)(0))
         self.assertFalse((0 & _)(1))
         self.assertFalse((0 & _)(0))
         # or
-        self.assertTrue( (1 | _)(1))
-        self.assertTrue( (1 | _)(0))
-        self.assertTrue( (0 | _)(1))
+        self.assertTrue((1 | _)(1))
+        self.assertTrue((1 | _)(0))
+        self.assertTrue((0 | _)(1))
         self.assertFalse((0 | _)(0))
         # xor
-        self.assertTrue( (1 ^ _)(0))
-        self.assertTrue( (0 ^ _)(1))
+        self.assertTrue((1 ^ _)(0))
+        self.assertTrue((0 ^ _)(1))
         self.assertFalse((1 ^ _)(1))
         self.assertFalse((0 ^ _)(0))
 
     def test_getattr(self):
         class GetattrTest(object):
+
             def __init__(self):
                 self.doc = "TestCase"
 
         self.assertEqual("TestCase", (_.doc)(GetattrTest()))
         self.assertEqual("TestCaseTestCase", (_.doc * 2)(GetattrTest()))
-        self.assertEqual("TestCaseTestCase", (_.doc + _.doc)(GetattrTest(), GetattrTest()))
+        self.assertEqual(
+            "TestCaseTestCase", (_.doc + _.doc)(GetattrTest(), GetattrTest())
+        )
 
     def test_call_method(self):
         self.assertEqual(["test", "case"], (_.call("split"))("test case"))
@@ -194,7 +208,7 @@ class UnderscoreTestCase(unittest.TestCase):
 
     def test_call_method_kwargs(self):
         test_dict = {'num': 23}
-        _.call("update", num = 42)(test_dict)
+        _.call("update", num=42)(test_dict)
         self.assertEqual({'num': 42}, (test_dict))
 
     def test_comparator(self):
@@ -215,6 +229,7 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertTrue((_ == None)(None))
 
         class pushlist(list):
+
             def __lshift__(self, item):
                 self.append(item)
                 return self
@@ -236,15 +251,15 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertFalse((_ == _)(9, 10))
 
     def test_comparator_filter(self):
-        self.assertEqual([0,1,2], list(filter(_ < 5, [0,1,2,10,11,12])))
+        self.assertEqual([0, 1, 2], list(filter(_ < 5, [0, 1, 2, 10, 11, 12])))
 
     def test_slicing(self):
         self.assertEqual(0,       (_[0])(list(range(10))))
         self.assertEqual(9,       (_[-1])(list(range(10))))
-        self.assertEqual([3,4,5], (_[3:])(list(range(6))))
-        self.assertEqual([0,1,2], (_[:3])(list(range(10))))
-        self.assertEqual([1,2,3], (_[1:4])(list(range(10))))
-        self.assertEqual([0,2,4], (_[0:6:2])(list(range(10))))
+        self.assertEqual([3, 4, 5], (_[3:])(list(range(6))))
+        self.assertEqual([0, 1, 2], (_[:3])(list(range(10))))
+        self.assertEqual([1, 2, 3], (_[1:4])(list(range(10))))
+        self.assertEqual([0, 2, 4], (_[0:6:2])(list(range(10))))
 
     def test_slicing_multiple(self):
         self.assertEqual(0, (_[_])(range(10), 0))
@@ -259,9 +274,9 @@ class UnderscoreTestCase(unittest.TestCase):
 
     def test_more_than_2_operations(self):
         self.assertEqual(12, (_ * 2 + 10)(1))
-        self.assertEqual(6,  (_ + _ + _)(1,2,3))
-        self.assertEqual(10, (_ + _ + _ + _)(1,2,3,4))
-        self.assertEqual(7,  (_ + _ * _)(1,2,3))
+        self.assertEqual(6,  (_ + _ + _)(1, 2, 3))
+        self.assertEqual(10, (_ + _ + _ + _)(1, 2, 3, 4))
+        self.assertEqual(7,  (_ + _ * _)(1, 2, 3))
 
     def test_string_converting(self):
         self.assertEqual("(x1) => x1", str(_))
@@ -331,7 +346,9 @@ class UnderscoreTestCase(unittest.TestCase):
         self.assertEqual("(x1, x2) => (x1 == x2)", str(_ == _))
         self.assertEqual("(x1, x2) => (x1 != x2)", str(_ != _))
 
-        self.assertEqual("(x1, x2) => (((x1 / x2) - 1) * 100)", str((_ / _ - 1) * 100))
+        self.assertEqual(
+            "(x1, x2) => (((x1 / x2) - 1) * 100)", str((_ / _ - 1) * 100)
+        )
 
     def test_reverse_string_converting(self):
         self.assertEqual("(x1, x2, x3) => ((x1 + x2) + x3)", str(_ + _ + _))
@@ -341,8 +358,13 @@ class UnderscoreTestCase(unittest.TestCase):
 
     def test_multi_underscore_string_converting(self):
         self.assertEqual("(x1) => (x1 + '_')", str(_ + "_"))
-        self.assertEqual("(x1, x2) => getattr((x1 + x2), '__and_now__')", str((_ + _).__and_now__))
-        self.assertEqual("(x1, x2) => x1['__name__'][x2]", str(_['__name__'][_]))
+        expected = "(x1, x2) => getattr((x1 + x2), '__and_now__')"
+        self.assertEqual(
+            expected, str((_ + _).__and_now__)
+        )
+        self.assertEqual(
+            "(x1, x2) => x1['__name__'][x2]", str(_['__name__'][_])
+        )
 
     def test_repr(self):
         self.assertEqual(_ / 2, eval(repr(_ / 2)))
@@ -356,15 +378,20 @@ class UnderscoreTestCase(unittest.TestCase):
             repr(reduce(_ & _, (_,) * 12)),
         )
 
+
 class CompositionTestCase(unittest.TestCase):
 
     def test_composition(self):
-        def f(x): return x * 2
-        def g(x): return x + 10
+        def f(x):
+            return x * 2
+
+        def g(x):
+            return x + 10
 
         self.assertEqual(30, (F(f) << g)(5))
 
-        def z(x): return x * 20
+        def z(x):
+            return x * 20
         self.assertEqual(220, (F(f) << F(g) << F(z))(5))
 
     def test_partial(self):
@@ -373,11 +400,16 @@ class CompositionTestCase(unittest.TestCase):
         self.assertEqual(25, f(10))
 
     def test_underscore(self):
-        self.assertEqual([1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3))))
+        self.assertEqual(
+            [1, 4, 9], list(map(F() << (_ ** 2) << _ + 1, range(3)))
+        )
 
     def test_pipe_composition(self):
-        def f(x): return x * 2
-        def g(x): return x + 10
+        def f(x):
+            return x * 2
+
+        def g(x):
+            return x + 10
 
         self.assertEqual(20, (F() >> f >> g)(5))
 
@@ -385,27 +417,30 @@ class CompositionTestCase(unittest.TestCase):
         func = F() >> (iters.filter, _ < 6) >> sum
         self.assertEqual(15, func(iters.range(10)))
 
+
 class IteratorsTestCase(unittest.TestCase):
 
     def test_take(self):
-        self.assertEqual([0,1], list(iters.take(2, range(10))))
-        self.assertEqual([0,1], list(iters.take(10, range(2))))
+        self.assertEqual([0, 1], list(iters.take(2, range(10))))
+        self.assertEqual([0, 1], list(iters.take(10, range(2))))
 
     def test_drop(self):
-        self.assertEqual([3,4], list(iters.drop(3, range(5))))
+        self.assertEqual([3, 4], list(iters.drop(3, range(5))))
         self.assertEqual([], list(iters.drop(10, range(2))))
 
     def test_first_true(self):
         pred = _ == 5
         self.assertEqual(5, iters.first_true(range(1, 10), pred=pred))
-        self.assertEqual(999, iters.first_true(range(6, 10), default=999, pred=pred))
+        self.assertEqual(
+            999, iters.first_true(range(6, 10), default=999, pred=pred)
+        )
 
     def test_takelast(self):
-        self.assertEqual([8,9], list(iters.takelast(2, range(10))))
-        self.assertEqual([0,1], list(iters.takelast(10, range(2))))
+        self.assertEqual([8, 9], list(iters.takelast(2, range(10))))
+        self.assertEqual([0, 1], list(iters.takelast(10, range(2))))
 
     def test_droplast(self):
-        self.assertEqual([0,1], list(iters.droplast(3, range(5))))
+        self.assertEqual([0, 1], list(iters.droplast(3, range(5))))
         self.assertEqual([], list(iters.droplast(10, range(2))))
 
     def test_consume(self):
@@ -429,7 +464,7 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual("X", iters.nth(range(5), 10, "X"))
 
     def test_head(self):
-        self.assertEqual(0, iters.head([0,1,2]))
+        self.assertEqual(0, iters.head([0, 1, 2]))
         self.assertEqual(None, iters.head([]))
 
         def gen():
@@ -443,7 +478,7 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual(iters.first, iters.head)  # Check if same object
 
     def test_tail(self):
-        self.assertEqual([1,2], list(iters.tail([0,1,2])))
+        self.assertEqual([1, 2], list(iters.tail([0, 1, 2])))
         self.assertEqual([], list(iters.tail([])))
 
         def gen():
@@ -451,7 +486,7 @@ class IteratorsTestCase(unittest.TestCase):
             yield 2
             yield 3
 
-        self.assertEqual([2,3], list(iters.tail(gen())))
+        self.assertEqual([2, 3], list(iters.tail(gen())))
 
     def test_rest(self):
         self.assertEqual(iters.rest, iters.tail)  # Check if same object
@@ -515,14 +550,14 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual(256, next(it))  # 16 * 16
 
     def test_padnone(self):
-        it = iters.padnone([10,11])
+        it = iters.padnone([10, 11])
         self.assertEqual(10, next(it))
         self.assertEqual(11, next(it))
         self.assertEqual(None, next(it))
         self.assertEqual(None, next(it))
 
     def test_ncycles(self):
-        it = iters.ncycles([10,11], 2)
+        it = iters.ncycles([10, 11], 2)
         self.assertEqual(10, next(it))
         self.assertEqual(11, next(it))
         self.assertEqual(10, next(it))
@@ -548,15 +583,15 @@ class IteratorsTestCase(unittest.TestCase):
     def test_grouper(self):
         # without fill value (default should be None)
         a, b, c = iters.grouper(3, "ABCDEFG")
-        self.assertEqual(["A","B","C"], list(a))
-        self.assertEqual(["D","E","F"], list(b))
-        self.assertEqual(["G",None,None], list(c))
+        self.assertEqual(["A", "B", "C"], list(a))
+        self.assertEqual(["D", "E", "F"], list(b))
+        self.assertEqual(["G", None, None], list(c))
 
         # with fill value
         a, b, c = iters.grouper(3, "ABCDEFG", "x")
-        self.assertEqual(["A","B","C"], list(a))
-        self.assertEqual(["D","E","F"], list(b))
-        self.assertEqual(["G","x","x"], list(c))
+        self.assertEqual(["A", "B", "C"], list(a))
+        self.assertEqual(["D", "E", "F"], list(b))
+        self.assertEqual(["G", "x", "x"], list(c))
 
     def test_group_by(self):
         # verify grouping logic
@@ -573,20 +608,20 @@ class IteratorsTestCase(unittest.TestCase):
 
     def test_roundrobin(self):
         r = iters.roundrobin('ABC', 'D', 'EF')
-        self.assertEqual(["A","D","E","B","F","C"], list(r))
+        self.assertEqual(["A", "D", "E", "B", "F", "C"], list(r))
 
     def test_partition(self):
         def is_odd(x):
             return x % 2 == 1
 
         before, after = iters.partition(is_odd, iters.range(5))
-        self.assertEqual([0,2,4], list(before))
-        self.assertEqual([1,3], list(after))
+        self.assertEqual([0, 2, 4], list(before))
+        self.assertEqual([1, 3], list(after))
 
     def test_splitat(self):
         before, after = iters.splitat(2, iters.range(5))
-        self.assertEqual([0,1], list(before))
-        self.assertEqual([2,3,4], list(after))
+        self.assertEqual([0, 1], list(before))
+        self.assertEqual([2, 3, 4], list(after))
 
     def test_splitby(self):
         def is_even(x):
@@ -594,15 +629,15 @@ class IteratorsTestCase(unittest.TestCase):
 
         before, after = iters.splitby(is_even, iters.range(5))
         self.assertEqual([0], list(before))
-        self.assertEqual([1, 2,3,4], list(after))
+        self.assertEqual([1, 2, 3, 4], list(after))
 
     def test_powerset(self):
-        ps = iters.powerset([1,2])
-        self.assertEqual([tuple(),(1,),(2,),(1,2)], list(ps))
+        ps = iters.powerset([1, 2])
+        self.assertEqual([tuple(), (1,), (2,), (1, 2)], list(ps))
 
     def test_pairwise(self):
-        ps = iters.pairwise([1,2,3,4])
-        self.assertEqual([(1,2),(2,3),(3,4)], list(ps))
+        ps = iters.pairwise([1, 2, 3, 4])
+        self.assertEqual([(1, 2), (2, 3), (3, 4)], list(ps))
 
     def test_iter_except(self):
         d = ["a", "b", "c"]
@@ -611,41 +646,53 @@ class IteratorsTestCase(unittest.TestCase):
 
     def test_flatten(self):
         # flatten nested lists
-        self.assertEqual([1,2,3,4], list(iters.flatten([[1,2], [3,4]])))
-        self.assertEqual([1,2,3,4,5,6], list(iters.flatten([[1,2], [3, [4,5,6]]])))
+        self.assertEqual([1, 2, 3, 4], list(iters.flatten([[1, 2], [3, 4]])))
+        self.assertEqual(
+            [1, 2, 3, 4, 5, 6], list(iters.flatten([[1, 2], [3, [4, 5, 6]]]))
+        )
         # flatten nested tuples, sets, and frozen sets
-        self.assertEqual([1,2,3,4,5,6], list(iters.flatten(((1,2), (3, (4,5,6))))))
-        self.assertEqual([1,2,3], list(iters.flatten(set([1, frozenset([2,3])]))))
+        self.assertEqual(
+            [1, 2, 3, 4, 5, 6], list(iters.flatten(((1, 2), (3, (4, 5, 6)))))
+        )
+        self.assertEqual(
+            [1, 2, 3], list(iters.flatten(set([1, frozenset([2, 3])])))
+        )
         # flatten nested generators
         generators = ((num + 1 for num in range(0, n)) for n in range(1, 4))
-        self.assertEqual([1,1,2,1,2,3], list(iters.flatten(generators)))
+        self.assertEqual([1, 1, 2, 1, 2, 3], list(iters.flatten(generators)))
         # flat list should return itself
-        self.assertEqual([1,2,3], list(iters.flatten([1,2,3])))
+        self.assertEqual([1, 2, 3], list(iters.flatten([1, 2, 3])))
         # Don't flatten strings, bytes, or bytearrays
-        self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
+        self.assertEqual([2, "abc", 1], list(iters.flatten([2, "abc", 1])))
         self.assertEqual([2, b'abc', 1], list(iters.flatten([2, b'abc', 1])))
         self.assertEqual([2, bytearray(b'abc'), 1],
                          list(iters.flatten([2, bytearray(b'abc'), 1])))
 
     def test_accumulate(self):
-        self.assertEqual([1,3,6,10,15], list(iters.accumulate([1,2,3,4,5])))
-        self.assertEqual([1,2,6,24,120], list(iters.accumulate([1,2,3,4,5], operator.mul)))
+        self.assertEqual(
+            [1, 3, 6, 10, 15], list(iters.accumulate([1, 2, 3, 4, 5]))
+        )
+        self.assertEqual(
+            [1, 2, 6, 24, 120],
+            list(iters.accumulate([1, 2, 3, 4, 5], operator.mul))
+        )
 
     def test_filterfalse(self):
-        l = iters.filterfalse(lambda x: x > 10, [1,2,3,11,12])
-        self.assertEqual([1,2,3], list(l))
+        l = iters.filterfalse(lambda x: x > 10, [1, 2, 3, 11, 12])
+        self.assertEqual([1, 2, 3], list(l))
+
 
 class StreamTestCase(unittest.TestCase):
 
     def test_from_list(self):
-        s = Stream() << [1,2,3,4,5]
-        self.assertEqual([1,2,3,4,5], list(s))
+        s = Stream() << [1, 2, 3, 4, 5]
+        self.assertEqual([1, 2, 3, 4, 5], list(s))
         self.assertEqual(2, s[1])
-        self.assertEqual([1,2], list(s[0:2]))
+        self.assertEqual([1, 2], list(s[0:2]))
 
     def test_from_iterator(self):
-        s = Stream() << range(6) << [6,7]
-        self.assertEqual([0,1,2,3,4,5,6,7], list(s))
+        s = Stream() << range(6) << [6, 7]
+        self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], list(s))
 
     def test_from_generator(self):
         def gen():
@@ -653,8 +700,8 @@ class StreamTestCase(unittest.TestCase):
             yield 2
             yield 3
 
-        s = Stream() << gen << (4,5)
-        assert list(s) == [1,2,3,4,5]
+        s = Stream() << gen << (4, 5)
+        assert list(s) == [1, 2, 3, 4, 5]
 
     def test_lazy_slicing(self):
         s = Stream() << iters.range(10)
@@ -677,19 +724,26 @@ class StreamTestCase(unittest.TestCase):
         f = Stream()
         fib = f << [0, 1] << iters.map(add, f, iters.drop(1, f))
 
-        self.assertEqual([0,1,1,2,3,5,8,13,21,34], list(iters.take(10, fib)))
+        self.assertEqual(
+            [0, 1, 1, 2, 3, 5, 8, 13, 21, 34], list(iters.take(10, fib))
+        )
         self.assertEqual(6765, fib[20])
-        self.assertEqual([832040,1346269,2178309,3524578,5702887], list(fib[30:35]))
+        self.assertEqual(
+            [832040, 1346269, 2178309, 3524578, 5702887], list(fib[30:35])
+        )
         # 35 elements should be already evaluated
         self.assertEqual(fib.cursor(), 35)
 
     def test_origin_param(self):
         self.assertEqual([100], list(Stream(100)))
-        self.assertEqual([1,2,3], list(Stream(1, 2, 3)))
-        self.assertEqual([1,2,3,10,20,30], list(Stream(1, 2, 3) << [10,20,30]))
+        self.assertEqual([1, 2, 3], list(Stream(1, 2, 3)))
+        self.assertEqual(
+            [1, 2, 3, 10, 20, 30], list(Stream(1, 2, 3) << [10, 20, 30])
+        )
 
     def test_origin_param_string(self):
         self.assertEqual(["stream"], list(Stream("stream")))
+
 
 class OptionTestCase(unittest.TestCase, InstanceChecker):
 
@@ -706,6 +760,7 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
 
     def test_map_filter(self):
         class Request(dict):
+
             def parameter(self, name):
                 return monad.Option(self.get(name, None))
 
@@ -751,30 +806,31 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
 
         # extract value from extension
         r = dict(url="myfile.png")
-        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .or_call(from_mimetype, r) \
-                                     .or_call(from_extension, r) \
-                                     .map(operator.methodcaller("upper")) \
+        self.assertEqual("PNG", monad.Option(r.get("type", None))
+                                     .or_call(from_mimetype, r)
+                                     .or_call(from_extension, r)
+                                     .map(operator.methodcaller("upper"))
                                      .get_or(""))
 
         # extract value from mimetype
         r = dict(url="myfile.svg", mimetype="png")
-        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .or_call(from_mimetype, r) \
-                                     .or_call(from_extension, r) \
-                                     .map(operator.methodcaller("upper")) \
+        self.assertEqual("PNG", monad.Option(r.get("type", None))
+                                     .or_call(from_mimetype, r)
+                                     .or_call(from_extension, r)
+                                     .map(operator.methodcaller("upper"))
                                      .get_or(""))
 
         # type is set directly
         r = dict(url="myfile.jpeg", mimetype="svg", type="png")
-        self.assertEqual("PNG", monad.Option(r.get("type", None)) \
-                                     .or_call(from_mimetype, r) \
-                                     .or_call(from_extension, r) \
-                                     .map(operator.methodcaller("upper")) \
+        self.assertEqual("PNG", monad.Option(r.get("type", None))
+                                     .or_call(from_mimetype, r)
+                                     .or_call(from_extension, r)
+                                     .map(operator.methodcaller("upper"))
                                      .get_or(""))
 
     def test_optionable_decorator(self):
         class Request(dict):
+
             @monad.optionable
             def parameter(self, name):
                 return self.get(name, None)
@@ -804,10 +860,12 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertEqual(monad.Empty(),  monad.Option.from_value(None))
         self.assertEqual(monad.Full(10), monad.Option.from_value(10))
         self.assertEqual(monad.Empty(),  monad.Option.from_call(lambda: None))
-        self.assertEqual(monad.Full(10), monad.Option.from_call(operator.add, 8, 2))
+        self.assertEqual(
+            monad.Full(10), monad.Option.from_call(operator.add, 8, 2)
+        )
         self.assertEqual(monad.Empty(),
                          monad.Option.from_call(lambda d, k: d[k],
-                                                {"a":1}, "b", exc=KeyError))
+                                                {"a": 1}, "b", exc=KeyError))
 
     def test_flatten_operation(self):
         self.assertEqual(monad.Empty(), monad.Empty(monad.Empty()))
@@ -815,13 +873,15 @@ class OptionTestCase(unittest.TestCase, InstanceChecker):
         self.assertEqual(monad.Empty(), monad.Full(monad.Empty()))
         self.assertEqual("Full(20)", str(monad.Full(monad.Full(20))))
 
+
 class TrampolineTestCase(unittest.TestCase):
 
     def test_tco_decorator(self):
 
         def recur_accumulate(origin, f=operator.add, acc=0):
             n = next(origin, None)
-            if n is None: return acc
+            if n is None:
+                return acc
             return recur_accumulate(origin, f, f(acc, n))
 
         # this works normally
@@ -832,13 +892,16 @@ class TrampolineTestCase(unittest.TestCase):
         # for PyPy we skip this test cause on PyPy the limit is
         # approximative and checked at a lower level
         if not hasattr(sys, 'pypy_version_info'):
-            self.assertRaises(RuntimeError, recur_accumulate, iter(range(limit)))
+            self.assertRaises(
+                RuntimeError, recur_accumulate, iter(range(limit))
+            )
 
         # with recur decorator it should run without problems
         @recur.tco
         def tco_accumulate(origin, f=operator.add, acc=0):
             n = next(origin, None)
-            if n is None: return False, acc
+            if n is None:
+                return False, acc
             return True, (origin, f, f(acc, n))
 
         self.assertEqual(sum(range(limit)), tco_accumulate(iter(range(limit))))
@@ -847,15 +910,18 @@ class TrampolineTestCase(unittest.TestCase):
 
         @recur.tco
         def recur_inc2(curr, acc=0):
-            if curr == 0: return False, acc
-            return recur_dec, (curr-1, acc+2)
+            if curr == 0:
+                return False, acc
+            return recur_dec, (curr - 1, acc + 2)
 
         @recur.tco
         def recur_dec(curr, acc=0):
-            if curr == 0: return False, acc
-            return recur_inc2, (curr-1, acc-1)
+            if curr == 0:
+                return False, acc
+            return recur_inc2, (curr - 1, acc - 1)
 
         self.assertEqual(5000, recur_inc2(10000))
+
 
 class UnionBasedHeapsTestCase(unittest.TestCase):
 
@@ -891,7 +957,7 @@ class UnionBasedHeapsTestCase(unittest.TestCase):
         self.assertEqual([5, 10, 20, 30, 100], list(h))
 
     def _heap_custom_compare(self, cls):
-        h = cls(cmp=lambda a,b: len(a) - len(b))
+        h = cls(cmp=lambda a, b: len(a) - len(b))
         h = h.insert("give")
         h = h.insert("few words")
         h = h.insert("about")
@@ -917,7 +983,9 @@ class UnionBasedHeapsTestCase(unittest.TestCase):
         h = h.insert((50, 100))
 
         # Convert to list using iterator
-        self.assertEqual([(40,-10), (10,10), (30,15), (50,100), (20,110)], list(h))
+        self.assertEqual(
+            [(40, -10), (10, 10), (30, 15), (50, 100), (20, 110)], list(h)
+        )
 
     def test_skew_heap_basic(self):
         self._heap_basic_operations(SkewHeap)
@@ -943,6 +1011,7 @@ class UnionBasedHeapsTestCase(unittest.TestCase):
     def test_pairing_heap_cmp_func(self):
         self._heap_custom_compare(PairingHeap)
 
+
 class LinkedListsTestCase(unittest.TestCase):
 
     def test_linked_list_basic_operations(self):
@@ -960,7 +1029,9 @@ class LinkedListsTestCase(unittest.TestCase):
         self.assertEqual(3, len(LinkedList().cons(10).cons(20).cons(30)))
 
     def tests_linked_list_iterator(self):
-        self.assertEqual([30, 20, 10], list(LinkedList().cons(10).cons(20).cons(30)))
+        self.assertEqual(
+            [30, 20, 10], list(LinkedList().cons(10).cons(20).cons(30))
+        )
 
     def test_from_iterable(self):
         expected = [10, 20, 30]
@@ -973,7 +1044,9 @@ class LinkedListsTestCase(unittest.TestCase):
         actual = LinkedList.from_iterable(iter(expected))
         self.assertEqual(list(actual), expected)
 
-        actual = LinkedList.from_iterable(LinkedList().cons(30).cons(20).cons(10))
+        actual = LinkedList.from_iterable(
+            LinkedList().cons(30).cons(20).cons(10)
+        )
         self.assertEqual(list(actual), expected)
 
     def test_stack_push_pop_ordering(self):
@@ -1002,6 +1075,7 @@ class LinkedListsTestCase(unittest.TestCase):
     def test_stack_iterator(self):
         self.assertEqual([10, 5, 1], list(Stack().push(1).push(5).push(10)))
         self.assertEqual(6, sum(Stack().push(1).push(2).push(3)))
+
 
 class BankerQueueTestCase(unittest.TestCase):
 
@@ -1035,8 +1109,11 @@ class BankerQueueTestCase(unittest.TestCase):
 
     def test_iterator(self):
         self.assertEqual([], list(Queue()))
-        self.assertEqual([1,2,3], list(Queue().enqueue(1).enqueue(2).enqueue(3)))
+        self.assertEqual(
+            [1, 2, 3], list(Queue().enqueue(1).enqueue(2).enqueue(3))
+        )
         self.assertEqual(60, sum(Queue().enqueue(10).enqueue(20).enqueue(30)))
+
 
 class VectorTestCase(unittest.TestCase):
 
@@ -1045,7 +1122,7 @@ class VectorTestCase(unittest.TestCase):
         self.assertEqual(0, len(v))
         v1 = v.cons(10)
         self.assertEqual(1, len(v1))
-        self.assertEqual(0, len(v)) # previous value didn't change
+        self.assertEqual(0, len(v))  # previous value didn't change
         up = reduce(lambda acc, el: acc.cons(el), range(513), Vector())
         self.assertEqual(513, len(up))
 
@@ -1062,7 +1139,9 @@ class VectorTestCase(unittest.TestCase):
         self.assertEqual(30, v3.get(2))
         self.assertEqual(50, v4.get(2))
         # long vector
-        up = reduce(lambda acc, el: acc.assoc(el, el*2), range(1500), Vector())
+        up = reduce(
+            lambda acc, el: acc.assoc(el, el * 2), range(1500), Vector()
+        )
         self.assertEqual(2800, up.get(1400))
         self.assertEqual(2998, up.get(1499))
 
@@ -1072,12 +1151,14 @@ class VectorTestCase(unittest.TestCase):
         self.assertEqual(list(range(1999)), list(v.pop()))
 
     def test_vector_iterator(self):
-        v = reduce(lambda acc, el: acc.assoc(el, el+1), range(1500), Vector())
+        v = reduce(
+            lambda acc, el: acc.assoc(el, el + 1), range(1500), Vector()
+        )
         self.assertEqual(list(range(1, 1501)), list(v))
         self.assertEqual(1125750, sum(v))
 
     def test_index_error(self):
-        v = reduce(lambda acc, el: acc.assoc(el, el+2), range(50), Vector())
+        v = reduce(lambda acc, el: acc.assoc(el, el + 2), range(50), Vector())
         self.assertRaises(IndexError, v.get, -1)
         self.assertRaises(IndexError, v.get, 50)
         self.assertRaises(IndexError, v.get, 52)
@@ -1090,6 +1171,7 @@ class VectorTestCase(unittest.TestCase):
 
     def test_subvector_operation(self):
         pass
+
 
 class FingerTreeDequeTestCase(unittest.TestCase):
 
@@ -1115,9 +1197,15 @@ class FingerTreeDequeTestCase(unittest.TestCase):
 
     def test_iterator(self):
         self.assertEqual([], list(Deque()))
-        self.assertEqual([1,2,3], list(Deque().push_back(1).push_back(2).push_back(3)))
-        self.assertEqual(60, sum(Deque().push_back(10).push_front(20).push_back(30)))
-        self.assertEqual(sum(range(1,20)), sum(Deque.from_iterable(range(1,20))))
+        self.assertEqual(
+            [1, 2, 3], list(Deque().push_back(1).push_back(2).push_back(3))
+        )
+        self.assertEqual(
+            60, sum(Deque().push_back(10).push_front(20).push_back(30))
+        )
+        self.assertEqual(
+            sum(range(1, 20)), sum(Deque.from_iterable(range(1, 20)))
+        )
 
 if __name__ == '__main__':
     unittest.main()
