@@ -10,6 +10,23 @@ from fn import op, _, F, Stream, iters, underscore, monad, recur
 from fn.uniform import reduce
 from fn.immutable import (
     SkewHeap, PairingHeap, LinkedList, Stack, Queue, Vector, Deque)
+from fn.func import curried
+
+
+class CurriedTestCase(unittest.TestCase):
+
+    def test_curried(self):
+        @curried
+        def _add(a, b):
+            return a + b
+
+        try:
+            adder = _add(1)
+            adder(3)
+        except AttributeError as exc:
+            self.fail(
+                "Failed curried decorator, AttributeError {0}".format(exc)
+            )
 
 
 class InstanceChecker(object):
