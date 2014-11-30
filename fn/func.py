@@ -1,7 +1,7 @@
 from functools import partial, wraps
 from inspect import getargspec
 
-from .op import identity, flip
+from .op import identity
 
 
 class F(object):
