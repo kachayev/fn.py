@@ -1,4 +1,4 @@
-from functools import partial, wraps
+from functools import partial, wraps, update_wrapper
 from inspect import getargspec
 
 from .op import identity
@@ -81,5 +81,8 @@ def curried(func):
         if count == len(spec.args) - len(args):
             return func(*args, **kwargs)
 
-        return curried(partial(func, *args, **kwargs))
+        para_func = partial(func, *args, **kwargs)
+        update_wrapper(para_func, f)
+        return curried(para_func)
+
     return _curried
