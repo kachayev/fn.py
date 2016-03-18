@@ -1,6 +1,10 @@
 Fn.py: enjoy FP in Python
 =========================
 
+.. image:: https://badges.gitter.im/fnpy/fn.py.svg
+   :alt: Join the chat at https://gitter.im/fnpy/fn.py
+   :target: https://gitter.im/fnpy/fn.py?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 Despite the fact that Python is not pure-functional programming
 language, it's multi-paradigm PL and it gives you enough freedom to take
 credits from functional programming approach. There are theoretical and
