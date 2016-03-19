@@ -5,9 +5,10 @@ python:
   - 3.2
   - 3.3
   - 3.4
+  - 3.5
   - pypy
   - pypy3
-script: 
+script:
   - python tests.py
 install:
   - python setup.py install

@@ -16,10 +16,10 @@ if sys.argv[-1] == 'publish':
 
 short = 'Implementation of missing features to enjoy functional programming in Python'
 setup(
-    name = 'fn',
-    version = fn.__version__,
-    description = short,
-    long_description = open('README.rst').read() + '\n\n' + open('HISTORY.rst').read(),
+    name='fn',
+    version=fn.__version__,
+    description=short,
+    long_description=open('README.rst').read() + '\n\n' + open('HISTORY.rst').read(),
     author='Alexey Kachayev',
     author_email='kachayev@gmail.com',
     url='https://github.com/kachayev/fn.py',
@@ -35,10 +35,13 @@ setup(
         'Natural Language :: English',
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
     ),
 )
