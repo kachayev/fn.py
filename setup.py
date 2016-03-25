@@ -16,19 +16,20 @@ if sys.argv[-1] == 'publish':
 
 short = 'Implementation of missing features to enjoy functional programming in Python'
 setup(
-    name='fn',
+    name='fn.py',
     version=fn.__version__,
     description=short,
     long_description=open('README.rst').read() + '\n\n' + open('HISTORY.rst').read(),
-    author='Alexey Kachayev',
-    author_email='kachayev@gmail.com',
-    url='https://github.com/kachayev/fn.py',
+    author='fnpy team',
+    author_email='vash0the0stampede@gmail.com',
+    url='https://github.com/fnpy/fn.py',
     packages=['fn', 'fn.immutable'],
     package_data={'': ['LICENSE', 'README.rst', 'HISTORY.rst']},
     include_package_data=True,
     install_requires=[],
     license=open('LICENSE').read(),
     zip_safe=False,
+    keywords=['functional', 'fp', 'utility'],
     classifiers=(
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
