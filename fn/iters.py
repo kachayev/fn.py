@@ -219,9 +219,10 @@ def flatten(items):
 
     http://docs.python.org/3.4/library/itertools.html#itertools-recipes
     """
+    str_type = basestring if version_info[0] < 3 else str
     for item in items:
         is_iterable = isinstance(item, Iterable)
-        is_string_or_bytes = isinstance(item, (str, bytes, bytearray))
+        is_string_or_bytes = isinstance(item, (str_type, bytes, bytearray))
         if is_iterable and not is_string_or_bytes:
             for i in flatten(item):
                 yield i

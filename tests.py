@@ -621,11 +621,13 @@ class IteratorsTestCase(unittest.TestCase):
         self.assertEqual([1,1,2,1,2,3], list(iters.flatten(generators)))
         # flat list should return itself
         self.assertEqual([1,2,3], list(iters.flatten([1,2,3])))
-        # Don't flatten strings, bytes, or bytearrays
+        # Don't flatten strings/unicode, bytes, or bytearrays
         self.assertEqual([2,"abc",1], list(iters.flatten([2,"abc",1])))
         self.assertEqual([2, b'abc', 1], list(iters.flatten([2, b'abc', 1])))
         self.assertEqual([2, bytearray(b'abc'), 1],
                          list(iters.flatten([2, bytearray(b'abc'), 1])))
+        self.assertEqual([bytearray(b'abc'), b'\xd1\x8f'.decode('utf8'), b'y'],
+                         list(iters.flatten([bytearray(b'abc'), b'\xd1\x8f'.decode('utf8'), b'y'])))
 
     def test_accumulate(self):
         self.assertEqual([1,3,6,10,15], list(iters.accumulate([1,2,3,4,5])))
