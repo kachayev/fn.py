@@ -1,6 +1,13 @@
 Fn.py: enjoy FP in Python
 =========================
 
+.. image:: https://badges.gitter.im/fnpy/fn.py.svg
+   :alt: Join the chat at https://gitter.im/fnpy/fn.py
+   :target: https://gitter.im/fnpy/fn.py?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+   
+.. image:: https://travis-ci.org/fnpy/fn.py.svg?branch=master
+    :target: https://travis-ci.org/fnpy/fn.py
+
 Despite the fact that Python is not pure-functional programming
 language, it's multi-paradigm PL and it gives you enough freedom to take
 credits from functional programming approach. There are theoretical and
@@ -460,6 +467,8 @@ Ideas to think about:
 Contribute
 ----------
 
+If you found a bug:
+
 1. Check for open issues or open a fresh issue to start a discussion
    around a feature idea or a bug.
 2. Fork the repository on Github to start making your changes to the
@@ -467,8 +476,18 @@ Contribute
 3. Write a test which shows that the bug was fixed or that the feature
    works as expected.
 
-How to find me
+If you like fixing bugs:
+
+1. Check for open issues with the label "Help Wanted" and either claim
+   it or collaborate with those who have claimed it.
+2. Fork the repository on Github to start making your changes to the
+   master branch (or branch off of it).
+3. Write a test which shows that the bug was fixed or that the feature
+   works as expected.
+
+How to contact the maintainers
 --------------
 
-- Twitter: `@kachayev <https://twitter.com/kachayev>`_
-- Email: kachayev <at> gmail.com
+- Gitter: https://gitter.im/fnpy/fn.py
+- Jacob's (Organization Owner) Email: him <at> jacobandkate143.com
+- Alex's (Original Project Owner) Email: kachayev <at> gmail.com
