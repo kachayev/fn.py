@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 """Provides decorator to deal with tail calls in recursive function."""
 
 class tco(object):
@@ -41,3 +43,87 @@ class tco(object):
             # impossible to use such function in tail calls loop?
             if callable(act): action = act
             kwargs = result[2] if len(result) > 2 else {}
+
+class stackless(object):
+    """Provides a "stackless" (constant Python stack) recursion decorator
+    for generators.
+
+    Invoking as f() creates the control structures. Within a
+    function, only use `yield f.call()` and `yield f.tailcall()`.
+
+    Usage examples:
+
+    Tail call optimised recursion with tailcall():
+
+    @recur.stackless
+    def fact(n, acc=1):
+        if n == 0:
+            yield acc
+            return
+        yield fact.tailcall(n-1, n*acc)
+
+    Non-tail recursion with call() uses heap space so won't overflow:
+
+    @recur.stackless
+    def fib(n):
+        if n == 0:
+            yield 1
+            return
+        if n == 1:
+            yield 1
+            return
+        yield (yield fib.call(n-1)) + (yield fib.call(n-2))
+
+    Mutual recursion also works:
+
+    @recur.stackless
+    def is_odd(n):
+        if n == 0:
+            yield False
+            return
+        yield is_even.tailcall(n-1)
+
+    @recur.stackless
+    def is_even(n):
+        if n == 0:
+            yield True
+            return
+        yield is_odd.tailcall(n-1)
+    """
+
+    __slots__ = "func",
+
+    Thunk = namedtuple('Thunk', ("func", "args", "kwargs", "is_tailcall"))
+
+    def __init__(self, func):
+        self.func = func
+
+    def call(self, *args, **kwargs):
+        return self.Thunk(self.func, args, kwargs, False)
+
+    def tailcall(self, *args, **kwargs):
+        return self.Thunk(self.func, args, kwargs, True)
+
+    def __call__(self, *args, **kwargs):
+        s = [self.func(*args, **kwargs)]
+        r = []
+        while s:
+            try:
+                if r:
+                    v = s[-1].send(r[-1])
+                    r.pop()
+                else:
+                    v = next(s[-1])
+            except StopIteration:
+                s.pop()
+                continue
+
+            if isinstance(v, self.Thunk):
+                g = v.func(*v.args, **v.kwargs)
+                if v.is_tailcall:
+                    s[-1] = g
+                else:
+                    s.append(g)
+            else:
+                r.append(v)
+        return r[0]
