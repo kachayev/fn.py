@@ -164,7 +164,7 @@ class PairingHeap(_MergeBased):
     def union(self, other):
         """Returns new heap as a result of merging two given
         
-        Note, that originally this operation for pairingi heap was
+        Note, that originally this operation for pairing heap was
         named "meld", see [1] and [2]. We use here name "union" to
         follow consistent naming convention for all heap implementations.
         """ 
