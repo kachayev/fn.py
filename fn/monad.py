@@ -1,4 +1,4 @@
-"""
+r"""
 ``fn.monad.Option`` represents optional values, each instance of 
 ``Option`` can be either instance of ``Full`` or ``Empty``. 
 It provides you with simple way to write long computation sequences 

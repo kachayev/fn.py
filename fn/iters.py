@@ -1,5 +1,5 @@
 from sys import version_info
-from collections import deque, Iterable
+from collections import deque
 from operator import add, itemgetter, attrgetter, not_
 from functools import partial
 from itertools import (islice,
@@ -11,6 +11,11 @@ from itertools import (islice,
                        takewhile,
                        dropwhile,
                        combinations)
+
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable
 
 from .op import flip
 from .func import F
